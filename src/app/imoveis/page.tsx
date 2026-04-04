@@ -58,7 +58,7 @@ export default async function SearchResultsPage({
                 price={property.price}
                 location={property.location}
                 beds={property.features?.bedrooms || 0}
-                image={property.images?.[0] || "/images/placeholder-property.jpg"}
+                image={property.images?.[0]?.url || "/images/placeholder-property.jpg"}
                 slug={property.slug}
                 tags={[property.category, property.type].filter(Boolean)}
               />
