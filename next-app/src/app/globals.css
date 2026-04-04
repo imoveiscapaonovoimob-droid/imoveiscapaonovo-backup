@@ -1,0 +1,104 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: var(--font-playfair);
+  --font-sans: var(--font-inter);
+
+  --color-primary: #001629;
+  --color-primary-container: #002B49;
+  --color-secondary: #8B6A1D;
+  --color-secondary-fixed: #ffdea5;
+  --color-surface-container-low: #F8F9FA;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-high: #e2e4e8;
+  --color-surface-container-highest: #d1d4d9;
+  --color-outline-variant: rgba(0, 0, 0, 0.15);
+
+  --spacing-12: 3rem;
+  --spacing-16: 4rem;
+  --spacing-20: 5rem;
+  --spacing-24: 6rem;
+}
+
+@layer base {
+  :root {
+    --foreground-rgb: 0, 22, 41;
+    --background-rgb: 255, 255, 255;
+  }
+
+  body {
+    color: rgb(var(--foreground-rgb));
+    background: rgb(var(--background-rgb));
+    @apply font-sans antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif tracking-tight text-primary;
+  }
+
+  .italic-serif {
+    @apply font-serif italic;
+  }
+
+  .concrete-texture {
+    position: relative;
+  }
+
+  .concrete-texture::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("https://www.transparenttextures.com/patterns/concrete-wall.png");
+    opacity: 0.05;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .glassmorphism {
+    @apply backdrop-blur-[20px] bg-white/70;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply px-12 py-5 bg-secondary text-white font-sans text-xs font-bold uppercase tracking-[0.2em] rounded-[0.25rem] transition-all;
+  }
+
+  .btn-primary:hover {
+    @apply bg-gradient-to-r from-secondary to-[#8B6A1D] -translate-y-1 shadow-lg;
+  }
+
+  .btn-secondary {
+    @apply px-12 py-5 border border-outline-variant text-primary font-sans text-xs font-bold uppercase tracking-[0.2em] rounded-[0.25rem] transition-all bg-transparent;
+  }
+
+  .btn-secondary:hover {
+    @apply bg-primary/5 -translate-y-1;
+  }
+
+  .btn-primary-outline {
+    @apply px-10 py-5 border-2 border-white text-white font-sans text-xs font-bold uppercase tracking-[0.2em] rounded-[0.25rem] transition-all bg-transparent;
+  }
+
+  .btn-primary-outline:hover {
+    @apply bg-white text-primary -translate-y-1;
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fade-in 1.2s ease-out forwards;
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 1s ease-out forwards;
+}
