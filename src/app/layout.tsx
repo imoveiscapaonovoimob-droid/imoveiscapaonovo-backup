@@ -55,6 +55,8 @@ export const metadata: Metadata = {
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import ScrollTracker from "@/components/analytics/ScrollTracker";
 
+import AuthProvider from "@/components/providers/AuthProvider";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -107,7 +109,9 @@ export default function RootLayout({
       <body className="antialiased font-sans">
         <GoogleAnalytics />
         <ScrollTracker />
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );

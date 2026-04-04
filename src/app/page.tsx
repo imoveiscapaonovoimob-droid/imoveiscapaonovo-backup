@@ -11,6 +11,7 @@ import { Footer } from "@/components/home/Footer";
 import { MarketStats } from "@/components/home/MarketStats";
 import { ComparisonTable } from "@/components/home/ComparisonTable";
 import { InvestmentInsights } from "@/components/home/InvestmentInsights";
+import { SEOBlock } from "@/components/home/SEOBlock";
 
 export default function Home() {
   return (
@@ -20,6 +21,7 @@ export default function Home() {
       <PropertyGrid />
       <MarketStats />
       <ProfileSearch />
+      <SEOBlock />
       <ComparisonTable />
       <Guide />
       <Blog />

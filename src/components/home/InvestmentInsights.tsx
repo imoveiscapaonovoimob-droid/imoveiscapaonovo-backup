@@ -3,71 +3,66 @@ import { CheckCircle2, Quote } from "lucide-react";
 
 const REASONS = [
   {
-    title: "Crescimento Populacional",
-    desc: "+8% ao ano (IBGE 2025). Aumento constante na procura por moradia fixa.",
+    title: "Crescimento Populacional Constante",
+    desc: "Aumento real na procura por moradia fixa e veraneio de qualidade no litoral norte.",
   },
   {
-    title: "Demanda Superior à Oferta",
-    desc: "Média de 2,5 compradores interessados por unidade disponível no mercado.",
+    title: "Alta Procura por Imóveis",
+    desc: "Demanda aquecida que garante liquidez e rentabilidade para investidores atentos.",
   },
   {
-    title: "Infraestrutura de Valor",
-    desc: "R$ 45 milhões investidos pelo setor público em Capão Novo (2024-2026).",
+    title: "Infraestrutura em Expansão",
+    desc: "Investimentos públicos e privados transformando a orla e os acessos da região.",
   },
   {
-    title: "Valorização Histórica",
-    desc: "Zero desvalorização registrada nos últimos 15 anos na região litorânea.",
+    title: "Valorização Contínua",
+    desc: "Histórico sólido de valorização patrimonial acima da média do mercado imobiliário.",
   },
 ];
 
 export const InvestmentInsights = () => {
   return (
-    <section className="py-32 bg-primary text-white overflow-hidden relative">
-      <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-white/5 to-transparent pointer-events-none" />
+    <section className="py-32 bg-primary text-white overflow-hidden relative border-y border-white/5">
+      <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-secondary/5 to-transparent pointer-events-none" />
 
       <div className="max-w-[1440px] mx-auto px-6 lg:px-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-start">
           <div>
-            <h2 className="text-[10px] font-sans font-black uppercase tracking-[0.4em] text-secondary mb-10">
-              Insight do Especialista
+            <h2 className="text-[11px] font-sans font-black uppercase tracking-[0.5em] text-secondary mb-10">
+              Diferencial Estratégico
             </h2>
-            <div className="relative mb-16">
-              <Quote size={40} className="text-secondary opacity-30 absolute -top-8 -left-8" />
-              <blockquote className="text-2xl md:text-3xl font-serif italic text-white/90 leading-relaxed mb-10 z-10 relative">
-                "Capão Novo é o novo ponto de valorização do litoral gaúcho. Investidores que compraram em 2023 já viram uma valorização de 30-40% em seus ativos."
-              </blockquote>
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-[1px] bg-secondary" />
-                <div className="flex flex-col gap-1">
-                  <p className="text-[10px] font-sans font-black uppercase tracking-widest text-secondary leading-none">
-                    Lenine Kerber
-                  </p>
-                  <p className="text-[9px] font-sans font-bold uppercase tracking-widest text-white/30 leading-none">
-                    Corretor CRECI 85784 — Especialista em Litoral Norte
-                  </p>
-                </div>
-              </div>
+            <h3 className="text-4xl md:text-5xl font-serif text-white leading-tight mb-10">
+              Por que investir em <em className="italic font-normal text-secondary">Capão Novo RS</em>?
+            </h3>
+            
+            <div className="relative mb-12">
+              <Quote size={48} className="text-secondary opacity-20 absolute -top-10 -left-10" />
+              <p className="text-xl md:text-2xl font-serif italic text-white/90 leading-relaxed z-10 relative">
+                "Capão Novo é o novo ponto de valorização do litoral gaúcho. Quem compra hoje, antecipa ganhos futuros."
+              </p>
             </div>
 
-            <p className="text-white/40 font-serif italic text-sm leading-relaxed mb-12 max-w-lg">
-              "A infraestrutura em plena expansão, somada ao novo acesso pela RS-389, coloca Capão Novo como a melhor relação custo-benefício para quem busca investir em 2026 e 2027."
-            </p>
+            <div className="p-8 bg-white/5 border border-white/10 rounded-xl backdrop-blur-sm">
+              <p className="text-sm md:text-base font-sans font-bold text-secondary leading-relaxed flex items-center gap-3">
+                <span className="text-2xl">👉</span> 
+                Região com excelente relação custo-benefício comparada a Capão da Canoa.
+              </p>
+            </div>
           </div>
 
-          <div>
-            <h3 className="text-3xl font-serif text-white leading-tight mb-12">
-              5 Razões Baseadas em <br />
-              <em className="italic font-normal">Dados</em> para Investir Agora
-            </h3>
-            <div className="space-y-10">
+          <div className="space-y-12">
+            <h4 className="text-[12px] font-sans font-black uppercase tracking-[0.3em] text-white/40 mb-8 border-b border-white/10 pb-4">
+              Pilares de Valorização
+            </h4>
+            <div className="space-y-12">
               {REASONS.map((reason) => (
-                <div key={reason.title} className="flex gap-6 items-start group">
-                  <div className="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center shrink-0 transition-colors group-hover:bg-secondary">
-                    <CheckCircle2 size={18} className="text-secondary transition-colors group-hover:text-white" />
+                <div key={reason.title} className="flex gap-8 items-start group">
+                  <div className="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center shrink-0 transition-all duration-500 group-hover:bg-secondary group-hover:-translate-y-1 shadow-lg shadow-secondary/5">
+                    <CheckCircle2 size={22} className="text-secondary transition-colors group-hover:text-white" />
                   </div>
                   <div>
-                    <h4 className="text-[11px] font-sans font-black uppercase tracking-widest text-white mb-2">{reason.title}</h4>
-                    <p className="text-white/40 font-serif italic text-sm leading-relaxed transition-colors group-hover:text-white/70">{reason.desc}</p>
+                    <h5 className="text-[13px] font-sans font-black uppercase tracking-widest text-white mb-3 group-hover:text-secondary transition-colors">{reason.title}</h5>
+                    <p className="text-white/50 font-sans text-sm leading-relaxed transition-colors group-hover:text-white/80">{reason.desc}</p>
                   </div>
                 </div>
               ))}

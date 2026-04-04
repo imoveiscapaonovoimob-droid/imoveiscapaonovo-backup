@@ -21,21 +21,35 @@ export const Hero = () => {
 
       {/* Hero Content */}
       <div className="relative z-10 max-w-[1440px] mx-auto px-6 lg:px-10 pt-32 sm:pt-40 lg:pt-44 pb-0 flex flex-col items-center text-center">
-        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif text-white font-bold leading-tight mb-8 md:mb-10 tracking-tight max-w-4xl">
-          Imóveis em <em className="italic font-normal text-secondary">Capão Novo</em>:<br />
-          Sua Seleção de Alto Padrão no Litoral
+        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif text-white font-bold leading-tight mb-8 md:mb-10 tracking-tight max-w-5xl">
+          Imóveis em <em className="italic font-normal text-secondary">Capão Novo RS</em>:<br />
+          Casas, Apartamentos e Terrenos à Venda
         </h1>
 
+        <div className="max-w-3xl mb-12 space-y-6">
+          <p className="text-lg md:text-xl text-white/90 font-sans leading-relaxed">
+            Encontre os melhores imóveis à venda em Capão Novo, com curadoria estratégica para quem busca segurança, valorização e qualidade de vida no litoral norte gaúcho.
+          </p>
+          <p className="text-base md:text-lg text-white/70 font-sans leading-relaxed">
+            Apartamentos, casas e terrenos selecionados com base em dados reais de mercado, localização e potencial de crescimento.
+          </p>
+        </div>
+
         <div className="flex flex-col items-center gap-8">
-          <a
-            href={WHATSAPP_MESSAGES.geral}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 px-8 py-5 bg-secondary text-white text-xs font-bold uppercase tracking-[0.2em] rounded transition-all duration-300 hover:bg-secondary/90 hover:-translate-y-0.5 shadow-xl cursor-pointer"
-          >
-            <MessageCircle size={18} />
-            Falar com Especialista
-          </a>
+          <div className="flex flex-col items-center gap-4">
+            <a
+              href={WHATSAPP_MESSAGES.geral}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 px-8 py-5 bg-secondary text-white text-xs font-bold uppercase tracking-[0.2em] rounded transition-all duration-300 hover:bg-secondary/90 hover:-translate-y-0.5 shadow-xl cursor-pointer"
+            >
+              <MessageCircle size={18} />
+              Falar com Especialista
+            </a>
+            <p className="text-[10px] md:text-xs text-secondary font-bold uppercase tracking-[0.15em]">
+              👉 Descubra as melhores oportunidades hoje
+            </p>
+          </div>
 
           {/* Quick Links / Featured Segments */}
           <div className="flex flex-wrap justify-center gap-4 md:gap-8 mb-14 md:mb-20">

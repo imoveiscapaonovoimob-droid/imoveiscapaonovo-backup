@@ -13,7 +13,7 @@ export default function Page() {
   return (
     <main className="min-h-screen">
       <Header />
-      
+
       {/* HEADER SEO */}
       <section className="pt-32 pb-8 px-6 lg:px-10 max-w-7xl mx-auto">
         <h1 className="text-4xl md:text-5xl font-serif text-primary mb-6">
@@ -21,8 +21,8 @@ export default function Page() {
         </h1>
         <article className="prose prose-lg text-secondary/80 max-w-none">
           <p>
-            Encontrar a casa dos sonhos nunca foi tão simples e seguro. Trabalhamos exclusivamente com as mais selecionadas <strong>Casas em Capão Novo</strong>. 
-            Nossa carteira atende quem busca alto padrão, propriedades de frente mar, casas isoladas ou localizadas nas áreas mais reservadas e cobiçadas como o Capão Novo Village ou o Posto 4. 
+            Encontrar a casa dos sonhos nunca foi tão simples e seguro. Trabalhamos exclusivamente com as mais selecionadas <strong>Casas em Capão Novo</strong>.
+            Nossa carteira atende quem busca alto padrão, propriedades de frente mar, casas isoladas ou localizadas nas áreas mais reservadas e cobiçadas como o Capão Novo Village ou o Posto 4.
             Ao focar no atendimento via WhatsApp, criamos exclusividade para sua curadoria e negociações discretas com os construtores da região.
           </p>
         </article>
@@ -49,7 +49,7 @@ export default function Page() {
       </section>
 
       <CTA />
-      
+
       <Footer />
     </main>
   );

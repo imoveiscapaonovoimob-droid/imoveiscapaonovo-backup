@@ -6,20 +6,33 @@ import { Bed, Star, MapPin } from "lucide-react";
 import Link from "next/link";
 
 interface PropertyProps {
-  id: string;
+  id?: string;
+  slug?: string;
   title: string;
   location: string;
-  price: string;
-  beds: string;
+  price: string | number;
+  beds: string | number;
   image: string;
   tags: string[];
   isFeatured?: boolean;
 }
 
-export const PropertyCard = ({ id, title, location, price, beds, image, tags }: PropertyProps) => {
+export const PropertyCard = ({ id, slug, title, location, price, beds, image = "/images/placeholder-property.jpg", tags }: PropertyProps) => {
+  const formatPrice = (val: string | number) => {
+    if (typeof val === 'number') {
+      return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(val);
+    }
+    return val;
+  };
+
+  const formatBeds = (val: string | number) => {
+    if (typeof val === 'number') return `${val} Dorm.`;
+    return val;
+  };
+
   return (
     <Link
-      href={`/imoveis/${id}`}
+      href={`/imoveis/${slug || id}`}
       className="group block relative w-full aspect-[4/5] sm:aspect-[3/4] rounded-lg overflow-hidden cursor-pointer"
     >
       {/* Background Image */}
@@ -71,7 +84,7 @@ export const PropertyCard = ({ id, title, location, price, beds, image, tags }: 
           <div className="flex items-center gap-1.5">
             <Bed size={12} className="text-secondary" />
             <span className="text-[9px] font-sans font-bold uppercase tracking-[0.3em]">
-              {beds}
+              {formatBeds(beds)}
             </span>
           </div>
         </div>
@@ -83,7 +96,7 @@ export const PropertyCard = ({ id, title, location, price, beds, image, tags }: 
 
         {/* Price and Action */}
         <div className="flex items-center justify-between pt-3 sm:pt-4 mt-1 sm:mt-2 border-t border-white/20">
-          <span className="text-xl sm:text-2xl font-serif text-white font-medium drop-shadow-md">{price}</span>
+          <span className="text-xl sm:text-2xl font-serif text-white font-medium drop-shadow-md">{formatPrice(price)}</span>
           <span className="text-[10px] font-sans font-bold uppercase tracking-[0.25em] text-secondary hidden sm:flex sm:opacity-0 sm:-translate-x-4 sm:group-hover:opacity-100 sm:group-hover:translate-x-0 transition-all duration-500 delay-150 items-center gap-2">
             Ver Detalhes
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

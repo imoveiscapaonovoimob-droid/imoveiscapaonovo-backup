@@ -1,0 +1,463 @@
+<html lang="pt-BR"><head></head><body class="bg-background text-primary font-body antialiased">```html
+
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&amp;family=Manrope:wght@200;300;400;500;600;700&amp;family=Playfair+Display:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary": "#111617",
+              "background": "#f9f9f9",
+              "on-surface-variant": "#42474d",
+              "tertiary-container": "#262a2c",
+              "surface-container": "#eeeeee",
+              "on-secondary-fixed": "#261900",
+              "on-tertiary": "#ffffff",
+              "on-surface": "#1a1c1c",
+              "surface-variant": "#e2e2e2",
+              "surface-container-lowest": "#ffffff",
+              "on-tertiary-fixed": "#181c1e",
+              "primary-container": "#002b49",
+              "inverse-primary": "#a8caef",
+              "surface-container-highest": "#e2e2e2",
+              "on-primary-fixed": "#001d34",
+              "on-error-container": "#93000a",
+              "on-primary": "#ffffff",
+              "tertiary-fixed-dim": "#c4c7c9",
+              "on-secondary-container": "#785a1a",
+              "secondary-fixed-dim": "#e9c176",
+              "surface-tint": "#406182",
+              "primary": "#001629",
+              "on-primary-container": "#7293b6",
+              "secondary": "#775a19",
+              "gold-accent": "#CFAF6A",
+              "error-container": "#ffdad6",
+              "inverse-surface": "#2f3131",
+              "on-error": "#ffffff",
+              "surface-dim": "#dadada",
+              "surface-container-high": "#e8e8e8",
+              "on-primary-fixed-variant": "#274969",
+              "on-secondary": "#ffffff",
+              "on-tertiary-container": "#8d9193",
+              "error": "#ba1a1a",
+              "inverse-on-surface": "#f1f1f1",
+              "on-background": "#1a1c1c",
+              "secondary-container": "#fed488",
+              "primary-fixed-dim": "#a8caef",
+              "on-tertiary-fixed-variant": "#434749",
+              "on-secondary-fixed-variant": "#5d4201",
+              "surface-container-low": "#f3f3f3",
+              "secondary-fixed": "#ffdea5",
+              "outline-variant": "#c3c7ce",
+              "outline": "#73777e",
+              "tertiary-fixed": "#e0e3e5",
+              "surface": "#f9f9f9",
+              "primary-fixed": "#cfe5ff",
+              "surface-bright": "#f9f9f9"
+            },
+            fontFamily: {
+              "headline": ["Noto Serif"],
+              "serif-alt": ["Playfair Display"],
+              "body": ["Manrope"],
+              "label": ["Manrope"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .concrete-texture {
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.04;
+        }
+        .glass-nav {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .hero-video-container::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(0,22,41,0.4), rgba(0,22,41,0.7));
+        }
+    </style>
+<!-- Top Navigation Bar -->
+<nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-100">
+<div class="max-w-[1920px] mx-auto flex justify-between items-center px-12 py-5">
+<div class="text-xl font-bold tracking-tighter text-slate-900 uppercase">Imóveis Capão Novo</div>
+<div class="hidden lg:flex items-center space-x-8">
+<a class="text-slate-800 font-medium text-sm uppercase tracking-wider hover:text-gold-accent transition-all duration-300" href="#">Casas</a>
+<a class="text-slate-800 font-medium text-sm uppercase tracking-wider hover:text-gold-accent transition-all duration-300" href="#">Apartamentos</a>
+<a class="text-slate-800 font-medium text-sm uppercase tracking-wider hover:text-gold-accent transition-all duration-300" href="#">Terrenos</a>
+<a class="text-slate-800 font-medium text-sm uppercase tracking-wider hover:text-gold-accent transition-all duration-300" href="#">Condomínios</a>
+<a class="text-slate-800 font-medium text-sm uppercase tracking-wider hover:text-gold-accent transition-all duration-300" href="#">Sobre</a>
+<a class="text-slate-800 font-medium text-sm uppercase tracking-wider hover:text-gold-accent transition-all duration-300" href="#">Blog</a>
+</div>
+<div class="flex items-center space-x-6">
+<button class="px-6 py-2 bg-primary-container text-white text-sm font-bold uppercase tracking-widest transition-all duration-300 hover:bg-gold-accent hover:text-primary-container">Fale Conosco</button>
+<span class="material-symbols-outlined cursor-pointer text-slate-800">menu</span>
+</div>
+</div>
+</nav>
+<!-- 1. Hero Section -->
+<section class="relative h-[90vh] min-h-[700px] w-full flex items-center justify-center overflow-hidden">
+<div class="absolute inset-0 hero-video-container">
+<img alt="Aerial view of luxury beachfront real estate in Capão Novo" class="w-full h-full object-cover" data-alt="Cinematic aerial view of luxury beachfront mansions and ocean waves" src="https://lh3.googleusercontent.com/aida/ADBb0ugGqrrGOr6ZBQjLGnUyXSXvdJMXUvPpl1Mt8fsG_pXn6tr6-6nMvKl4opJi4P1OXwScjd1_L8-CYdRJFBSRjcD742R6pmB68wsb0JjcLCZWvbyieVeuOdC4spPcnUFoKs9n9gkEau3Mwv8VDyy50lJXop82i2VuvAtB4LuPEB1a5vao1KydlvJiZ5RWg0D1ezJMADtmgOQQZU6OF8pMKHVnvEau6YAXspwSrfKApYXup5RZAYFDdHsh-Dl0_ChGTS7u1CJj-pL2WQ"/>
+</div>
+<div class="relative z-10 text-center max-w-5xl px-6 flex flex-col items-center">
+<h1 class="text-5xl md:text-6xl lg:text-7xl font-headline italic tracking-wide text-white leading-tight mb-12">
+            Os melhores imóveis<br/>de Capão Novo, selecionados<br/>por especialistas locais
+        </h1>
+<div class="w-24 h-px bg-gold-accent/50 mb-12"></div>
+<div class="mt-4">
+<button class="px-10 py-4 bg-gold-accent text-primary-container text-sm font-bold uppercase tracking-[0.2em] hover:bg-white transition-all duration-300 shadow-xl">
+                Falar com Corretor
+            </button>
+</div>
+</div>
+</section>
+<!-- 2. Centro de Comando (Search Bar) - Compact & Natural -->
+<div class="relative z-40 -mt-24 px-6">
+<div class="max-w-[1000px] mx-auto bg-primary-container shadow-2xl overflow-hidden">
+<div class="px-8 pt-8 pb-8 md:px-12">
+<h3 class="text-gold-accent font-serif-alt italic text-xl mb-6 text-center">Encontre seu Imóvel Ideal em Capão Novo</h3>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+<div class="space-y-1.5">
+<label class="block text-[9px] uppercase tracking-[0.2em] text-white/60 font-medium">Tipo</label>
+<select class="w-full bg-transparent border border-gold-accent/30 text-white px-3 py-2.5 text-sm focus:border-gold-accent outline-none appearance-none cursor-pointer transition-colors">
+<option class="bg-primary">Casas</option>
+<option class="bg-primary">Apartamentos</option>
+<option class="bg-primary">Terrenos</option>
+<option class="bg-primary">Condomínios</option>
+<option class="bg-primary">Exclusividades</option>
+</select>
+</div>
+<div class="space-y-1.5">
+<label class="block text-[9px] uppercase tracking-[0.2em] text-white/60 font-medium">Preço</label>
+<select class="w-full bg-transparent border border-gold-accent/30 text-white px-3 py-2.5 text-sm focus:border-gold-accent outline-none appearance-none cursor-pointer transition-colors">
+<option class="bg-primary">R$ 50mil - R$ 500mil</option>
+<option class="bg-primary">R$ 500mil - R$ 1M</option>
+<option class="bg-primary">R$ 1M - R$ 2M</option>
+<option class="bg-primary">R$ 2M - R$ 5M</option>
+<option class="bg-primary">Acima de R$ 5M</option>
+</select>
+</div>
+<div class="space-y-1.5">
+<label class="block text-[9px] uppercase tracking-[0.2em] text-white/60 font-medium">Localização</label>
+<div class="relative">
+<select class="w-full bg-transparent border border-gold-accent/30 text-white px-3 py-2.5 text-sm focus:border-gold-accent outline-none appearance-none cursor-pointer transition-colors">
+<option class="bg-primary">Posto 04</option>
+<option class="bg-primary">Posto 05</option>
+<option class="bg-primary">Village</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-gold-accent text-lg pointer-events-none">expand_more</span>
+</div>
+</div>
+<button class="bg-gold-accent text-primary-container font-bold px-6 py-2.5 hover:bg-white transition-colors duration-300 uppercase tracking-widest text-xs h-[42px]">
+                    Buscar Imóveis
+                </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Profile Search Section -->
+<section class="py-24 px-12 bg-[#F7F5F0]">
+<div class="max-w-[1200px] mx-auto text-center">
+<span class="text-gold-accent text-xs font-bold tracking-[0.3em] uppercase mb-4 block">Buscar por Perfil</span>
+<h2 class="text-4xl md:text-5xl font-headline text-primary mb-16">Como você quer seu imóvel?</h2>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Card 1 -->
+<div class="bg-white p-10 flex flex-col items-center text-center shadow-sm hover:shadow-xl transition-all duration-500 group cursor-pointer">
+<div class="w-16 h-16 rounded-full bg-[#FCF9F2] flex items-center justify-center mb-8 group-hover:bg-gold-accent transition-colors duration-500">
+<span class="material-symbols-outlined text-gold-accent text-3xl group-hover:text-white transition-colors duration-500">diamond</span>
+</div>
+<h4 class="text-primary-container font-bold text-lg mb-3">Frente Mar</h4>
+<p class="text-on-surface-variant text-sm leading-relaxed">Imóveis com vista e acesso direto à praia</p>
+</div>
+<!-- Card 2 -->
+<div class="bg-white p-10 flex flex-col items-center text-center shadow-sm hover:shadow-xl transition-all duration-500 group cursor-pointer">
+<div class="w-16 h-16 rounded-full bg-[#FCF9F2] flex items-center justify-center mb-8 group-hover:bg-gold-accent transition-colors duration-500">
+<span class="material-symbols-outlined text-gold-accent text-3xl group-hover:text-white transition-colors duration-500">payments</span>
+</div>
+<h4 class="text-primary-container font-bold text-lg mb-3">Oportunidades</h4>
+<p class="text-on-surface-variant text-sm leading-relaxed">Melhores preços e condições especiais</p>
+</div>
+<!-- Card 3 -->
+<div class="bg-white p-10 flex flex-col items-center text-center shadow-sm hover:shadow-xl transition-all duration-500 group cursor-pointer">
+<div class="w-16 h-16 rounded-full bg-[#FCF9F2] flex items-center justify-center mb-8 group-hover:bg-gold-accent transition-colors duration-500">
+<span class="material-symbols-outlined text-gold-accent text-3xl group-hover:text-white transition-colors duration-500">home</span>
+</div>
+<h4 class="text-primary-container font-bold text-lg mb-3">Casas</h4>
+<p class="text-on-surface-variant text-sm leading-relaxed">Residências com conforto e privacidade</p>
+</div>
+<!-- Card 4 -->
+<div class="bg-white p-10 flex flex-col items-center text-center shadow-sm hover:shadow-xl transition-all duration-500 group cursor-pointer">
+<div class="w-16 h-16 rounded-full bg-[#FCF9F2] flex items-center justify-center mb-8 group-hover:bg-gold-accent transition-colors duration-500">
+<span class="material-symbols-outlined text-gold-accent text-3xl group-hover:text-white transition-colors duration-500">apartment</span>
+</div>
+<h4 class="text-primary-container font-bold text-lg mb-3">Apartamentos</h4>
+<p class="text-on-surface-variant text-sm leading-relaxed">Praticidade no litoral gaúcho</p>
+</div>
+</div>
+</div>
+</section>
+<!-- 3. Seção Novidades (Listing) -->
+<section class="py-32 px-12 max-w-[1600px] mx-auto">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-20 gap-6">
+<div>
+<span class="text-gold-accent text-sm font-bold tracking-[0.3em] uppercase mb-4 block">Oportunidades</span>
+<h2 class="text-5xl font-serif-alt text-primary">Novos Agenciamentos</h2>
+</div>
+<a class="text-primary font-bold border-b-2 border-primary pb-1 hover:text-gold-accent hover:border-gold-accent transition-all" href="#">Ver portfólio completo</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+<!-- Property Card 1 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-[3/4] overflow-hidden mb-6">
+<img alt="Casa de Alto Padrão em Condomínio" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida/ADBb0uhPCKsM34-M_u6o4MK6teCHFqIBFYLreBcMvQZ7GCtDGxeUxOij7rOgVWAO80jO92anYzKIJV9m8NwVeTGdq-PQM4iFTa2yX8E4z5vhDSCuSqrMpKNPb5lVKAO826428hwN6QWOsXHWO0eYrO_D-CdJ6LabYDcSaQQvjHhAcz3KWfcu7j-piyhIo8VzvcMtI04nIZvE4KVdV9mzgUTsqe0WvS3M7Vi0r77A4ZblX3UlHtKcBu4A7Wj8BKuRvIhBHSVoRkcTNegBtIE"/>
+<div class="absolute top-4 left-4 flex flex-col gap-2">
+<span class="bg-primary/90 text-gold-accent text-[10px] font-bold tracking-widest px-3 py-1.5 uppercase">Costa Serena</span>
+</div>
+<button class="absolute top-4 right-4 text-white hover:text-gold-accent transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">star</span>
+</button>
+</div>
+<h3 class="text-2xl font-serif-alt mb-1 group-hover:text-gold-accent transition-colors">Casa de Alto Padrão em Condomínio</h3>
+<p class="text-on-surface-variant text-xs uppercase tracking-widest mb-3">Village, Capão Novo</p>
+<div class="flex items-center gap-4 text-outline mb-4 text-sm">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">bed</span> 5 dormitórios, 4 suítes</span>
+</div>
+<p class="text-xl font-headline font-bold text-primary mb-4">R$ 4.500.000</p>
+<a class="flex items-center gap-2 text-[#CFAF6A] font-bold text-xs uppercase tracking-widest group-hover:gap-3 transition-all" href="#">
+                Ver imóvel <span class="material-symbols-outlined text-base">arrow_forward</span>
+</a>
+</div>
+<!-- Property Card 2 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-[3/4] overflow-hidden mb-6">
+<img alt="Sobrado Alto Padrão em Condomínio" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida/ADBb0uja3VMmZol03x7elt1wgxS4jV0_d51hr0_zavHkK3RsyTAEGL6vnbE0JqUlZY_GosLzh_KeBBXb5AByI13nCLM4LXt0p8SIYmED4tyMUFxUBV_-5S5u0qvCldxN3ezn6PGgHxVnbIe_uFb-n-RpSVf7EgTXstqJtbY7FO0ma3OkiMT0p_XRO1MhH4krAxvhQGWehYFrxxD92z8fnUl7cDVwg3rQL1P0zPyke060xTmuth5MZe-USKErVtaKADUbrPKelYVe22EOGdM"/>
+<div class="absolute top-4 left-4 flex flex-col gap-2">
+<span class="bg-gold-accent text-primary-container text-[10px] font-bold tracking-widest px-3 py-1.5 uppercase">Alta procura</span>
+<span class="bg-primary/90 text-gold-accent text-[10px] font-bold tracking-widest px-3 py-1.5 uppercase">50m do mar</span>
+</div>
+<button class="absolute top-4 right-4 text-white hover:text-gold-accent transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">star</span>
+</button>
+</div>
+<h3 class="text-2xl font-serif-alt mb-1 group-hover:text-gold-accent transition-colors">Sobrado em Condomínio</h3>
+<p class="text-on-surface-variant text-xs uppercase tracking-widest mb-3">Posto 04, Capão Novo</p>
+<div class="flex items-center gap-4 text-outline mb-4 text-sm">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">bed</span> 3 dormitórios, 1 suíte</span>
+</div>
+<p class="text-xl font-headline font-bold text-primary mb-4">R$ 648.000</p>
+<a class="flex items-center gap-2 text-[#CFAF6A] font-bold text-xs uppercase tracking-widest group-hover:gap-3 transition-all" href="#">
+                Ver imóvel <span class="material-symbols-outlined text-base">arrow_forward</span>
+</a>
+</div>
+<!-- Property Card 3 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-[3/4] overflow-hidden mb-6">
+<img alt="Minimalist Mansion" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida/ADBb0uj-LRRTQQf9tFJrMBdR2pdXUIy3jkImJw70qesab5LIMqSjtSN3jbeEnZ2Ouh7r4BDjZ4F_peWLKhII_fSlJz3ggE5yZQEVXkCmfJ6ZFLlRGOmr-asBqQhmWfJf2_D73WPbk1Bfj0-y-gOBL_n4KDmdGnCY-B9djS2cdpGJFXOCE2vlLcjBACkBUt3HcSWViWJYagKEBnk_94p39C7z4ugndQ9sOQdIUntTmZhOGcIM5O3eUxPCg6-yg3L-3CxXEpA6aPTBsHRJO00"/>
+<div class="absolute top-4 left-4 flex flex-col gap-2">
+<span class="bg-gold-accent text-primary-container text-[10px] font-bold tracking-widest px-3 py-1.5 uppercase">ALTA PROCURA</span>
+<span class="bg-primary/90 text-gold-accent text-[10px] font-bold tracking-widest px-3 py-1.5 uppercase">100M DO MAR</span>
+</div>
+<button class="absolute top-4 right-4 text-white hover:text-gold-accent transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">star</span>
+</button>
+</div>
+<h3 class="text-2xl font-serif-alt mb-3 group-hover:text-gold-accent transition-colors">Apartamento Mobiliado em Condomínio</h3>
+<p class="text-on-surface-variant text-xs uppercase tracking-widest mb-3">Posto 04, Capão Novo</p>
+<div class="flex items-center gap-4 text-outline mb-4 text-sm">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">bed</span> 3 dormitórios, 1 suíte, 1 box coberto</span>
+</div>
+<p class="text-xl font-headline font-bold text-primary mb-4">R$ 562.000</p>
+<a class="flex items-center gap-2 text-[#CFAF6A] font-bold text-xs uppercase tracking-widest group-hover:gap-3 transition-all" href="#">
+                Ver imóvel <span class="material-symbols-outlined text-base">arrow_forward</span>
+</a>
+</div>
+<!-- Property Card 4 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-[3/4] overflow-hidden mb-6">
+<img alt="Sobrado Vista Eterna para o Mar" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida/ADBb0uht5wF_PJuRitVIFo6wWbhICquFve8oB7jujxlUGge2o8M-54M8LBY5WjRovDwHC4ByxbHLhaPz9mjFN0WoeKcWHpbsOj6D-dYOtujhwf1MUqABM8LBzTghIvPEeHJQzlNiomq-z0cpMuwLAzima7j1hadO-csMF2fPneKZxpHHyUEWY1dIRspWK4XzvrAfnJWzi1S1h_r55LWCDsCPtd7e_OVtex_Gty20ro4fGxpv-UdJy0ShEk7ZfoLMCYtDn2ePkgCTrLZsWqw"/>
+<div class="absolute top-4 left-4 flex flex-col gap-2">
+<span class="bg-gold-accent text-primary-container text-[10px] font-bold tracking-widest px-3 py-1.5 uppercase">Frente mar</span>
+</div>
+<button class="absolute top-4 right-4 text-white hover:text-gold-accent transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">star</span>
+</button>
+</div>
+<h3 class="text-2xl font-serif-alt mb-3 group-hover:text-gold-accent transition-colors">Sobrado Vista Eterna para o Mar</h3>
+<p class="text-on-surface-variant text-xs uppercase tracking-widest mb-3">Posto 05, Capão Novo</p>
+<div class="flex items-center gap-4 text-outline mb-4 text-sm">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">bed</span> 4 dormitórios, 1 suíte</span>
+</div>
+<p class="text-xl font-headline font-bold text-primary mb-4">R$ 850.000</p>
+<a class="flex items-center gap-2 text-[#CFAF6A] font-bold text-xs uppercase tracking-widest group-hover:gap-3 transition-all" href="#">
+                Ver imóvel <span class="material-symbols-outlined text-base">arrow_forward</span>
+</a>
+</div>
+</div>
+</section>
+<!-- 4. Seção Guia Capão Novo (Vibe) -->
+<section class="relative py-32 bg-surface-container-low overflow-hidden">
+<div class="absolute inset-0 concrete-texture"></div>
+<div class="relative z-10 px-12 max-w-[1600px] mx-auto">
+<div class="grid grid-cols-12 gap-6 lg:h-[800px]">
+<div class="col-span-12 md:col-span-4 flex flex-col justify-center pr-0 md:pr-12 mb-12 md:mb-0">
+<h2 class="text-6xl font-headline italic mb-8 leading-tight">Guia<br/>Capão Novo</h2>
+<p class="text-on-surface-variant font-light leading-relaxed text-lg italic">
+                    "O guia completo de Capão Novo: imóveis, bairros, dicas e oportunidades para viver e investir melhor."
+                </p>
+</div>
+<div class="col-span-12 md:col-span-8 grid grid-cols-1 md:grid-cols-2 grid-rows-none md:grid-rows-2 gap-6">
+<div class="relative overflow-hidden group aspect-video md:aspect-auto">
+<img alt="Aerial view of Capão Novo coast" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" src="https://lh3.googleusercontent.com/aida/ADBb0ujen_wDvg7Kki_W9pPkcJ-R0LPUMbYNgw4cOFLQ_9JYeYfJUie7YogehdqP4n_hD6gHEPoYpHQ0AtrG_5jWUl635O3jko5iZWBxNIgebv4wrLtNNK07vJQNSinz8UN9oo9W54_5XnkZO4jRq6XwdpmIy1EoJYtcMbgBE12CukhSQ9vBHFsj6NHxSW9b7IKkNltQeS8o7Rq-OejgpuVRwRXnnOkaR-rjadUDRt_EiJEUVEbxtC2lX6GLyQz6f9ScRdFzDQmAYbaUQRE"/>
+</div>
+<div class="relative overflow-hidden group md:row-span-2 aspect-[3/4] md:aspect-auto">
+<img alt="Bird's eye view of beachfront leisure area" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" src="https://lh3.googleusercontent.com/aida/ADBb0ugevL2dGUl3VxuZCrD2TxPjJ4fPr5jbfCsHf2GM_NV-VFrF2p3kIYL82SqGADHdZdNcJjaETH1blf6LHfcsZU6ucBKSBMo6c01_E9bPJj9k-E1ysLMmm2JLuntGMZb8I0hUpnoVIK5FrpA0R9e2EzxFYk5jouwhBpcGpAz-Y9yS_y7TfGthmJCoPIhniEiAPkeqkmZwOiu4HnBRYf_OOJD50J4XqqDPdzKPPSWhAXgfUtKGq5Ez2nV8sX7ArTSjfsP13AdZBdGsui4"/>
+</div>
+<div class="relative overflow-hidden group aspect-video md:aspect-auto">
+<img alt="Aerial landscape of Capão Novo during sunset" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" src="https://lh3.googleusercontent.com/aida/ADBb0ugUEd7PChM1wEZ9jQlE0SORMvzp-prtBROpUOpeBP2dv0f0yrBKlcdfEwaanMVQlSDxmVVaEFThWfzZjK_PbOYP3bUaLCc-ihFAQRQJMh79NRVqICYeLeQ8vh2aU59L1uXF1sDYKBtDk9gNSZMbuVUOpnADJkaefJqDv76cKLVFJ0saWtFnu7RF_staBzUo8AWrvj_rVWUqrQ-_a6DGToJj29Z__Dwx5uW1fyfLIDngd-0zS9vIvSOeRiztK6-CeM59jzyGWjh-pto"/>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 5. Inteligência Imobiliária (Blog) - REDESIGNED -->
+<section class="relative py-32 bg-[#F4F4F4] overflow-hidden">
+<div class="absolute inset-0 concrete-texture pointer-events-none"></div>
+<div class="relative z-10 px-6 max-w-[1200px] mx-auto">
+<div class="text-center mb-24">
+<h2 class="text-4xl font-headline text-primary uppercase tracking-[0.2em] mb-4">Inteligência Imobiliária</h2>
+<div class="w-16 h-px bg-gold-accent mx-auto"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24">
+<!-- Article 1: Market Analysis -->
+<article class="flex flex-col group">
+<div class="aspect-[16/10] overflow-hidden mb-8 shadow-2xl bg-white">
+<img alt="Estratégia de Investimento" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1PeH5zMmhZ0zjkXhcuFZ6klC2pfRCc6lWgMZzgB1yR4PWabfN7pBno8ggV2sDpRPNDbXmOljisHY6t4QBHr3_uT3TQfG296KkwYoIfdejQd0_3GasLgXjZ_dQVs3PDY3xTt0QOqO38LI45zN1XKXHDxAA3DAbyeTx0DZIZVKBIQ2OD5aGZmY8gFq_xOVphw7Li8BMKcky98etu0c5aitolvMy8Sgq3VoId0qgchOx6k-nGY7rFzvoLgSPSmARAnTsX6s43v_BDrWE"/>
+</div>
+<div class="flex flex-col flex-grow">
+<span class="text-gold-accent text-[10px] font-bold tracking-[0.4em] uppercase mb-4 block">Estratégia</span>
+<h3 class="text-2xl md:text-3xl font-headline font-bold text-primary mb-5 group-hover:text-gold-accent transition-colors duration-300">Por que investir em Capão Novo agora?</h3>
+<p class="text-on-surface-variant text-sm md:text-base leading-relaxed mb-8 flex-grow">
+                        Análise técnica sobre a valorização de 18% ao ano no quadrante norte e as novas infraestruturas de lazer que estão transformando a região.
+                    </p>
+<a class="inline-flex items-center gap-3 text-gold-accent font-bold text-xs tracking-[0.2em] uppercase group/link" href="#">
+                        LER ARTIGO <span class="material-symbols-outlined text-lg group-hover/link:translate-x-1 transition-transform">trending_flat</span>
+</a>
+</div>
+</article>
+<!-- Article 2: Curated Selection -->
+<article class="flex flex-col group">
+<div class="aspect-[16/10] overflow-hidden mb-8 shadow-2xl bg-white">
+<img alt="Seleção Curada de Imóveis" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida/ADBb0ugGqrrGOr6ZBQjLGnUyXSXvdJMXUvPpl1Mt8fsG_pXn6tr6-6nMvKl4opJi4P1OXwScjd1_L8-CYdRJFBSRjcD742R6pmB68wsb0JjcLCZWvbyieVeuOdC4spPcnUFoKs9n9gkEau3Mwv8VDyy50lJXop82i2VuvAtB4LuPEB1a5vao1KydlvJiZ5RWg0D1ezJMADtmgOQQZU6OF8pMKHVnvEau6YAXspwSrfKApYXup5RZAYFDdHsh-Dl0_ChGTS7u1CJj-pL2WQ"/>
+</div>
+<div class="flex flex-col flex-grow">
+<span class="text-gold-accent text-[10px] font-bold tracking-[0.4em] uppercase mb-4 block">Curadoria</span>
+<h3 class="text-2xl md:text-3xl font-headline font-bold text-primary mb-5 group-hover:text-gold-accent transition-colors duration-300">Os 5 melhores imóveis frente-mar de 2026</h3>
+<p class="text-on-surface-variant text-sm md:text-base leading-relaxed mb-8 flex-grow">
+                        Nossa seleção anual de residências que redefinem o conceito de luxo e "pé-na-areia" no litoral gaúcho. Conheça as exclusividades do ano.
+                    </p>
+<a class="inline-flex items-center gap-3 text-gold-accent font-bold text-xs tracking-[0.2em] uppercase group/link" href="#">
+                        LER ARTIGO <span class="material-symbols-outlined text-lg group-hover/link:translate-x-1 transition-transform">trending_flat</span>
+</a>
+</div>
+</article>
+</div>
+</div>
+</section>
+<!-- CTA Section - Updated for Readability -->
+<section class="py-24 text-center overflow-hidden relative bg-primary-container">
+<div class="absolute inset-0 concrete-texture opacity-[0.03]"></div>
+<div class="relative z-10 max-w-4xl mx-auto px-6">
+<span class="text-gold-accent text-xs font-bold tracking-[0.4em] uppercase mb-6 block">FALE COM UM ESPECIALISTA</span>
+<h2 class="text-4xl md:text-5xl lg:text-6xl font-headline text-white mb-8 leading-tight">Quer comprar imóvel em<br/>Capão Novo?</h2>
+<p class="text-white/70 font-body text-lg md:text-xl max-w-2xl mx-auto mb-12 leading-relaxed">
+            Nossa equipe está pronta para encontrar a melhor oportunidade para você no litoral gaúcho.
+        </p>
+<div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20">
+<a class="w-full sm:w-auto flex items-center justify-center gap-3 bg-[#128C7E] hover:bg-[#075E54] text-white px-8 py-4 font-bold text-sm uppercase tracking-widest transition-all shadow-lg" href="#">
+<svg class="w-5 h-5 fill-current" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"></path></svg>
+<span>Falar no WhatsApp</span>
+</a>
+<a class="w-full sm:w-auto flex items-center justify-center gap-3 bg-gold-accent hover:bg-[#b89b5e] text-primary-container px-8 py-4 font-bold text-sm uppercase tracking-widest transition-all shadow-lg" href="#">
+<span class="material-symbols-outlined text-xl">mail</span>
+<span>Receber oportunidades exclusivas</span>
+</a>
+</div>
+<div class="flex flex-col md:flex-row items-center justify-center gap-12 md:gap-24">
+<div class="flex flex-col items-center">
+<span class="text-3xl md:text-4xl font-headline font-bold text-gold-accent mb-2">+30</span>
+<span class="text-[10px] tracking-[0.4em] text-white/40 font-bold uppercase">ANOS DE MERCADO</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="text-3xl md:text-4xl font-headline font-bold text-gold-accent mb-2">+1.000</span>
+<span class="text-[10px] tracking-[0.4em] text-white/40 font-bold uppercase">IMÓVEIS NEGOCIADOS</span>
+</div>
+</div>
+</div>
+</section>
+<!-- WhatsApp Sticky Button -->
+<a class="fixed bottom-8 right-8 z-[60] bg-[#128C7E] text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-transform flex items-center justify-center" href="#" target="_blank">
+<svg class="w-7 h-7 fill-current" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"></path></svg>
+</a>
+<!-- Footer -->
+<footer class="bg-primary-container text-white w-full relative">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-12 px-12 py-24 w-full max-w-[1920px] mx-auto">
+<div class="md:col-span-4">
+<div class="text-2xl font-bold tracking-tighter uppercase mb-8">Imóveis Capão Novo</div>
+<p class="text-white/60 text-sm leading-loose max-w-sm">
+                Especialistas em imóveis em Capão Novo. Curadoria exclusiva para viver ou investir com segurança no litoral norte gaúcho.
+            </p>
+</div>
+<div class="md:col-span-2 space-y-4">
+<h4 class="text-gold-accent font-bold text-xs tracking-[0.3em] uppercase mb-8">Imóveis</h4>
+<ul class="space-y-4">
+<li><a class="text-white/60 hover:text-white transition-colors text-sm uppercase tracking-widest" href="#">Casas</a></li>
+<li><a class="text-white/60 hover:text-white transition-colors text-sm uppercase tracking-widest" href="#">Apartamentos</a></li>
+<li><a class="text-white/60 hover:text-white transition-colors text-sm uppercase tracking-widest" href="#">Terrenos</a></li>
+<li><a class="text-white/60 hover:text-white transition-colors text-sm uppercase tracking-widest" href="#">Condomínios</a></li>
+</ul>
+</div>
+<div class="md:col-span-2 space-y-4">
+<h4 class="text-gold-accent font-bold text-xs tracking-[0.3em] uppercase mb-8">Regiões</h4>
+<ul class="space-y-4">
+<li><a class="text-white/60 hover:text-white transition-colors text-sm uppercase tracking-widest" href="#">Posto 4</a></li>
+<li><a class="text-white/60 hover:text-white transition-colors text-sm uppercase tracking-widest" href="#">Posto 5</a></li>
+<li><a class="text-white/60 hover:text-white transition-colors text-sm uppercase tracking-widest" href="#">Village</a></li>
+</ul>
+</div>
+<div class="md:col-span-2 space-y-4">
+<h4 class="text-gold-accent font-bold text-xs tracking-[0.3em] uppercase mb-8">Empresa</h4>
+<ul class="space-y-4">
+<li><a class="text-white/60 hover:text-white transition-colors text-sm uppercase tracking-widest" href="#">Guia Capão Novo</a></li>
+<li><a class="text-white/60 hover:text-white transition-colors text-sm uppercase tracking-widest" href="#">Sobre</a></li>
+<li><a class="text-white/60 hover:text-white transition-colors text-sm uppercase tracking-widest" href="#">Contato</a></li>
+</ul>
+</div>
+<div class="md:col-span-2 space-y-4">
+<h4 class="text-gold-accent font-bold text-xs tracking-[0.3em] uppercase mb-8">Newsletter</h4>
+<p class="text-white/60 text-[11px] leading-relaxed mb-4 uppercase tracking-wider">Receba oportunidades exclusivas de Imóveis Capão Novo. antes de ir para o mercado</p>
+<div class="flex border-b border-white/20 pb-2">
+<input class="bg-transparent text-white text-sm outline-none w-full placeholder:text-white/30" placeholder="Seu e-mail" type="email"/>
+<button class="text-gold-accent"><span class="material-symbols-outlined">trending_flat</span></button>
+</div>
+</div>
+</div>
+<div class="px-12 py-10 border-t border-white/5 text-center text-white/30 text-[10px] tracking-[0.3em] uppercase">
+        © 2026 Imóveis Capão Novo — Seu Melhor Negócio no Litoral Começa Aqui.
+    </div>
+</footer>
+```</body></html>
