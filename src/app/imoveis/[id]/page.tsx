@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { PROPERTIES } from '@/data/properties';
+import { getPropertyBySlugOrId } from '@/lib/actions/property.actions';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/home/Footer';
 import { 
@@ -20,11 +20,16 @@ import Link from 'next/link';
 
 export default async function PropertyPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const property = PROPERTIES.find((p) => p.id === id);
+  const result = await getPropertyBySlugOrId(id);
 
-  if (!property) {
+  if (!result.success || !result.property) {
     notFound();
   }
+
+  const property = result.property;
+  // Default values mapping to old format temporarily
+  const mainImage = property.images?.find((img: any) => img.isMain)?.url || property.images?.[0]?.url || '/placeholder.jpg';
+  const priceFormatted = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(property.price);
 
   return (
     <main className="min-h-screen bg-slate-50">
@@ -62,7 +67,7 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
                   Exclusividade
                 </span>
                 <span className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em]">
-                  ID: #{property.id.padStart(4, '0')}
+                  ID: #{property._id?.toString().slice(-6) || '0000'}
                 </span>
               </div>
               <h1 className="text-5xl md:text-6xl font-serif text-slate-900 leading-tight mb-6">
@@ -70,21 +75,21 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
               </h1>
               <div className="flex items-center gap-2 text-slate-500 font-medium">
                 <MapPin size={18} className="text-accent" />
-                {property.location}
+                {property.location || property.address || ''}
               </div>
             </div>
 
             {/* Gallery Mockup (main image for now) */}
             <div className="relative aspect-video overflow-hidden bg-slate-200 group">
               <Image
-                src={property.image}
+                src={mainImage}
                 alt={property.title}
                 fill
                 className="object-cover"
               />
               <div className="absolute bottom-6 right-6">
                 <button className="bg-white/90 backdrop-blur-md text-slate-900 px-6 py-3 text-xs font-black uppercase tracking-widest hover:bg-white transition-colors">
-                  Ver todas as {property.gallery.length} fotos
+                  Ver todas as {property.images?.length || 0} fotos
                 </button>
               </div>
             </div>
@@ -92,10 +97,10 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
             {/* Quick Details Grid */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[
-                { icon: <Square size={20} />, label: "Área Total", value: property.details.area },
-                { icon: <Bed size={20} />, label: "Dormitórios", value: property.beds.split(',')[0] },
-                { icon: <Bath size={20} />, label: "Banheiros", value: property.details.bathrooms },
-                { icon: <Car size={20} />, label: "Vagas", value: property.details.garage },
+                { icon: <Square size={20} />, label: "Área Total", value: `${property.features?.area || 0}m²` },
+                { icon: <Bed size={20} />, label: "Dormitórios", value: property.features?.bedrooms || 0 },
+                { icon: <Bath size={20} />, label: "Banheiros", value: property.features?.bathrooms || 0 },
+                { icon: <Car size={20} />, label: "Vagas", value: property.features?.parking || 0 },
               ].map((item, idx) => (
                 <div key={idx} className="bg-white p-6 border border-slate-100 flex flex-col items-center text-center">
                   <div className="text-accent mb-3">{item.icon}</div>
@@ -121,7 +126,7 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
                 Diferenciais e <span className="italic">Comodidades</span>
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4">
-                {property.features.map((feature, idx) => (
+                {property.amenities?.map((feature: string, idx: number) => (
                   <div key={idx} className="flex items-center gap-3 text-slate-600">
                     <CheckCircle2 size={18} className="text-accent" />
                     <span className="text-sm font-medium">{feature}</span>
@@ -140,18 +145,20 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
                 Valor de Investimento
               </span>
               <div className="text-4xl font-serif italic mb-8">
-                {property.price}
+                {priceFormatted}
               </div>
               
               <div className="space-y-4 mb-10 pt-8 border-t border-white/10">
-                <div className="flex justify-between text-xs tracking-widest uppercase">
-                  <span className="text-white/40">IPTU anual</span>
-                  <span>{property.details.iptu}</span>
-                </div>
-                {property.details.condo && (
+                {property.values?.iptu && (
+                  <div className="flex justify-between text-xs tracking-widest uppercase">
+                    <span className="text-white/40">IPTU anual</span>
+                    <span>{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(property.values.iptu)}</span>
+                  </div>
+                )}
+                {property.values?.condo && (
                   <div className="flex justify-between text-xs tracking-widest uppercase">
                     <span className="text-white/40">Condomínio</span>
-                    <span>{property.details.condo}</span>
+                    <span>{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(property.values.condo)}</span>
                   </div>
                 )}
               </div>

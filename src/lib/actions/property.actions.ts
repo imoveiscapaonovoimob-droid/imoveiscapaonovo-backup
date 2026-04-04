@@ -206,4 +206,24 @@ export async function searchProperties(filters: any) {
   }
 }
 
+export async function getPropertyBySlugOrId(idOrSlug: string) {
+  try {
+    await connectDB();
+    const query = idOrSlug.match(/^[0-9a-fA-F]{24}$/) 
+      ? { _id: idOrSlug } 
+      : { slug: idOrSlug };
+      
+    const property = await Property.findOne(query).lean();
+    
+    if (!property) return { success: false, property: null };
+    
+    return { 
+      success: true, 
+      property: JSON.parse(JSON.stringify(property)) 
+    };
+  } catch (error: any) {
+    console.error('Error fetching property by slug/id:', error);
+    return { success: false, error: error.message, property: null };
+  }
+}
 
