@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 
@@ -18,6 +19,11 @@ interface PropertyGalleryProps {
 export function PropertyGallery({ title, images, mainImageFallback }: PropertyGalleryProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Esc to close
   useEffect(() => {
@@ -63,6 +69,53 @@ export function PropertyGallery({ title, images, mainImageFallback }: PropertyGa
     setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
   };
 
+  const modalContent = isOpen ? (
+    <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/95 backdrop-blur-sm">
+      <button
+        onClick={() => setIsOpen(false)}
+        className="absolute top-6 right-6 text-white/50 hover:text-white transition-colors z-50 p-4"
+        aria-label="Fechar Galeria"
+      >
+        <X size={32} />
+      </button>
+
+      <div className="relative w-full h-full max-w-7xl max-h-[90vh] mx-auto flex items-center justify-center p-4 md:p-12">
+        {images.length > 1 && (
+          <button
+            onClick={prevImage}
+            className="absolute left-2 md:left-6 text-white/50 hover:text-white transition-colors z-50 p-3 bg-black/40 rounded-full hover:bg-black/80"
+          >
+            <ChevronLeft size={48} />
+          </button>
+        )}
+
+        <div className="relative w-full h-full">
+          <Image
+            src={images[currentIndex].url}
+            alt={`${title} - Foto ${currentIndex + 1}`}
+            fill
+            className="object-contain"
+            sizes="100vw"
+            priority
+          />
+        </div>
+
+        {images.length > 1 && (
+          <button
+            onClick={nextImage}
+            className="absolute right-2 md:right-6 text-white/50 hover:text-white transition-colors z-50 p-3 bg-black/40 rounded-full hover:bg-black/80"
+          >
+            <ChevronRight size={48} />
+          </button>
+        )}
+      </div>
+
+      <div className="absolute bottom-6 left-0 right-0 flex justify-center text-white/50 text-sm font-medium tracking-widest uppercase">
+        {currentIndex + 1} / {images.length}
+      </div>
+    </div>
+  ) : null;
+
   return (
     <>
       {/* Thumbnail / Cover */}
@@ -73,65 +126,24 @@ export function PropertyGallery({ title, images, mainImageFallback }: PropertyGa
           fill
           className="object-cover"
         />
-        <div className="absolute bottom-6 right-6">
+        <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500 pointer-events-none" />
+        <div className="absolute bottom-6 right-6 z-10">
           <button 
-            onClick={() => {
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
               setCurrentIndex(0);
               setIsOpen(true);
             }}
-            className="bg-white/90 backdrop-blur-md text-slate-900 px-6 py-3 text-xs font-black uppercase tracking-widest hover:bg-white transition-colors"
+            className="bg-white/90 backdrop-blur-md text-slate-900 px-6 py-3 text-xs font-black uppercase tracking-widest hover:bg-white hover:scale-105 active:scale-95 transition-all shadow-xl cursor-pointer"
           >
             Ver todas as {images.length} fotos
           </button>
         </div>
       </div>
 
-      {/* Fullscreen Modal */}
-      {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-sm">
-          <button
-            onClick={() => setIsOpen(false)}
-            className="absolute top-6 right-6 text-white/50 hover:text-white transition-colors z-50 p-2"
-          >
-            <X size={32} />
-          </button>
-
-          <div className="relative w-full h-full max-w-6xl max-h-[85vh] mx-auto flex items-center justify-center p-4">
-            {images.length > 1 && (
-              <button
-                onClick={prevImage}
-                className="absolute left-4 md:left-10 text-white/50 hover:text-white transition-colors z-50 p-2 bg-black/20 rounded-full hover:bg-black/50"
-              >
-                <ChevronLeft size={48} />
-              </button>
-            )}
-
-            <div className="relative w-full h-full">
-              <Image
-                src={images[currentIndex].url}
-                alt={`${title} - Foto ${currentIndex + 1}`}
-                fill
-                className="object-contain"
-                sizes="100vw"
-                priority
-              />
-            </div>
-
-            {images.length > 1 && (
-              <button
-                onClick={nextImage}
-                className="absolute right-4 md:right-10 text-white/50 hover:text-white transition-colors z-50 p-2 bg-black/20 rounded-full hover:bg-black/50"
-              >
-                <ChevronRight size={48} />
-              </button>
-            )}
-          </div>
-
-          <div className="absolute bottom-6 left-0 right-0 flex justify-center text-white/50 text-sm font-medium tracking-widest uppercase">
-            {currentIndex + 1} / {images.length}
-          </div>
-        </div>
-      )}
+      {/* Fullscreen Modal using Portal */}
+      {mounted && modalContent && createPortal(modalContent, document.body)}
     </>
   );
 }
