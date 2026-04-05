@@ -2,6 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { getPropertyBySlugOrId } from '@/lib/actions/property.actions';
+import { PropertyGallery } from '@/components/imoveis/PropertyGallery';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/home/Footer';
 import { 
@@ -79,20 +80,12 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
               </div>
             </div>
 
-            {/* Gallery Mockup (main image for now) */}
-            <div className="relative aspect-video overflow-hidden bg-slate-200 group">
-              <Image
-                src={mainImage}
-                alt={property.title}
-                fill
-                className="object-cover"
-              />
-              <div className="absolute bottom-6 right-6">
-                <button className="bg-white/90 backdrop-blur-md text-slate-900 px-6 py-3 text-xs font-black uppercase tracking-widest hover:bg-white transition-colors">
-                  Ver todas as {property.images?.length || 0} fotos
-                </button>
-              </div>
-            </div>
+            {/* Gallery Component */}
+            <PropertyGallery 
+              title={property.title} 
+              images={property.images} 
+              mainImageFallback="/placeholder.jpg" 
+            />
 
             {/* Quick Details Grid */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
