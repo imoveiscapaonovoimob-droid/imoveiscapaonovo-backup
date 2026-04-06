@@ -80,10 +80,10 @@ export function PropertyShareActions({ title, slug, mainImage, price, bedrooms, 
         console.warn("Falha ao carregar a imagem para o canvas (CORS bloqueou)");
       }
 
-      // Desenhar a Imagem (75% altura = 810px) com o recurso de cortar proporcional (object-fit: cover)
+      // Desenhar a Imagem (2/3 da altura = 720px) com object-fit: cover
       if (imgObj && imgObj.width > 0) {
         const targetW = 1080;
-        const targetH = 810;
+        const targetH = 720;
         const imgRatio = imgObj.width / imgObj.height;
         const targetRatio = targetW / targetH;
         let drawW, drawH, drawX, drawY;
@@ -102,54 +102,95 @@ export function PropertyShareActions({ title, slug, mainImage, price, bedrooms, 
         ctx.drawImage(imgObj, drawX, drawY, drawW, drawH, 0, 0, targetW, targetH);
       } else {
         ctx.fillStyle = '#112233';
-        ctx.fillRect(0, 0, 1080, 810);
+        ctx.fillRect(0, 0, 1080, 720);
       }
 
-      // Logo/Marca D'água
-      ctx.fillStyle = 'rgba(0, 22, 41, 0.85)';
+      // Adicionar gradiente escuro de transição entre a imagem e o texto
+      const gradient = ctx.createLinearGradient(0, 600, 0, 720);
+      gradient.addColorStop(0, 'rgba(0, 22, 41, 0)');
+      gradient.addColorStop(1, 'rgba(0, 22, 41, 1)');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 600, 1080, 120);
+
+      // Fundo Inferior (Azul super escuro/preto da marca)
+      ctx.fillStyle = '#00101C'; // Um pouco mais escuro para maior contraste
+      ctx.fillRect(0, 720, 1080, 360);
+
+      // Logo/Marca D'água mais sutil
+      ctx.fillStyle = 'rgba(0, 16, 28, 0.9)';
       ctx.beginPath();
-      ctx.roundRect(40, 40, 420, 80, 10);
+      ctx.roundRect(40, 40, 380, 70, 8);
       ctx.fill();
       
       ctx.fillStyle = '#FFFFFF';
-      ctx.font = '36px "Times New Roman", serif'; // Simula Manrope Serif
-      ctx.fillText('Imóveis', 70, 92);
+      ctx.font = '30px system-ui, -apple-system, sans-serif'; 
+      ctx.fillText('Imóveis', 70, 86);
       ctx.fillStyle = '#C3A562';
-      ctx.font = 'bold 24px Arial, sans-serif'; 
-      ctx.fillText('CAPÃO NOVO', 200, 90);
+      ctx.font = '900 22px system-ui, -apple-system, sans-serif'; 
+      ctx.fillText('CAPÃO NOVO', 200, 85);
 
-      // Rodapé Textos (Y = 810 a 1080)
+      // Rodapé Textos (Y = 720 a 1080)
       ctx.fillStyle = '#C3A562';
-      ctx.font = 'bold 20px Arial';
-      ctx.fillText('LANÇAMENTO EXCLUSIVO', 60, 870);
+      ctx.font = '800 18px system-ui, -apple-system, sans-serif';
+      ctx.letterSpacing = '4px'; // Supported no chrome moderno
+      ctx.fillText('LANÇAMENTO EXCLUSIVO', 60, 790);
+      ctx.letterSpacing = '0px';
 
+      // Quebra de Texto Automática para o Título (Line wrap)
       ctx.fillStyle = '#FFFFFF';
-      ctx.font = 'bold 46px "Times New Roman", serif';
-      // Quebrar o título se for muito grande
-      const maxTitleWidth = 960;
-      let titleText = title;
-      if (ctx.measureText(titleText).width > maxTitleWidth) {
-         titleText = titleText.substring(0, 45) + '...';
-      }
-      ctx.fillText(titleText, 60, 940);
+      ctx.font = '800 48px system-ui, -apple-system, sans-serif';
+      
+      const wrapText = (context: CanvasRenderingContext2D, text: string, x: number, y: number, maxWidth: number, lineHeight: number) => {
+        const words = text.split(' ');
+        let line = '';
+        let currentY = y;
+        let linesCount = 0;
 
-      // Linha Separadora
-      ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+        for (let n = 0; n < words.length; n++) {
+          const testLine = line + words[n] + ' ';
+          const metrics = context.measureText(testLine);
+          const testWidth = metrics.width;
+          if (testWidth > maxWidth && n > 0) {
+            context.fillText(line, x, currentY);
+            line = words[n] + ' ';
+            currentY += lineHeight;
+            linesCount++;
+            if (linesCount >= 2) {
+               // Limita a 2 linhas e adiciona reticências se houver mais palavras
+               line = line.trim() + '...';
+               break;
+            }
+          } else {
+            line = testLine;
+          }
+        }
+        if (linesCount < 2) {
+          context.fillText(line, x, currentY);
+        }
+      };
+
+      // Escreve até 2 linhas de texto para o título sem cortar a última palavra
+      wrapText(ctx, title, 60, 860, 960, 60);
+
+      // Linha Separadora Finíssima
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+      ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.moveTo(60, 990);
-      ctx.lineTo(1020, 990);
+      ctx.moveTo(60, 980);
+      ctx.lineTo(1020, 980);
       ctx.stroke();
 
-      // Features + Preço
-      ctx.fillStyle = 'rgba(255,255,255,0.7)';
-      ctx.font = 'bold 24px Arial';
-      const features = [area ? `${area}M²` : '', bedrooms ? `${bedrooms} DORMS` : ''].filter(Boolean).join('   |   ');
-      ctx.fillText(features, 60, 1040);
+      // Features / Metragens
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+      ctx.font = '600 22px system-ui, -apple-system, sans-serif';
+      const features = [area ? `${area} M²` : '', bedrooms ? `${bedrooms} DORMS` : ''].filter(Boolean).join('   •   ');
+      ctx.fillText(features, 60, 1030);
 
+      // Preço Extra Gigante e Destacado
       ctx.fillStyle = '#C3A562';
-      ctx.font = 'italic bold 56px "Times New Roman", serif';
+      ctx.font = '800 58px system-ui, -apple-system, sans-serif';
       const priceMetrics = ctx.measureText(price);
-      ctx.fillText(price, 1020 - priceMetrics.width, 1045);
+      ctx.fillText(price, 1020 - priceMetrics.width, 1035);
 
       // Exportar para Arquivo
       const blob = await new Promise<Blob | null>(res => canvas.toBlob(res, 'image/png'));
