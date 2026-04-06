@@ -6,10 +6,38 @@ import Property from '@/models/Property';
 import cloudinary from '@/lib/cloudinary';
 import { slugify } from '@/lib/utils';
 
+// Remove campos com string vazia que têm enum no schema (Mongoose rejeita '' como valor)
+function sanitizeEnums(data: any) {
+  const clone = { ...data };
+
+  // address: se vazio, usa string genérica (campo required no schema)
+  if (!clone.address || clone.address.trim() === '') {
+    clone.address = 'A divulgar';
+  }
+
+  // strategicData.urgency
+  if (clone.strategicData?.urgency === '') {
+    clone.strategicData = { ...clone.strategicData, urgency: undefined };
+  }
+
+  // propertyProfile.classification
+  if (clone.propertyProfile?.classification === '') {
+    clone.propertyProfile = { ...clone.propertyProfile, classification: undefined };
+  }
+
+  // documentation.status
+  if (clone.documentation?.status === '') {
+    clone.documentation = { ...clone.documentation, status: undefined };
+  }
+
+  return clone;
+}
+
 export async function createProperty(formData: any) {
   try {
     await connectDB();
 
+    const sanitized = sanitizeEnums(formData);
     const {
       title,
       description,
@@ -27,7 +55,7 @@ export async function createProperty(formData: any) {
       images,
       isPublished,
       isFeatured,
-    } = formData;
+    } = sanitized;
 
     // Basic Validation
     if (!title || !price || !category) {
@@ -102,22 +130,22 @@ export async function createProperty(formData: any) {
       isFeatured:  Boolean(isFeatured),
 
       // ── Novos módulos de inteligência comercial ──────────────────────────
-      strategicData:          formData.strategicData          || {},
+      strategicData:          sanitized.strategicData          || {},
       commercialIntelligence: {
-        commissionPercentage: formData.commercialIntelligence?.commissionPercentage
-          ? Number(formData.commercialIntelligence.commissionPercentage) : undefined,
-        netValueExpected: formData.commercialIntelligence?.netValueExpected
-          ? Number(formData.commercialIntelligence.netValueExpected) : undefined,
-        proposalsHistory: formData.commercialIntelligence?.proposalsHistory || undefined,
+        commissionPercentage: sanitized.commercialIntelligence?.commissionPercentage
+          ? Number(sanitized.commercialIntelligence.commissionPercentage) : undefined,
+        netValueExpected: sanitized.commercialIntelligence?.netValueExpected
+          ? Number(sanitized.commercialIntelligence.netValueExpected) : undefined,
+        proposalsHistory: sanitized.commercialIntelligence?.proposalsHistory || undefined,
       },
-      propertyProfile:        formData.propertyProfile        || {},
+      propertyProfile:        sanitized.propertyProfile        || {},
       advancedLocation: {
-        distanceToSea: formData.advancedLocation?.distanceToSea
-          ? Number(formData.advancedLocation.distanceToSea) : undefined,
-        proximities: formData.advancedLocation?.proximities || [],
+        distanceToSea: sanitized.advancedLocation?.distanceToSea
+          ? Number(sanitized.advancedLocation.distanceToSea) : undefined,
+        proximities: sanitized.advancedLocation?.proximities || [],
       },
-      idealCustomerProfile: formData.idealCustomerProfile || undefined,
-      documentation:        formData.documentation        || {},
+      idealCustomerProfile: sanitized.idealCustomerProfile || undefined,
+      documentation:        sanitized.documentation        || {},
     });
 
     revalidatePath('/');
