@@ -69,7 +69,14 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
             Voltar para Portfólio
           </Link>
           
-          <PropertyShareActions title={property.title} slug={property.slug} />
+          <PropertyShareActions 
+            title={property.title} 
+            slug={property.slug}
+            mainImage={property.images?.find((i: any) => i.isMain)?.url || property.images?.[0]?.url || '/placeholder.jpg'}
+            price={priceFormatted}
+            bedrooms={property.features?.bedrooms}
+            area={property.features?.area}
+          />
         </div>
       </div>
 
