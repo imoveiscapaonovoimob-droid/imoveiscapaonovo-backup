@@ -12,14 +12,14 @@ import {
   CheckCircle2, 
   MapPin, 
   ArrowLeft,
-  Share2,
-  Heart,
   MessageSquare,
   Building,
   Calendar,
   Compass
 } from 'lucide-react';
 import Link from 'next/link';
+import { WHATSAPP_URL } from '@/lib/constants';
+import { PropertyShareActions } from '@/components/imoveis/PropertyShareActions';
 
 const amenityMap: Record<string, string> = {
   barbecue: 'Churrasqueira',
@@ -69,14 +69,7 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
             Voltar para Portfólio
           </Link>
           
-          <div className="flex items-center gap-4">
-            <button className="p-2 text-[#001629]/60 hover:text-accent transition-colors">
-              <Share2 size={18} />
-            </button>
-            <button className="p-2 text-[#001629]/60 hover:text-accent transition-colors">
-              <Heart size={18} />
-            </button>
-          </div>
+          <PropertyShareActions title={property.title} slug={property.slug} />
         </div>
       </div>
 
@@ -235,15 +228,24 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
                   </div>
                 )}
 
-                <button className="w-full bg-accent text-white py-5 px-6 text-[11px] font-black uppercase tracking-[0.2em] hover:bg-[#b0904a] transition-colors duration-300 mb-4 rounded-sm flex items-center justify-center relative overflow-hidden group">
+                {/* Botões Funcionais de Contato Direcionados ao WhatsApp */}
+                <a 
+                  href={`${WHATSAPP_URL}?text=${encodeURIComponent(`Olá! Gostaria de agendar uma visita exclusiva para o imóvel: ${property.title}. Poderiam me dar mais informações?`)}`}
+                  target="_blank" rel="noopener noreferrer"
+                  className="w-full bg-accent text-white py-5 px-6 text-[11px] font-black uppercase tracking-[0.2em] hover:bg-[#b0904a] transition-colors duration-300 mb-4 rounded-sm flex items-center justify-center relative overflow-hidden group"
+                >
                   <span className="relative z-10 w-full text-center">Agendar Visita Exclusiva</span>
                   <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-                </button>
+                </a>
                 
-                <button className="w-full flex items-center justify-center gap-3 bg-white/5 border border-white/10 py-5 text-[11px] font-black uppercase tracking-[0.2em] hover:bg-white/10 transition-colors duration-300 rounded-sm group">
+                <a 
+                  href={`${WHATSAPP_URL}?text=${encodeURIComponent(`Olá! Tenho interesse no imóvel que encontrei no site: ${property.title}.`)}`}
+                  target="_blank" rel="noopener noreferrer"
+                  className="w-full flex items-center justify-center gap-3 bg-white/5 border border-white/10 py-5 text-[11px] font-black uppercase tracking-[0.2em] hover:bg-white/10 transition-colors duration-300 rounded-sm group"
+                >
                   <MessageSquare size={16} className="text-accent group-hover:scale-110 transition-transform" />
                   <span>Falar no WhatsApp</span>
-                </button>
+                </a>
               </div>
 
               {/* Agent Info - Inside the sticky flow to never roll under the card */}
