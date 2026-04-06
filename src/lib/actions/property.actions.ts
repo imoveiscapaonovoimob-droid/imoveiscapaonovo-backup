@@ -165,9 +165,7 @@ export async function createProperty(formData: any) {
         ? sanitized.financialStatus : undefined,
     });
 
-    revalidatePath('/');
-    revalidatePath('/imoveis');
-    revalidatePath(`/imoveis/${category}`);
+    revalidatePath('/', 'layout');
 
     return { success: true, propertyId: newProperty._id.toString() };
   } catch (error: any) {
@@ -212,8 +210,7 @@ export async function deleteProperty(id: string) {
 
     await Property.findByIdAndDelete(id);
 
-    revalidatePath('/admin/dashboard');
-    revalidatePath('/');
+    revalidatePath('/', 'layout');
 
     return { success: true };
   } catch (error: any) {
