@@ -63,15 +63,14 @@ export function PropertyShareActions({ title, slug, mainImage, price, bedrooms, 
 
       // 2. Copia a Legenda
       navigator.clipboard.writeText(captionFormat);
-      alert('Texto da Legenda foi copiado para sua área de transferência! Cole no post!');
 
       // 3. Compartilhamento Nativo com arquivo (para Mobile/Instagram) ou Download
       if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
         await navigator.share({
           files: [file],
           title: title,
-          text: 'Postagem pronta', // Texto da api share nativa
         });
+        // Disparar o aviso apenas DEPOIS que o share funcionou, ou não usar alert.
       } else {
         // Fallback: Baixar no Computador
         const objUrl = URL.createObjectURL(blob);
@@ -80,6 +79,8 @@ export function PropertyShareActions({ title, slug, mainImage, price, bedrooms, 
         a.download = `capao-novo-${slug}.png`;
         a.click();
         URL.revokeObjectURL(objUrl);
+        // Avisar ao usuário do computador que baixou e copiou!
+        alert('📦 Imagem baixada no seu computador e texto da Legenda foi copiado para sua área de transferência! Cole no post do seu Instagram!');
       }
     } catch (err) {
       console.error('Falha ao exportar imagem', err);
