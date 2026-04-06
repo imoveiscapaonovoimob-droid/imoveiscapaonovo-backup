@@ -50,6 +50,25 @@ export function PropertyShareActions({ title, slug, mainImage, price, bedrooms, 
     setIsGenerating(true);
 
     try {
+      // FORÇA O CARREGAMENTO DA IMAGEM EM BASE64:
+      // Isso previne que o Safari/Chrome no celular gere o quadrado preto por causa de CORS ou Image Lazy Loading
+      const response = await fetch(mainImage, { mode: 'cors' });
+      const imageBlob = await response.blob();
+      const base64DataUrl = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(imageBlob);
+      });
+
+      // Aplica o base64 diretamente no nó DOM da imagem do template
+      const imgElement = postRef.current.querySelector('img');
+      if (imgElement) {
+        imgElement.src = base64DataUrl;
+        // Tempo microscópico para a engine do Safari "printar" o base64 no DOM invisível
+        await new Promise(r => setTimeout(r, 150));
+      }
+
       // 1. Gera a imagem do elemento escondido
       const blob = await htmlToImage.toBlob(postRef.current, {
         cacheBust: true,
