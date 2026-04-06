@@ -152,24 +152,51 @@ export default function NewPropertyPage() {
         return;
       }
 
-      // Upload individual de cada foto direto ao Cloudinary via API route
-      // Evita o limite de tamanho do Server Action
+      // Upload direto ao Cloudinary pelo client (Signed Upload)
+      // Resolve o erro de 'Unexpected response' (limite de 4.5MB do Vercel)
       const uploadedImages: { url: string; public_id: string; isMain: boolean }[] = [];
       setUploadProgress({ current: 0, total: photos.length });
 
+      // Pegamos as credenciais de assinatura uma única vez ou por upload se preferir,
+      // mas como o timestamp é o mesmo por um período, podemos reutilizar.
+      const sigRes = await fetch('/api/upload/signature');
+      const sigData = await sigRes.json();
+      
+      if (!sigRes.ok) throw new Error('Falha ao obter assinatura de segurança para as fotos.');
+
       for (let i = 0; i < photos.length; i++) {
         const p = photos[i];
+        
+        // Se a foto já tem URL (ex: de uma edição anterior ou cache), não re-upload
+        if (p.url && !p.file) {
+          uploadedImages.push({ url: p.url, public_id: p.public_id, isMain: p.isMain });
+          setUploadProgress({ current: i + 1, total: photos.length });
+          continue;
+        }
+
         const fd = new FormData();
         fd.append('file', p.file);
-        fd.append('isMain', p.isMain ? 'true' : 'false');
+        fd.append('api_key', sigData.api_key);
+        fd.append('timestamp', sigData.timestamp);
+        fd.append('signature', sigData.signature);
+        fd.append('folder', sigData.folder);
 
-        const res = await fetch('/api/upload', { method: 'POST', body: fd });
+        const res = await fetch(`https://api.cloudinary.com/v1_1/${sigData.cloud_name}/image/upload`, {
+          method: 'POST',
+          body: fd,
+        });
+
         if (!res.ok) {
           const err = await res.json();
-          throw new Error(`Foto ${i + 1}: ${err.error || 'Falha no upload'}`);
+          throw new Error(`Foto ${i + 1}: ${err.error?.message || 'Falha no upload ao Cloudinary'}`);
         }
+
         const data = await res.json();
-        uploadedImages.push({ url: data.url, public_id: data.public_id, isMain: p.isMain });
+        uploadedImages.push({ 
+          url: data.secure_url, 
+          public_id: data.public_id, 
+          isMain: p.isMain 
+        });
         setUploadProgress({ current: i + 1, total: photos.length });
       }
 

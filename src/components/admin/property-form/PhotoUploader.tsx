@@ -8,6 +8,7 @@ interface Photo {
   id: string; // local id
   file?: File;
   preview: string;
+  url?: string; // Para imagens vindas do banco
   isMain: boolean;
   public_id?: string; // Para imagens já existentes no Cloudinary
 }

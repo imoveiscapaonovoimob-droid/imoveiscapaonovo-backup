@@ -194,7 +194,10 @@ export default function EditPropertyForm({ property }: Props) {
 
     try {
       const finalImages = [];
-      
+      const sigRes = await fetch('/api/upload/signature');
+      const sigData = await sigRes.json();
+      if (!sigRes.ok) throw new Error('Erro ao obter autorização para fotos.');
+
       // Processar cada foto
       for (let i = 0; i < photos.length; i++) {
         const photo = photos[i];
@@ -203,25 +206,34 @@ export default function EditPropertyForm({ property }: Props) {
         if (photo.public_id) {
           // Imagem já existente no Cloudinary
           finalImages.push({
-            url: photo.preview,
+            url: photo.preview || photo.url,
             public_id: photo.public_id,
             isMain: photo.isMain
           });
         } else if (photo.file) {
           // Nova imagem (precisa de upload)
           setUploadStatus(`Enviando foto ${i + 1} de ${photos.length}...`);
-          const base64 = await fileToBase64(photo.file);
           
-          const res = await fetch('/api/upload', {
+          const fd = new FormData();
+          fd.append('file', photo.file);
+          fd.append('api_key', sigData.api_key);
+          fd.append('timestamp', sigData.timestamp);
+          fd.append('signature', sigData.signature);
+          fd.append('folder', sigData.folder);
+
+          const res = await fetch(`https://api.cloudinary.com/v1_1/${sigData.cloud_name}/image/upload`, {
             method: 'POST',
-            body: JSON.stringify({ file: base64, isMain: photo.isMain }),
-            headers: { 'Content-Type': 'application/json' }
+            body: fd,
           });
 
-          if (!res.ok) throw new Error('Falha no upload de uma imagem');
+          if (!res.ok) {
+            const err = await res.json();
+            throw new Error(`Erro na foto ${i+1}: ${err.error?.message || 'Falha no Cloudinary'}`);
+          }
+          
           const data = await res.json();
           finalImages.push({
-            url: data.url,
+            url: data.secure_url,
             public_id: data.public_id,
             isMain: photo.isMain
           });
@@ -229,7 +241,7 @@ export default function EditPropertyForm({ property }: Props) {
       }
 
       setUploadProgress(100);
-      setUploadStatus('Finalizando...');
+      setUploadStatus('Salvando dados...');
 
       const result = await updateProperty(property._id, {
         ...formData,
