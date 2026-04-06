@@ -246,7 +246,7 @@ export async function searchProperties(filters: any) {
     const query: any = { isPublished: true };
 
     if (category && category !== 'all') {
-      query.category = category;
+      query.category = { $regex: new RegExp(`^${category}$`, 'i') };
     }
 
     if (location && location !== 'all') {

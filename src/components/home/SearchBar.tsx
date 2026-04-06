@@ -91,7 +91,7 @@ export const SearchBar = () => {
                 <option value="all">Toda a cidade</option>
                 <option value="Capão Novo">Capão Novo (Geral)</option>
                 <option value="Posto 4">Posto 4</option>
-                <option value="Arpoador">Arpoador</option>
+                <option value="Posto 5">Posto 5</option>
                 <option value="Village">Village</option>
               </select>
               <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-primary/40 pointer-events-none" />

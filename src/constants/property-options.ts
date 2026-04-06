@@ -8,9 +8,8 @@ export const PROPERTY_CATEGORIES = [
 export const PROPERTY_LOCATIONS = [
   'Capão Novo',
   'Posto 4',
-  'Arpoador',
+  'Posto 5',
   'Village',
-  'Capão da Canoa',
 ];
 
 export const AMENITIES_LIST = [
