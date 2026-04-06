@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
+import CloudinaryImage from "@/components/ui/CloudinaryImage";
 import { Bed, Star, MapPin } from "lucide-react";
 import Link from "next/link";
 
@@ -37,8 +37,9 @@ export const PropertyCard = ({ id, slug, title, location, price, beds, image = "
     >
       {/* Background Image */}
       <div className="absolute inset-0 w-full h-full z-0">
-        <Image
+        <CloudinaryImage
           src={image}
+          size="list"
           alt={title}
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"

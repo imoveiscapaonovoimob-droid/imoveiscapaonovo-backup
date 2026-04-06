@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react';
 import { deleteProperty } from '@/lib/actions/property.actions';
 import { useRouter } from 'next/navigation';
+import CloudinaryImage from '@/components/ui/CloudinaryImage';
 
 interface Property {
   _id: string;
@@ -73,9 +74,9 @@ export default function PropertyTable({ properties, categoryLabels }: Props) {
             }`}
           >
             {/* Thumbnail */}
-            <div className="w-12 h-10 mr-4 bg-[#001629]/5 overflow-hidden shrink-0">
+            <div className="relative w-12 h-10 mr-4 bg-[#001629]/5 overflow-hidden shrink-0">
               {mainImage ? (
-                <img src={mainImage} alt={p.title} className="w-full h-full object-cover" />
+                <CloudinaryImage size="thumbnail" src={mainImage} alt={p.title} fill className="object-cover" />
               ) : (
                 <div className="w-full h-full flex items-center justify-center">
                   <span className="text-[#001629]/20 text-xs">—</span>

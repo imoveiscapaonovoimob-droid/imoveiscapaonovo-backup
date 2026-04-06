@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import Image from 'next/image';
+import CloudinaryImage from '@/components/ui/CloudinaryImage';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 
 interface PropertyImage {
@@ -51,7 +51,8 @@ export function PropertyGallery({ title, images, mainImageFallback }: PropertyGa
   if (!images || images.length === 0) {
     return (
       <div className="relative aspect-video overflow-hidden bg-slate-200">
-        <Image
+        <CloudinaryImage
+          size="list"
           src={mainImageFallback}
           alt={title}
           fill
@@ -90,7 +91,8 @@ export function PropertyGallery({ title, images, mainImageFallback }: PropertyGa
         )}
 
         <div className="relative w-full h-full">
-          <Image
+          <CloudinaryImage
+            size="full"
             src={images[currentIndex].url}
             alt={`${title} - Foto ${currentIndex + 1}`}
             fill
@@ -120,7 +122,8 @@ export function PropertyGallery({ title, images, mainImageFallback }: PropertyGa
     <>
       {/* Thumbnail / Cover */}
       <div className="relative aspect-video overflow-hidden bg-slate-200 group">
-        <Image
+        <CloudinaryImage
+          size="list"
           src={mainImage}
           alt={title}
           fill
