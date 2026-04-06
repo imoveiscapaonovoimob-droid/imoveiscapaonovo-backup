@@ -1,5 +1,6 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
+import Image from 'next/image';
 import { getPropertyBySlugOrId } from '@/lib/actions/property.actions';
 import { PropertyGallery } from '@/components/imoveis/PropertyGallery';
 import { Header } from '@/components/layout/Header';
@@ -257,13 +258,19 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
 
               {/* Agent Info - Inside the sticky flow to never roll under the card */}
               <div className="bg-[#f9f9f9] p-8 flex items-center gap-6 group cursor-pointer hover:bg-white transition-colors border border-[#001629]/5">
-                <div className="w-16 h-16 rounded-full bg-[#001629]/5 overflow-hidden relative grayscale group-hover:grayscale-0 transition-all duration-500 border border-[#001629]/10 shrink-0">
-                  <div className="absolute inset-0 flex items-center justify-center text-[#001629]/30 font-serif italic text-xs">Foto</div>
+                <div className="w-16 h-16 rounded-full bg-[#001629]/5 overflow-hidden relative transition-all duration-500 border border-[#001629]/10 shrink-0">
+                  <Image
+                    src="/images/leninekerber.jpg"
+                    alt="Lenine Kerber"
+                    width={128}
+                    height={128}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 <div className="overflow-hidden">
-                  <span className="text-[10px] text-accent uppercase tracking-[0.2em] font-black block mb-1">Consultor</span>
-                  <h4 className="font-serif text-lg text-[#001629] truncate">Equipe Capão Novo</h4>
-                  <p className="text-[10px] text-[#001629]/50 mt-1 uppercase tracking-widest truncate">Especialistas Locais</p>
+                  <span className="text-[10px] text-accent uppercase tracking-[0.2em] font-black block mb-1">CORRETOR</span>
+                  <h4 className="font-serif text-lg text-[#001629] truncate">Lenine Kerber</h4>
+                  <p className="text-[10px] text-[#001629]/50 mt-1 uppercase tracking-widest truncate">CRECI-RS 85.784</p>
                 </div>
               </div>
 
