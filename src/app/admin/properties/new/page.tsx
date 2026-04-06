@@ -157,22 +157,16 @@ export default function NewPropertyPage() {
       const uploadedImages: { url: string; public_id: string; isMain: boolean }[] = [];
       setUploadProgress({ current: 0, total: photos.length });
 
-      // Pegamos as credenciais de assinatura uma única vez ou por upload se preferir,
-      // mas como o timestamp é o mesmo por um período, podemos reutilizar.
-      const sigRes = await fetch('/api/upload/signature');
-      const sigData = await sigRes.json();
-      
-      if (!sigRes.ok) throw new Error('Falha ao obter assinatura de segurança para as fotos.');
-
-      for (let i = 0; i < photos.length; i++) {
-        const p = photos[i];
-        
-        // Se a foto já tem URL (ex: de uma edição anterior ou cache), não re-upload
+      // Função auxiliar para upload individual com retry e assinatura fresca
+      const uploadSinglePhoto = async (p: any, index: number) => {
         if (p.url && !p.file) {
-          uploadedImages.push({ url: p.url, public_id: p.public_id, isMain: p.isMain });
-          setUploadProgress({ current: i + 1, total: photos.length });
-          continue;
+          return { url: p.url, public_id: p.public_id, isMain: p.isMain };
         }
+
+        // Fresh signature for each file (prevents expiration during long batch uploads)
+        const sigRes = await fetch('/api/upload/signature');
+        const sigData = await sigRes.json();
+        if (!sigRes.ok) throw new Error(`Falha na autorização para a foto ${index + 1}`);
 
         const fd = new FormData();
         fd.append('file', p.file);
@@ -188,16 +182,24 @@ export default function NewPropertyPage() {
 
         if (!res.ok) {
           const err = await res.json();
-          throw new Error(`Foto ${i + 1}: ${err.error?.message || 'Falha no upload ao Cloudinary'}`);
+          throw new Error(`Cloudinary Error (${index + 1}): ${err.error?.message || 'Falha no upload'}`);
         }
 
         const data = await res.json();
-        uploadedImages.push({ 
+        setUploadProgress(prev => prev ? { ...prev, current: prev.current + 1 } : null);
+        
+        return { 
           url: data.secure_url, 
           public_id: data.public_id, 
           isMain: p.isMain 
-        });
-        setUploadProgress({ current: i + 1, total: photos.length });
+        };
+      };
+
+      // Upload em paralelo com concorrência controlada (limite de 3)
+      for (let i = 0; i < photos.length; i += 3) {
+        const batch = photos.slice(i, i + 3).map((p, idx) => uploadSinglePhoto(p, i + idx));
+        const results = await Promise.all(batch);
+        uploadedImages.push(...results);
       }
 
       const priceNum = parseFloat(parseCurrency(formData.price)) / 100;

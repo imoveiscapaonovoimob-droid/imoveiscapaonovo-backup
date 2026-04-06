@@ -194,50 +194,56 @@ export default function EditPropertyForm({ property }: Props) {
 
     try {
       const finalImages = [];
-      const sigRes = await fetch('/api/upload/signature');
-      const sigData = await sigRes.json();
-      if (!sigRes.ok) throw new Error('Erro ao obter autorização para fotos.');
 
-      // Processar cada foto
-      for (let i = 0; i < photos.length; i++) {
-        const photo = photos[i];
-        setUploadProgress(Math.round((i / photos.length) * 100));
-
-        if (photo.public_id) {
-          // Imagem já existente no Cloudinary
-          finalImages.push({
+      // Função auxiliar para upload individual com assinatura fresca
+      const uploadSinglePhoto = async (photo: any, index: number) => {
+        if (photo.public_id && !photo.file) {
+          return {
             url: photo.preview || photo.url,
             public_id: photo.public_id,
             isMain: photo.isMain
-          });
-        } else if (photo.file) {
-          // Nova imagem (precisa de upload)
-          setUploadStatus(`Enviando foto ${i + 1} de ${photos.length}...`);
-          
-          const fd = new FormData();
-          fd.append('file', photo.file);
-          fd.append('api_key', sigData.api_key);
-          fd.append('timestamp', sigData.timestamp);
-          fd.append('signature', sigData.signature);
-          fd.append('folder', sigData.folder);
-
-          const res = await fetch(`https://api.cloudinary.com/v1_1/${sigData.cloud_name}/image/upload`, {
-            method: 'POST',
-            body: fd,
-          });
-
-          if (!res.ok) {
-            const err = await res.json();
-            throw new Error(`Erro na foto ${i+1}: ${err.error?.message || 'Falha no Cloudinary'}`);
-          }
-          
-          const data = await res.json();
-          finalImages.push({
-            url: data.secure_url,
-            public_id: data.public_id,
-            isMain: photo.isMain
-          });
+          };
         }
+
+        // Nova imagem (precisa de upload)
+        setUploadStatus(`Enviando foto ${index + 1} de ${photos.length}...`);
+        
+        // Fresh signature for each file
+        const sigRes = await fetch('/api/upload/signature');
+        const sigData = await sigRes.json();
+        if (!sigRes.ok) throw new Error(`Falha na autorização para a foto ${index + 1}`);
+
+        const fd = new FormData();
+        fd.append('file', photo.file);
+        fd.append('api_key', sigData.api_key);
+        fd.append('timestamp', sigData.timestamp);
+        fd.append('signature', sigData.signature);
+        fd.append('folder', sigData.folder);
+
+        const res = await fetch(`https://api.cloudinary.com/v1_1/${sigData.cloud_name}/image/upload`, {
+          method: 'POST',
+          body: fd,
+        });
+
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(`Upload Falhou (${index + 1}): ${err.error?.message || 'Erro no Cloudinary'}`);
+        }
+        
+        const data = await res.json();
+        return {
+          url: data.secure_url,
+          public_id: data.public_id,
+          isMain: photo.isMain
+        };
+      };
+
+      // Upload em paralelo com concorrência controlada (limite de 3)
+      for (let i = 0; i < photos.length; i += 3) {
+        const batch = photos.slice(i, i + 3).map((p, idx) => uploadSinglePhoto(p, i + idx));
+        const results = await Promise.all(batch);
+        finalImages.push(...results);
+        setUploadProgress(Math.round(((i + batch.length) / photos.length) * 100));
       }
 
       setUploadProgress(100);
