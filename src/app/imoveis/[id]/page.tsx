@@ -1,5 +1,4 @@
 import React from 'react';
-import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { getPropertyBySlugOrId } from '@/lib/actions/property.actions';
 import { PropertyGallery } from '@/components/imoveis/PropertyGallery';
@@ -15,9 +14,37 @@ import {
   ArrowLeft,
   Share2,
   Heart,
-  MessageSquare
+  MessageSquare,
+  Building,
+  Calendar,
+  Compass
 } from 'lucide-react';
 import Link from 'next/link';
+
+const amenityMap: Record<string, string> = {
+  barbecue: 'Churrasqueira',
+  kitchen_cabinets: 'Armários de Cozinha',
+  pool: 'Piscina',
+  balcony: 'Sacada / Varanda',
+  gym: 'Academia',
+  elevator: 'Elevador',
+  furnished: 'Mobiliado',
+  pet_friendly: 'Aceita Pets',
+  security_24h: 'Portaria 24h',
+  playground: 'Playground',
+  party_room: 'Salão de Festas',
+  sports_court: 'Quadra Esportiva',
+  service_area: 'Área de Serviço',
+  air_conditioning: 'Ar Condicionado',
+  fireplace: 'Lareira',
+  ocean_view: 'Vista para o Mar',
+  garden: 'Jardim',
+  suite: 'Suíte Master'
+};
+
+function formatAmenity(key: string) {
+  return amenityMap[key] || key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+}
 
 export default async function PropertyPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -28,153 +55,209 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
   }
 
   const property = result.property;
-  // Default values mapping to old format temporarily
-  const mainImage = property.images?.find((img: any) => img.isMain)?.url || property.images?.[0]?.url || '/placeholder.jpg';
   const priceFormatted = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(property.price);
 
   return (
-    <main className="min-h-screen bg-slate-50">
+    <main className="min-h-screen bg-[#f9f9f9] text-[#001629]">
       <Header />
       
-      {/* Navigation Bar */}
-      <div className="bg-white border-b border-slate-100 sticky top-20 z-40 backdrop-blur-md bg-white/80">
+      {/* Floating Glass Navigation */}
+      <div className="sticky top-20 z-40 bg-[#f9f9f9]/70 backdrop-blur-[20px]">
         <div className="max-w-[1400px] mx-auto px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-slate-400 hover:text-accent transition-colors">
-            <ArrowLeft size={14} />
+          <Link href="/imoveis" className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#001629]/60 hover:text-accent transition-colors">
+            <ArrowLeft size={16} />
             Voltar para Portfólio
           </Link>
           
           <div className="flex items-center gap-4">
-            <button className="p-2 text-slate-400 hover:text-accent transition-colors">
+            <button className="p-2 text-[#001629]/60 hover:text-accent transition-colors">
               <Share2 size={18} />
             </button>
-            <button className="p-2 text-slate-400 hover:text-accent transition-colors">
+            <button className="p-2 text-[#001629]/60 hover:text-accent transition-colors">
               <Heart size={18} />
             </button>
           </div>
         </div>
       </div>
 
-      <div className="max-w-[1400px] mx-auto px-6 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-          
-          {/* Main Content */}
-          <div className="lg:col-span-2 space-y-12">
-            
-            {/* Header Info */}
-            <div>
-              <div className="flex items-center gap-3 mb-6">
-                <span className="bg-accent/10 text-accent text-[10px] font-black uppercase tracking-[0.2em] px-3 py-1.5">
-                  Exclusividade
-                </span>
-                <span className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em]">
-                  ID: #{property._id?.toString().slice(-6) || '0000'}
-                </span>
-              </div>
-              <h1 className="text-5xl md:text-6xl font-serif text-slate-900 leading-tight mb-6">
-                {property.title}
-              </h1>
-              <div className="flex items-center gap-2 text-slate-500 font-medium">
-                <MapPin size={18} className="text-accent" />
-                {property.location || property.address || ''}
-              </div>
+      <div className="max-w-[1400px] mx-auto px-6 py-12 md:py-24">
+        {/* Editorial Hero Layout with Overlap */}
+        <div className="relative mb-24 md:mb-32">
+          {/* Typographic Hero */}
+          <div className="w-full md:w-3/4 lg:w-2/3 relative z-20 pb-8 md:pb-0 md:mb-[-100px]">
+            <div className="inline-flex items-center gap-3 mb-8 bg-[#1A1A1A] px-4 py-2 shadow-[0_20px_40px_rgba(0,22,41,0.06)]">
+              <span className="text-accent text-xs font-serif italic">Status</span>
+              <span className="text-white text-[10px] font-black uppercase tracking-[0.2em]">
+                Exclusividade
+              </span>
             </div>
+            
+            <h1 className="text-5xl md:text-7xl font-serif text-[#001629] leading-[1.1] mb-6">
+              {property.title}
+            </h1>
+            
+            <div className="flex items-center gap-2 text-[#001629]/60 font-sans text-sm tracking-widest uppercase mb-6">
+              <MapPin size={16} className="text-accent" />
+              {property.location || property.address || ''}
+            </div>
+          </div>
 
-            {/* Gallery Component */}
-            <PropertyGallery 
+          {/* Property Gallery (Overlapped) */}
+          <div className="w-full md:w-5/6 ml-auto relative z-10">
+             <PropertyGallery 
               title={property.title} 
               images={property.images} 
               mainImageFallback="/placeholder.jpg" 
-            />
+             />
+          </div>
+        </div>
 
-            {/* Quick Details Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {/* Content & Sidebar Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-y-16 lg:gap-x-16">
+          
+          {/* Main Details */}
+          <div className="lg:col-span-8 space-y-20">
+            
+            {/* Minimal Metrics Dashboard */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               {[
-                { icon: <Square size={20} />, label: "Área Total", value: `${property.features?.area || 0}m²` },
-                { icon: <Bed size={20} />, label: "Dormitórios", value: property.features?.bedrooms || 0 },
-                { icon: <Bath size={20} />, label: "Banheiros", value: property.features?.bathrooms || 0 },
-                { icon: <Car size={20} />, label: "Vagas", value: property.features?.parking || 0 },
+                { icon: <Square size={24} />, label: "Área Total", value: `${property.features?.area || 0}m²` },
+                { icon: <Bed size={24} />, label: "Dormitórios", value: property.features?.bedrooms || 0 },
+                { icon: <Bath size={24} />, label: "Banheiros", value: property.features?.bathrooms || 0 },
+                { icon: <Car size={24} />, label: "Vagas", value: property.features?.parking || 0 },
               ].map((item, idx) => (
-                <div key={idx} className="bg-white p-6 border border-slate-100 flex flex-col items-center text-center">
-                  <div className="text-accent mb-3">{item.icon}</div>
-                  <span className="text-[10px] text-slate-400 uppercase tracking-widest font-bold mb-1">{item.label}</span>
-                  <span className="text-sm font-bold text-slate-900">{item.value}</span>
+                <div key={idx} className="flex flex-col items-start">
+                  <div className="text-accent mb-4">{item.icon}</div>
+                  <span className="text-3xl font-serif text-[#001629] mb-1">{item.value}</span>
+                  <span className="text-[10px] text-[#001629]/50 uppercase tracking-[0.2em] font-bold">{item.label}</span>
                 </div>
               ))}
             </div>
 
-            {/* Description */}
-            <div className="bg-white p-12 border border-slate-100">
-              <h3 className="text-2xl font-serif text-slate-900 mb-8 pb-8 border-b border-slate-50">
-                Sobre este <span className="italic">Imóvel</span>
+            {/* Building Info (If available) */}
+            {(property.buildingInfo?.year || property.buildingInfo?.position || property.buildingInfo?.condition) && (
+              <div className="bg-[#002B49]/5 p-8 md:p-12">
+                 <h3 className="text-xl font-serif text-[#001629] mb-8">
+                  Detalhes <span className="italic text-accent">Técnicos</span>
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  {property.buildingInfo?.year && (
+                    <div className="flex items-center gap-4">
+                      <Calendar size={20} className="text-[#001629]/30" />
+                      <div>
+                        <span className="block text-[10px] uppercase tracking-widest text-[#001629]/50 mb-1">Construção</span>
+                        <span className="font-bold text-sm tracking-wide">{property.buildingInfo.year}</span>
+                      </div>
+                    </div>
+                  )}
+                  {property.buildingInfo?.position && (
+                    <div className="flex items-center gap-4">
+                      <Compass size={20} className="text-[#001629]/30" />
+                      <div>
+                        <span className="block text-[10px] uppercase tracking-widest text-[#001629]/50 mb-1">Posição Solar</span>
+                        <span className="font-bold text-sm tracking-wide">{property.buildingInfo.position}</span>
+                      </div>
+                    </div>
+                  )}
+                  {property.buildingInfo?.condition && (
+                    <div className="flex items-center gap-4">
+                      <Building size={20} className="text-[#001629]/30" />
+                      <div>
+                        <span className="block text-[10px] uppercase tracking-widest text-[#001629]/50 mb-1">Condição</span>
+                        <span className="font-bold text-sm tracking-wide">{property.buildingInfo.condition}</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Editorial Description */}
+            <div className="max-w-3xl">
+              <h3 className="text-3xl font-serif text-[#001629] mb-8">
+                A Experiência <span className="italic text-accent">do Imóvel</span>
               </h3>
-              <p className="text-slate-600 leading-relaxed text-lg">
+              <p className="text-[#001629]/80 leading-[1.8] text-lg font-sans font-light whitespace-pre-line">
                 {property.description}
               </p>
             </div>
 
-            {/* Features */}
-            <div className="bg-white p-12 border border-slate-100">
-              <h3 className="text-2xl font-serif text-slate-900 mb-8">
-                Diferenciais e <span className="italic">Comodidades</span>
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4">
-                {property.amenities?.map((feature: string, idx: number) => (
-                  <div key={idx} className="flex items-center gap-3 text-slate-600">
-                    <CheckCircle2 size={18} className="text-accent" />
-                    <span className="text-sm font-medium">{feature}</span>
-                  </div>
-                ))}
+            {/* Amenities Grid */}
+            {property.amenities && property.amenities.length > 0 && (
+              <div className="bg-white p-10 md:p-16 shadow-[0_20px_40px_rgba(0,22,41,0.03)]">
+                <h3 className="text-2xl font-serif text-[#001629] mb-10">
+                  Diferenciais & <span className="italic text-accent">Comodidades</span>
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6">
+                  {property.amenities.map((feature: string, idx: number) => (
+                    <div key={idx} className="flex items-center gap-4 text-[#001629]/80">
+                      <CheckCircle2 size={18} className="text-accent" />
+                      <span className="text-sm font-medium tracking-wide">{formatAmenity(feature)}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
           </div>
 
-          {/* Sidebar */}
-          <div className="space-y-8">
-            {/* Price & Action Card */}
-            <div className="bg-slate-900 text-white p-10 sticky top-40 shadow-2xl">
-              <span className="text-accent text-[10px] font-black uppercase tracking-[0.3em] mb-4 block">
-                Valor de Investimento
-              </span>
-              <div className="text-4xl font-serif italic mb-8">
-                {priceFormatted}
-              </div>
+          {/* Sticky Sidebar */}
+          <div className="lg:col-span-4 relative">
+            <div className="sticky top-32 z-30 flex flex-col gap-8">
               
-              <div className="space-y-4 mb-10 pt-8 border-t border-white/10">
-                {property.values?.iptu && (
-                  <div className="flex justify-between text-xs tracking-widest uppercase">
-                    <span className="text-white/40">IPTU anual</span>
-                    <span>{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(property.values.iptu)}</span>
+              {/* Premium Price Card */}
+              <div className="bg-[#001629] text-white p-10 lg:p-12 shadow-[0_40px_80px_rgba(0,22,41,0.15)] relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-accent/10 blur-[50px] pointer-events-none" />
+                
+                <span className="text-accent text-[10px] font-black uppercase tracking-[0.3em] mb-4 block">
+                  Valor de Investimento
+                </span>
+                
+                <div className="text-4xl lg:text-5xl font-serif italic mb-10">
+                  {priceFormatted}
+                </div>
+                
+                {/* Bug Fix: Only render if value is greater than 0 explicitly */}
+                {((property.values?.iptu ?? 0) > 0 || (property.values?.condo ?? 0) > 0) && (
+                  <div className="space-y-5 mb-10 pt-8 border-t border-white/10">
+                    {(property.values?.iptu ?? 0) > 0 && (
+                      <div className="flex justify-between items-center text-xs tracking-widest uppercase">
+                        <span className="text-white/40">IPTU anual</span>
+                        <span className="font-bold tracking-widest">{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(property.values!.iptu)}</span>
+                      </div>
+                    )}
+                    {(property.values?.condo ?? 0) > 0 && (
+                      <div className="flex justify-between items-center text-xs tracking-widest uppercase">
+                        <span className="text-white/40">Condomínio</span>
+                        <span className="font-bold tracking-widest">{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(property.values!.condo)}</span>
+                      </div>
+                    )}
                   </div>
                 )}
-                {property.values?.condo && (
-                  <div className="flex justify-between text-xs tracking-widest uppercase">
-                    <span className="text-white/40">Condomínio</span>
-                    <span>{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(property.values.condo)}</span>
-                  </div>
-                )}
+
+                <button className="w-full bg-accent text-white py-5 px-6 text-[11px] font-black uppercase tracking-[0.2em] hover:bg-[#b0904a] transition-colors duration-300 mb-4 rounded-sm flex items-center justify-center relative overflow-hidden group">
+                  <span className="relative z-10 w-full text-center">Agendar Visita Exclusiva</span>
+                  <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                </button>
+                
+                <button className="w-full flex items-center justify-center gap-3 bg-white/5 border border-white/10 py-5 text-[11px] font-black uppercase tracking-[0.2em] hover:bg-white/10 transition-colors duration-300 rounded-sm group">
+                  <MessageSquare size={16} className="text-accent group-hover:scale-110 transition-transform" />
+                  <span>Falar no WhatsApp</span>
+                </button>
               </div>
 
-              <button className="w-full bg-accent text-slate-900 py-6 text-xs font-black uppercase tracking-[0.2em] hover:bg-white transition-all duration-500 mb-4 rounded-sm">
-                Agendar Visita Exclusiva
-              </button>
-              <button className="w-full flex items-center justify-center gap-3 border border-white/20 py-6 text-xs font-black uppercase tracking-[0.2em] hover:bg-white/10 transition-all duration-500 rounded-sm">
-                <MessageSquare size={16} />
-                Falar no WhatsApp
-              </button>
-            </div>
+              {/* Agent Info - Inside the sticky flow to never roll under the card */}
+              <div className="bg-[#f9f9f9] p-8 flex items-center gap-6 group cursor-pointer hover:bg-white transition-colors border border-[#001629]/5">
+                <div className="w-16 h-16 rounded-full bg-[#001629]/5 overflow-hidden relative grayscale group-hover:grayscale-0 transition-all duration-500 border border-[#001629]/10 shrink-0">
+                  <div className="absolute inset-0 flex items-center justify-center text-[#001629]/30 font-serif italic text-xs">Foto</div>
+                </div>
+                <div className="overflow-hidden">
+                  <span className="text-[10px] text-accent uppercase tracking-[0.2em] font-black block mb-1">Consultor</span>
+                  <h4 className="font-serif text-lg text-[#001629] truncate">Equipe Capão Novo</h4>
+                  <p className="text-[10px] text-[#001629]/50 mt-1 uppercase tracking-widest truncate">Especialistas Locais</p>
+                </div>
+              </div>
 
-            {/* Agent Info (Placeholder) */}
-            <div className="bg-white p-8 border border-slate-100 flex items-center gap-6">
-              <div className="w-20 h-20 rounded-full bg-slate-100 overflow-hidden relative grayscale">
-                <div className="absolute inset-0 flex items-center justify-center text-slate-300 font-serif italic">Photo</div>
-              </div>
-              <div>
-                <span className="text-[10px] text-slate-400 uppercase tracking-widest font-bold block mb-1">Consultor</span>
-                <h4 className="font-serif text-lg text-slate-900">Especialista Local</h4>
-                <p className="text-xs text-slate-500 mt-1 uppercase tracking-tighter">Capão Novo & Litoral</p>
-              </div>
             </div>
           </div>
 

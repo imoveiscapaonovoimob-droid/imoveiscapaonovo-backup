@@ -45,6 +45,31 @@ export interface IProperty {
   }[];
   isPublished: boolean;
   isFeatured: boolean; // para Home Page
+  
+  // Novos Campos (Inteligência Comercial & CRM)
+  strategicData?: {
+    sellerMotivation?: string; // Ex: Mudança, Investimento, Divórcio
+    urgency?: 'Baixa' | 'Média' | 'Alta' | 'Imediata';
+    negotiationFlexibility?: string; // Ex: Aceita carro, Aceita imóvel menor
+  };
+  commercialIntelligence?: {
+    commissionPercentage?: number;
+    netValueExpected?: number;
+    proposalsHistory?: string; // Anotações sobre histórico
+  };
+  propertyProfile?: {
+    classification?: 'Standard' | 'Alto Padrão' | 'Luxo' | 'Investimento' | 'Lançamento';
+  };
+  advancedLocation?: {
+    distanceToSea?: number; // em metros
+    proximities?: string[]; // Ex: Supermercado, Farmácia, Praça
+  };
+  idealCustomerProfile?: string; // Descrição de quem é a "persona" que compra
+  documentation?: {
+    status?: '100% Regularizado' | 'Em inventário' | 'Falta averbação' | 'Contrato de Compra e Venda';
+    details?: string;
+  };
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -101,11 +126,32 @@ const PropertySchema = new Schema<IProperty>(
     ],
     isPublished: { type: Boolean, default: false },
     isFeatured: { type: Boolean, default: false },
+
+    // Schema - Novos Campos (Inteligência Comercial & CRM)
+    strategicData: {
+      sellerMotivation: { type: String },
+      urgency: { type: String, enum: ['Baixa', 'Média', 'Alta', 'Imediata'] },
+      negotiationFlexibility: { type: String },
+    },
+    commercialIntelligence: {
+      commissionPercentage: { type: Number },
+      netValueExpected: { type: Number },
+      proposalsHistory: { type: String },
+    },
+    propertyProfile: {
+      classification: { type: String, enum: ['Standard', 'Alto Padrão', 'Luxo', 'Investimento', 'Lançamento'] },
+    },
+    advancedLocation: {
+      distanceToSea: { type: Number },
+      proximities: [{ type: String }],
+    },
+    idealCustomerProfile: { type: String },
+    documentation: {
+      status: { type: String, enum: ['100% Regularizado', 'Em inventário', 'Falta averbação', 'Contrato de Compra e Venda'] },
+      details: { type: String },
+    },
   },
   { timestamps: true }
 );
-
-// Pre-save hook to generate slug IF needed (can also be done in actions)
-// PropertySchema.pre('save', function(next) { ... });
 
 export default models.Property || model<IProperty>('Property', PropertySchema);

@@ -40,20 +40,29 @@ export async function createProperty(formData: any) {
 
     const slug = `${slugify(title)}-${Math.random().toString(36).substring(2, 7)}`;
 
-    // 1. Upload Images to Cloudinary
-    const uploadedImages = [];
+    // 1. Process Images
+    // Se as imagens já foram enviadas pelo client (API route), usamos as URLs diretamente.
+    // Caso contrário (fallback), fazemos o upload aqui (sujeito ao limite de tamanho do Server Action).
+    const finalImages = [];
     for (const img of images) {
-      // img is { data: string (base64/dataurl), isMain: boolean }
-      const uploadResponse = await cloudinary.uploader.upload(img.data, {
-        folder: 'imoveis-capao-novo',
-        resource_type: 'image',
-      });
+      if (img.url && img.public_id) {
+        finalImages.push({
+          url: img.url,
+          public_id: img.public_id,
+          isMain: img.isMain,
+        });
+      } else if (img.data) {
+        const uploadResponse = await cloudinary.uploader.upload(img.data, {
+          folder: 'imoveis-capao-novo',
+          resource_type: 'image',
+        });
 
-      uploadedImages.push({
-        url: uploadResponse.secure_url,
-        public_id: uploadResponse.public_id,
-        isMain: img.isMain,
-      });
+        finalImages.push({
+          url: uploadResponse.secure_url,
+          public_id: uploadResponse.public_id,
+          isMain: img.isMain,
+        });
+      }
     }
 
     // 2. Create Property in MongoDB
@@ -69,28 +78,46 @@ export async function createProperty(formData: any) {
       youtubeId,
       link360,
       features: {
-        bedrooms: Number(features.bedrooms),
-        suites: Number(features.suites),
+        bedrooms:  Number(features.bedrooms),
+        suites:    Number(features.suites),
         bathrooms: Number(features.bathrooms),
-        parking: Number(features.parking),
-        area: Number(features.area),
+        parking:   Number(features.parking),
+        area:      Number(features.area),
       },
       values: {
         condo: Number(values.condo),
-        iptu: Number(values.iptu),
+        iptu:  Number(values.iptu),
       },
       buildingInfo: {
         ...buildingInfo,
-        year: buildingInfo.year ? Number(buildingInfo.year) : undefined,
-        floors: buildingInfo.floors ? Number(buildingInfo.floors) : undefined,
+        year:         buildingInfo.year         ? Number(buildingInfo.year)         : undefined,
+        floors:       buildingInfo.floors       ? Number(buildingInfo.floors)       : undefined,
         aptsPerFloor: buildingInfo.aptsPerFloor ? Number(buildingInfo.aptsPerFloor) : undefined,
-        totalApts: buildingInfo.totalApts ? Number(buildingInfo.totalApts) : undefined,
+        totalApts:    buildingInfo.totalApts    ? Number(buildingInfo.totalApts)    : undefined,
         deliveryDate: buildingInfo.deliveryDate ? new Date(buildingInfo.deliveryDate) : undefined,
       },
       amenities,
-      images: uploadedImages,
+      images: finalImages,
       isPublished: Boolean(isPublished),
-      isFeatured: Boolean(isFeatured),
+      isFeatured:  Boolean(isFeatured),
+
+      // ── Novos módulos de inteligência comercial ──────────────────────────
+      strategicData:          formData.strategicData          || {},
+      commercialIntelligence: {
+        commissionPercentage: formData.commercialIntelligence?.commissionPercentage
+          ? Number(formData.commercialIntelligence.commissionPercentage) : undefined,
+        netValueExpected: formData.commercialIntelligence?.netValueExpected
+          ? Number(formData.commercialIntelligence.netValueExpected) : undefined,
+        proposalsHistory: formData.commercialIntelligence?.proposalsHistory || undefined,
+      },
+      propertyProfile:        formData.propertyProfile        || {},
+      advancedLocation: {
+        distanceToSea: formData.advancedLocation?.distanceToSea
+          ? Number(formData.advancedLocation.distanceToSea) : undefined,
+        proximities: formData.advancedLocation?.proximities || [],
+      },
+      idealCustomerProfile: formData.idealCustomerProfile || undefined,
+      documentation:        formData.documentation        || {},
     });
 
     revalidatePath('/');

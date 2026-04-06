@@ -6,14 +6,15 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 interface Photo {
   id: string; // local id
-  file: File;
+  file?: File;
   preview: string;
   isMain: boolean;
+  public_id?: string; // Para imagens já existentes no Cloudinary
 }
 
 interface PhotoUploaderProps {
   photos: Photo[];
-  setPhotos: (photos: Photo[]) => void;
+  setPhotos: React.Dispatch<React.SetStateAction<Photo[]>> | ((photos: Photo[]) => void);
 }
 
 export default function PhotoUploader({ photos, setPhotos }: PhotoUploaderProps) {
@@ -35,13 +36,16 @@ export default function PhotoUploader({ photos, setPhotos }: PhotoUploaderProps)
       newPhotos[0].isMain = true;
     }
 
-    setPhotos([...photos, ...newPhotos]);
+    const updated = [...photos, ...newPhotos];
+    if (typeof setPhotos === 'function') (setPhotos as any)(updated);
   };
 
   const removePhoto = (id: string) => {
     const updated = photos.filter(p => {
       if (p.id === id) {
-        URL.revokeObjectURL(p.preview);
+        if (p.preview.startsWith('blob:')) {
+          URL.revokeObjectURL(p.preview);
+        }
         return false;
       }
       return true;
@@ -52,25 +56,28 @@ export default function PhotoUploader({ photos, setPhotos }: PhotoUploaderProps)
       updated[0].isMain = true;
     }
 
-    setPhotos(updated);
+    if (typeof setPhotos === 'function') {
+      (setPhotos as any)(updated);
+    }
   };
 
   const setMain = (id: string) => {
-    setPhotos(photos.map(p => ({ ...p, isMain: p.id === id })));
+    const updated = photos.map(p => ({ ...p, isMain: p.id === id }));
+    if (typeof setPhotos === 'function') (setPhotos as any)(updated);
   };
 
   const moveLeft = (index: number) => {
     if (index === 0) return;
     const newPhotos = [...photos];
     [newPhotos[index - 1], newPhotos[index]] = [newPhotos[index], newPhotos[index - 1]];
-    setPhotos(newPhotos);
+    if (typeof setPhotos === 'function') (setPhotos as any)(newPhotos);
   };
 
   const moveRight = (index: number) => {
     if (index === photos.length - 1) return;
     const newPhotos = [...photos];
     [newPhotos[index + 1], newPhotos[index]] = [newPhotos[index], newPhotos[index + 1]];
-    setPhotos(newPhotos);
+    if (typeof setPhotos === 'function') (setPhotos as any)(newPhotos);
   };
 
   return (
