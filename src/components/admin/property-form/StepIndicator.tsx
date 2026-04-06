@@ -8,12 +8,12 @@ interface StepIndicatorProps {
 }
 
 const steps = [
-  { id: 1, title: 'Básicas',     subtitle: 'Informações gerais' },
-  { id: 2, title: 'Detalhes',   subtitle: 'Vagas e Amenidades' },
-  { id: 3, title: 'Estratégia', subtitle: 'Dados Comerciais' },
-  { id: 4, title: 'Localização',subtitle: 'Proximidades e Mar' },
-  { id: 5, title: 'Perfil',     subtitle: 'Documentação e Perfil' },
-  { id: 6, title: 'Publicação', subtitle: 'Mídia e Status' },
+  { id: 1, title: 'Básicas',        subtitle: 'Informações gerais' },
+  { id: 2, title: 'Características',subtitle: 'Cômodos e amenidades' },
+  { id: 3, title: 'Financeiro',     subtitle: 'Valores e negociação' },
+  { id: 4, title: 'Localização',    subtitle: 'Proximidades e mar' },
+  { id: 5, title: 'Perfil',         subtitle: 'Documentação e perfil' },
+  { id: 6, title: 'Publicação',     subtitle: 'Mídia e status' },
 ];
 
 export default function StepIndicator({ currentStep }: StepIndicatorProps) {

@@ -129,7 +129,7 @@ export async function createProperty(formData: any) {
       isPublished: Boolean(isPublished),
       isFeatured:  Boolean(isFeatured),
 
-      // ── Novos módulos de inteligência comercial ──────────────────────────
+      // ── Módulos de inteligência comercial (legado) ────────────────────────
       strategicData:          sanitized.strategicData          || {},
       commercialIntelligence: {
         commissionPercentage: sanitized.commercialIntelligence?.commissionPercentage
@@ -146,6 +146,23 @@ export async function createProperty(formData: any) {
       },
       idealCustomerProfile: sanitized.idealCustomerProfile || undefined,
       documentation:        sanitized.documentation        || {},
+
+      // ── Novos campos UX Step 2: Características ───────────────────────────
+      areas: sanitized.areas?.privateArea || sanitized.areas?.totalArea
+        ? sanitized.areas : undefined,
+      garageType: sanitized.garageType?.length ? sanitized.garageType : undefined,
+
+      // ── Novos campos UX Step 3: Financeiro ───────────────────────────────
+      iptuPeriod:         sanitized.iptuPeriod      || 'Anual',
+      exclusivity:        Boolean(sanitized.exclusivity),
+      paymentMethods:     sanitized.paymentMethods   || [],
+      directPaymentTerms: sanitized.directPayment?.minEntry || sanitized.directPayment?.maxMonths
+        ? sanitized.directPayment : undefined,
+      acceptsExchange:    Boolean(sanitized.acceptsExchange),
+      exchange: sanitized.acceptsExchange && (sanitized.exchange?.limitPercent || sanitized.exchange?.assetTypes?.length)
+        ? sanitized.exchange : undefined,
+      financialStatus: sanitized.financialStatus?.hasEncumbrance !== undefined
+        ? sanitized.financialStatus : undefined,
     });
 
     revalidatePath('/');

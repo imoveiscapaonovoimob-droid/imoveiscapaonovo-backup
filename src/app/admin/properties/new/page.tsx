@@ -5,13 +5,15 @@ import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import StepIndicator from '@/components/admin/property-form/StepIndicator';
 import FormInput from '@/components/admin/property-form/FormInput';
-import AmenitiesGrid from '@/components/admin/property-form/AmenitiesGrid';
 import PhotoUploader from '@/components/admin/property-form/PhotoUploader';
 import { createProperty } from '@/lib/actions/property.actions';
 import {
+  CardSection, CardHeader, SectionDivider, LineInput, MoneyInput,
+  IncrementField, TagGroup, BinaryToggle, CollapsibleSection, CalcValue, SelectLine,
+} from '@/components/admin/property-form/PropertyFormUI';
+import {
   PROPERTY_CATEGORIES,
   PROPERTY_LOCATIONS,
-  CARDINAL_DIRECTIONS,
   PROPERTY_STREETS,
 } from '@/constants/property-options';
 
@@ -96,7 +98,7 @@ export default function NewPropertyPage() {
   const [photos, setPhotos] = useState<any[]>([]);
 
   const [formData, setFormData] = useState({
-    // Step 1 – Básicas
+    // ── Step 1: Básicas ───────────────────────────────────────────────────────
     title:       '',
     description: '',
     call:        '',
@@ -105,29 +107,43 @@ export default function NewPropertyPage() {
     location:    'Capão Novo',
     address:     '',
 
-    // Step 2 – Detalhes
+    // ── Step 2: Características ───────────────────────────────────────────────
+    areas: { privateArea: '', totalArea: '', terrainArea: '', terrainDimensions: '' },
     features:    { bedrooms: 0, suites: 0, bathrooms: 1, parking: 0, area: 0 },
-    values:      { condo: 0, iptu: 0 },
+    garageType:  [] as string[],
+    internalTags: [] as string[],  // finishes + special rooms
+    furnitureTag: '',              // single-select: furniture status
+    condoTags:   [] as string[],   // condo features
     buildingInfo: {
       year: '', floors: '', aptsPerFloor: '', totalApts: '',
       position: 'Frente', view: '', orientation: 'Norte',
       facade: '', opening: '', condition: '', isNeverInhabited: false, deliveryDate: '',
     },
-    amenities:   [] as string[],
 
-    // Step 3 – Estratégia Comercial
+    // ── Step 3: Financeiro ────────────────────────────────────────────────────
+    values:          { condo: '', iptu: '' },
+    iptuPeriod:      'Anual',
+    exclusivity:     false,
+    paymentMethods:  [] as string[],
+    directPayment:   { minEntry: '', maxMonths: '' },
+    acceptsExchange: false,
+    exchange:        { limitPercent: '', assetTypes: [] as string[], regions: '', notes: '' },
+    financialStatus: { hasEncumbrance: false, balance: '', bank: '' },
+
+    // ── Step 3 (legacy kept for backward compat) ──────────────────────────────
     strategicData: { sellerMotivation: '', urgency: '', negotiationFlexibility: '' },
     commercialIntelligence: { commissionPercentage: '', netValueExpected: '', proposalsHistory: '' },
     propertyProfile: { classification: '' },
+    amenities:   [] as string[],
 
-    // Step 4 – Localização Avançada
+    // ── Step 4: Localização Avançada ──────────────────────────────────────────
     advancedLocation: { distanceToSea: '', proximities: [] as string[] },
 
-    // Step 5 – Perfil & Documentação
+    // ── Step 5: Perfil & Documentação ─────────────────────────────────────────
     idealCustomerProfile: '',
     documentation: { status: '', details: '' },
 
-    // Step 6 – Publicação
+    // ── Step 6: Publicação ────────────────────────────────────────────────────
     youtubeId:   '',
     link360:     '',
     isPublished: true,
@@ -206,12 +222,44 @@ export default function NewPropertyPage() {
       const condoNum = parseFloat(parseCurrency(String(formData.values.condo))) / 100;
       const iptuNum  = parseFloat(parseCurrency(String(formData.values.iptu)))  / 100;
 
+      // Merge tag arrays into amenities for backward compat with DB schema
+      const allAmenities = [
+        ...formData.internalTags,
+        ...(formData.furnitureTag ? [formData.furnitureTag] : []),
+        ...formData.condoTags,
+        ...formData.amenities,
+      ];
+
       const cleanData = {
         ...formData,
         price: isNaN(priceNum) ? 0 : priceNum,
         values: {
           condo: isNaN(condoNum) ? 0 : condoNum,
           iptu:  isNaN(iptuNum)  ? 0 : iptuNum,
+        },
+        // Map privateArea back to features.area for DB compat
+        features: {
+          ...formData.features,
+          area: formData.areas.privateArea ? Number(formData.areas.privateArea) : formData.features.area,
+        },
+        amenities: allAmenities,
+        garageType: formData.garageType,
+        areas: {
+          privateArea:       formData.areas.privateArea ? Number(formData.areas.privateArea) : undefined,
+          totalArea:         formData.areas.totalArea ? Number(formData.areas.totalArea) : undefined,
+          terrainArea:       formData.areas.terrainArea ? Number(formData.areas.terrainArea) : undefined,
+          terrainDimensions: formData.areas.terrainDimensions || undefined,
+        },
+        iptuPeriod:      formData.iptuPeriod,
+        exclusivity:     formData.exclusivity,
+        paymentMethods:  formData.paymentMethods,
+        directPayment:   formData.directPayment,
+        acceptsExchange: formData.acceptsExchange,
+        exchange:        formData.exchange,
+        financialStatus: {
+          hasEncumbrance: formData.financialStatus.hasEncumbrance,
+          balance: formData.financialStatus.balance ? Number(parseCurrency(formData.financialStatus.balance)) / 100 : undefined,
+          bank:    formData.financialStatus.bank || undefined,
         },
         commercialIntelligence: {
           ...formData.commercialIntelligence,
@@ -225,7 +273,7 @@ export default function NewPropertyPage() {
           distanceToSea: formData.advancedLocation.distanceToSea
             ? Number(formData.advancedLocation.distanceToSea) : undefined,
         },
-        images: uploadedImages, // já são URLs do Cloudinary, não base64
+        images: uploadedImages,
       };
 
       const result = await createProperty(cleanData);
@@ -316,135 +364,282 @@ export default function NewPropertyPage() {
               </motion.div>
             )}
 
-            {/* ── STEP 2: Detalhes ─────────────────────────────────────────── */}
+            {/* ── STEP 2: Características ───────────────────────────────────── */}
             {step === 2 && (
               <motion.div key="step-2" variants={slideVariants} initial="initial" animate="animate" exit="exit"
-                transition={{ duration: 0.35, ease: [0.33, 1, 0.68, 1] }} className="space-y-20"
+                transition={{ duration: 0.35, ease: [0.33, 1, 0.68, 1] }} className="space-y-6"
               >
-                <div className="bg-[#F9FCFF] p-8 border border-[#002B49]/5">
-                  <SectionTitle icon="🏠" title="Características da Unidade" subtitle="Composição física do imóvel" />
-                  <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
-                    <FormInput label="Dormitórios" type="number" value={formData.features.bedrooms} onChange={e => updateNested('features', 'bedrooms', e.target.value)} />
-                    <FormInput label="Suítes"      type="number" value={formData.features.suites}   onChange={e => updateNested('features', 'suites', e.target.value)} />
-                    <FormInput label="Banheiros"   type="number" value={formData.features.bathrooms} onChange={e => updateNested('features', 'bathrooms', e.target.value)} />
-                    <FormInput label="Vagas"       type="number" value={formData.features.parking}  onChange={e => updateNested('features', 'parking', e.target.value)} />
-                    <FormInput label="Área m²"     type="number" value={formData.features.area}     onChange={e => updateNested('features', 'area', e.target.value)} />
+                {/* Card 1 – Áreas */}
+                <CardSection>
+                  <CardHeader icon="📐" title="Áreas e Dimensões" subtitle="Medidas em m²" />
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+                    <LineInput label="Área Privativa / Útil" suffix="m²" type="number"
+                      value={formData.areas.privateArea}
+                      onChange={v => setFormData(p => ({ ...p, areas: { ...p.areas, privateArea: v } }))} />
+                    <LineInput label="Área Total" suffix="m²" type="number"
+                      value={formData.areas.totalArea}
+                      onChange={v => setFormData(p => ({ ...p, areas: { ...p.areas, totalArea: v } }))} />
+                    {formData.category !== 'apartamento' && (
+                      <LineInput label="Área do Terreno" suffix="m²" type="number"
+                        value={formData.areas.terrainArea}
+                        onChange={v => setFormData(p => ({ ...p, areas: { ...p.areas, terrainArea: v } }))} />
+                    )}
+                    <LineInput label="Dimensões do Terreno" placeholder="Ex: 10x25"
+                      value={formData.areas.terrainDimensions}
+                      onChange={v => setFormData(p => ({ ...p, areas: { ...p.areas, terrainDimensions: v } }))} />
                   </div>
-                </div>
+                </CardSection>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                  <div className="space-y-8">
-                    <SectionTitle icon="💰" title="Valores Mensais" subtitle="Condomínio e IPTU" />
-                    <div className="grid grid-cols-2 gap-8">
-                      <FormInput label="Condomínio (R$)" placeholder="R$ 0,00"
-                        value={formData.values.condo === 0 ? '' : formatCurrency(formData.values.condo)}
-                        onChange={e => updateNested('values', 'condo', formatCurrency(e.target.value))} />
-                      <FormInput label="IPTU (R$)" placeholder="R$ 0,00"
-                        value={formData.values.iptu === 0 ? '' : formatCurrency(formData.values.iptu)}
-                        onChange={e => updateNested('values', 'iptu', formatCurrency(e.target.value))} />
-                    </div>
+                {/* Card 2 – Cômodos */}
+                <CardSection>
+                  <CardHeader icon="🛏️" title="Cômodos Principais" subtitle="Use os botões — muito mais rápido no celular" />
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
+                    <IncrementField label="Dormitórios" value={formData.features.bedrooms}
+                      onChange={v => updateNested('features', 'bedrooms', v)} />
+                    <IncrementField label="Sendo Suítes"
+                      value={formData.features.suites}
+                      onChange={v => updateNested('features', 'suites', Math.min(v, formData.features.bedrooms))}
+                      max={formData.features.bedrooms} />
+                    <IncrementField label="Banheiros Totais" value={formData.features.bathrooms}
+                      onChange={v => updateNested('features', 'bathrooms', v)} min={1} />
+                    <IncrementField label="Vagas de Garagem" value={formData.features.parking}
+                      onChange={v => updateNested('features', 'parking', v)} />
                   </div>
-                  <div className="space-y-8">
-                    <SectionTitle icon="🏗️" title="Informações do Imóvel" subtitle="Ano, andares e estado" />
-                    <div className="grid grid-cols-2 gap-8">
-                      <FormInput label="Ano Const." type="number" value={formData.buildingInfo.year || ''}
-                        onChange={e => updateNested('buildingInfo', 'year', e.target.value)} />
-                      <Select label="Posição Solar" value={formData.buildingInfo.orientation}
-                        onChange={v => updateNested('buildingInfo', 'orientation', v)}
-                        options={CARDINAL_DIRECTIONS.map(d => ({ label: d, value: d }))} />
-                    </div>
-                    <Select label="Estado de Conservação" value={formData.buildingInfo.condition}
-                      onChange={v => updateNested('buildingInfo', 'condition', v)}
-                      options={[
-                        { label: 'Novo / Nunca habitado', value: 'Novo' },
-                        { label: 'Excelente',             value: 'Excelente' },
-                        { label: 'Bom',                   value: 'Bom' },
-                        { label: 'Necessita reforma',     value: 'Reforma' },
-                      ]} />
-                  </div>
-                </div>
+                  {formData.features.parking > 0 && (
+                    <TagGroup
+                      label="Tipo de Garagem"
+                      tags={['Vagas Cobertas', 'Vagas Descobertas']}
+                      selected={formData.garageType}
+                      onChange={v => setFormData(p => ({ ...p, garageType: v }))}
+                    />
+                  )}
+                </CardSection>
 
-                <div>
-                  <SectionTitle icon="✨" title="Infraestrutura e Amenidades" subtitle="Selecione todos que se aplicam" />
-                  <AmenitiesGrid selectedAmenities={formData.amenities}
-                    onChange={list => setFormData({ ...formData, amenities: list })} />
-                </div>
+                {/* Card 3 – Detalhes Internos */}
+                <CardSection>
+                  <CardHeader icon="✨" title="Detalhes Internos" subtitle="Tags clicáveis — selecione os que se aplicam" />
+                  <div className="space-y-6">
+                    <TagGroup
+                      label="Acabamentos & Climatização"
+                      tags={['Piso Porcelanato', 'Piso de Madeira', 'Ar Condicionado', 'Lareira', 'Aquecimento a Gás', 'Teto Rebaixado em Gesso']}
+                      selected={formData.internalTags}
+                      onChange={v => setFormData(p => ({ ...p, internalTags: v }))}
+                    />
+                    <SectionDivider />
+                    <div className="flex flex-col gap-3">
+                      <span className="font-manrope text-[9px] uppercase tracking-[0.2em] text-[#002B49]/40">Mobília</span>
+                      <div className="flex flex-wrap gap-2">
+                        {['Imóvel Vazio', 'Semi-Mobiliado (Planejados)', 'Porteira Fechada (Mobiliado)'].map(tag => (
+                          <button key={tag} type="button"
+                            onClick={() => setFormData(p => ({ ...p, furnitureTag: p.furnitureTag === tag ? '' : tag }))}
+                            className={`px-4 py-2 text-[11px] font-manrope tracking-wider border transition-all duration-200 ${
+                              formData.furnitureTag === tag
+                                ? 'bg-[#001629] text-[#ffdea5] border-[#001629]'
+                                : 'bg-white text-[#002B49]/55 border-[#002B49]/15 hover:border-[#002B49]/40'
+                            }`}>{tag}</button>
+                        ))}
+                      </div>
+                    </div>
+                    <SectionDivider />
+                    <TagGroup
+                      label="Ambientes Especiais"
+                      tags={['Varanda Gourmet', 'Closet', 'Despensa', 'Dependência de Empregada', 'Lavabo', 'Escritório / Home Office']}
+                      selected={formData.internalTags}
+                      onChange={v => setFormData(p => ({ ...p, internalTags: v }))}
+                    />
+                  </div>
+                </CardSection>
+
+                {/* Card 4 – Condomínio */}
+                <CardSection>
+                  <CardHeader icon="🏊" title="Infraestrutura do Condomínio / Lazer" subtitle="Facilidades disponíveis no empreendimento" />
+                  <div className="space-y-6">
+                    <TagGroup
+                      label="Lazer"
+                      tags={['Piscina', 'Academia', 'Salão de Festas', 'Churrasqueira', 'Espaço Kids / Brinquedoteca', 'Quadra Poliesportiva']}
+                      selected={formData.condoTags}
+                      onChange={v => setFormData(p => ({ ...p, condoTags: v }))}
+                    />
+                    <SectionDivider />
+                    <TagGroup
+                      label="Facilidades & Segurança"
+                      tags={['Portaria 24h', 'Elevador', 'Minimercado', 'Aceita Pets', 'Bicicletário', 'Câmeras de Segurança']}
+                      selected={formData.condoTags}
+                      onChange={v => setFormData(p => ({ ...p, condoTags: v }))}
+                    />
+                  </div>
+                </CardSection>
               </motion.div>
             )}
 
-            {/* ── STEP 3: Estratégia Comercial ─────────────────────────────── */}
-            {step === 3 && (
-              <motion.div key="step-3" variants={slideVariants} initial="initial" animate="animate" exit="exit"
-                transition={{ duration: 0.35, ease: [0.33, 1, 0.68, 1] }} className="space-y-16"
-              >
-                <div className="bg-[#F9FCFF] p-8 border border-[#002B49]/5">
-                  <SectionTitle icon="🎯" title="Dados Estratégicos do Vendedor" subtitle="Contexto interno — não aparece no site" />
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <Select label="Motivação do Vendedor" value={formData.strategicData.sellerMotivation}
-                      onChange={v => updateNested('strategicData', 'sellerMotivation', v)}
-                      options={[
-                        { label: 'Mudança de cidade',      value: 'Mudança de cidade' },
-                        { label: 'Investimento',           value: 'Investimento' },
-                        { label: 'Divórcio / Herança',     value: 'Divórcio ou Herança' },
-                        { label: 'Troca por outro imóvel', value: 'Troca' },
-                        { label: 'Dívida / Necessidade',   value: 'Necessidade Financeira' },
-                        { label: 'Outro',                  value: 'Outro' },
-                      ]} />
-                    <Select label="Urgência de Venda" value={formData.strategicData.urgency}
-                      onChange={v => updateNested('strategicData', 'urgency', v)}
-                      options={[
-                        { label: '🟢 Baixa',    value: 'Baixa' },
-                        { label: '🟡 Média',    value: 'Média' },
-                        { label: '🟠 Alta',     value: 'Alta' },
-                        { label: '🔴 Imediata', value: 'Imediata' },
-                      ]} />
-                    <div className="md:col-span-2 flex flex-col gap-2">
-                      <label className="font-noto text-xs uppercase tracking-[0.15em] text-[#002B49]/60">Flexibilidade de Negociação</label>
-                      <input
-                        className="bg-transparent border-b border-[#002B49]/10 p-3 font-manrope text-sm text-[#002B49] focus:outline-none focus:border-[#775A19]"
-                        placeholder="Ex: Aceita carro na troca, imóvel menor, permuta…"
-                        value={formData.strategicData.negotiationFlexibility}
-                        onChange={e => updateNested('strategicData', 'negotiationFlexibility', e.target.value)}
-                      />
+            {/* ── STEP 3: Financeiro e Negociação ──────────────────────────── */}
+            {step === 3 && (() => {
+              const rawPrice = parseFloat(parseCurrency(formData.price)) / 100;
+              const pct = parseFloat(formData.commercialIntelligence.commissionPercentage);
+              const commissionValue = !isNaN(rawPrice) && !isNaN(pct) && pct > 0
+                ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(rawPrice * pct / 100)
+                : '—';
+              const excLimit = parseFloat(formData.exchange.limitPercent);
+              const excValue = !isNaN(rawPrice) && !isNaN(excLimit) && excLimit > 0
+                ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(rawPrice * excLimit / 100)
+                : null;
+              return (
+                <motion.div key="step-3" variants={slideVariants} initial="initial" animate="animate" exit="exit"
+                  transition={{ duration: 0.35, ease: [0.33, 1, 0.68, 1] }} className="space-y-6"
+                >
+                  {/* Bloco 1 – Precificação */}
+                  <CardSection>
+                    <CardHeader icon="💰" title="Precificação do Imóvel" subtitle="Valores com máscara monetária automática" />
+                    <div className="space-y-8">
+                      <MoneyInput label="Valor de Venda"
+                        value={formData.price}
+                        onChange={v => setFormData(p => ({ ...p, price: v }))} className="max-w-sm" />
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <MoneyInput label="Condomínio / Mês"
+                          value={formData.values.condo as string}
+                          onChange={v => setFormData(p => ({ ...p, values: { ...p.values, condo: v } }))} />
+                        <div>
+                          <MoneyInput label="IPTU"
+                            value={formData.values.iptu as string}
+                            onChange={v => setFormData(p => ({ ...p, values: { ...p.values, iptu: v } }))} />
+                          <div className="flex gap-2 mt-3">
+                            {['Anual', 'Mensal'].map(period => (
+                              <button key={period} type="button"
+                                onClick={() => setFormData(p => ({ ...p, iptuPeriod: period }))}
+                                className={`px-3 py-1.5 text-[10px] font-manrope tracking-wider border transition-all duration-200 ${
+                                  formData.iptuPeriod === period
+                                    ? 'bg-[#001629] text-[#ffdea5] border-[#001629]'
+                                    : 'bg-white text-[#002B49]/45 border-[#002B49]/15 hover:border-[#002B49]/40'
+                                }`}>{period}</button>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
+                  </CardSection>
 
-                <div className="bg-[#F9FCFF] p-8 border border-[#002B49]/5">
-                  <SectionTitle icon="📊" title="Inteligência Comercial" subtitle="Comissão, valor líquido e histórico" />
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <FormInput label="Comissão (%)" type="number"
-                      value={formData.commercialIntelligence.commissionPercentage}
-                      onChange={e => updateNested('commercialIntelligence', 'commissionPercentage', e.target.value)} />
-                    <FormInput label="Valor Líquido Esperado (R$)" type="number"
-                      value={formData.commercialIntelligence.netValueExpected}
-                      onChange={e => updateNested('commercialIntelligence', 'netValueExpected', e.target.value)} />
-                    <div className="md:col-span-2 flex flex-col gap-2">
-                      <label className="font-noto text-xs uppercase tracking-[0.15em] text-[#002B49]/60">Histórico de Propostas</label>
-                      <textarea
-                        className="bg-transparent border-b border-[#002B49]/10 p-4 font-manrope text-sm text-[#002B49] focus:outline-none focus:border-[#775A19] min-h-[100px]"
-                        placeholder="Anote propostas anteriores, condições, datas…"
-                        value={formData.commercialIntelligence.proposalsHistory}
-                        onChange={e => updateNested('commercialIntelligence', 'proposalsHistory', e.target.value)}
-                      />
+                  {/* Bloco 2 – Comissionamento */}
+                  <CardSection>
+                    <CardHeader icon="🤝" title="Modelo de Agenciamento" subtitle="Comissionamento — uso interno da imobiliária" />
+                    <div className="space-y-8">
+                      <div className="grid grid-cols-2 gap-8 max-w-md">
+                        <LineInput label="Honorários da Corretora (%)"
+                          type="number" placeholder="Ex: 6"
+                          value={formData.commercialIntelligence.commissionPercentage}
+                          onChange={v => updateNested('commercialIntelligence', 'commissionPercentage', v)} />
+                        <CalcValue label="Valor Projetado" value={commissionValue} />
+                      </div>
+                      <div className="flex flex-col gap-3">
+                        <span className="font-manrope text-[9px] uppercase tracking-[0.2em] text-[#002B49]/40">Contrato de Exclusividade?</span>
+                        <div className="flex gap-2">
+                          <button type="button" onClick={() => setFormData(p => ({ ...p, exclusivity: true }))}
+                            className={`px-5 py-2.5 text-[11px] font-manrope tracking-wider border transition-all duration-200 ${
+                              formData.exclusivity ? 'bg-[#001629] text-[#ffdea5] border-[#001629]' : 'bg-white text-[#002B49]/55 border-[#002B49]/15 hover:border-[#002B49]/40'
+                            }`}>Sim, com exclusividade</button>
+                          <button type="button" onClick={() => setFormData(p => ({ ...p, exclusivity: false }))}
+                            className={`px-5 py-2.5 text-[11px] font-manrope tracking-wider border transition-all duration-200 ${
+                              !formData.exclusivity ? 'bg-[#001629] text-[#ffdea5] border-[#001629]' : 'bg-white text-[#002B49]/55 border-[#002B49]/15 hover:border-[#002B49]/40'
+                            }`}>Não, agenciamento comum</button>
+                        </div>
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <label className="font-manrope text-[9px] uppercase tracking-[0.2em] text-[#002B49]/40">Observações de Comissionamento</label>
+                        <textarea
+                          className="bg-transparent border-b border-[#002B49]/15 pb-2 font-manrope text-sm text-[#002B49] focus:outline-none focus:border-[#775A19] transition-colors min-h-[80px] resize-none"
+                          placeholder="Ex: 50% para quem captou, 50% para quem fechar negócio…"
+                          value={formData.commercialIntelligence.proposalsHistory}
+                          onChange={e => updateNested('commercialIntelligence', 'proposalsHistory', e.target.value)}
+                        />
+                      </div>
                     </div>
-                  </div>
-                </div>
+                  </CardSection>
 
-                <div>
-                  <SectionTitle icon="🏆" title="Perfil do Imóvel" subtitle="Classificação para CRM e filtragem interna" />
-                  <Select label="Classificação" value={formData.propertyProfile.classification}
-                    onChange={v => updateNested('propertyProfile', 'classification', v)}
-                    options={[
-                      { label: '⭐ Standard',     value: 'Standard' },
-                      { label: '⭐⭐ Alto Padrão', value: 'Alto Padrão' },
-                      { label: '⭐⭐⭐ Luxo',      value: 'Luxo' },
-                      { label: '💵 Investimento', value: 'Investimento' },
-                      { label: '🚀 Lançamento',   value: 'Lançamento' },
-                    ]} />
-                </div>
-              </motion.div>
-            )}
+                  {/* Bloco 3 – Condições de Pagamento */}
+                  <CardSection>
+                    <CardHeader icon="🏦" title="Condições de Pagamento" subtitle="Estruturas financeiras aceitas pelo proprietário" />
+                    <div className="space-y-6">
+                      <TagGroup
+                        tags={['Financiamento Bancário', 'Uso de FGTS', 'Parcelamento Direto']}
+                        selected={formData.paymentMethods}
+                        onChange={v => setFormData(p => ({ ...p, paymentMethods: v }))}
+                      />
+                      <CollapsibleSection open={formData.paymentMethods.includes('Parcelamento Direto')}>
+                        <div className="grid grid-cols-2 gap-8 max-w-sm">
+                          <LineInput label="Entrada Mínima Exigida" placeholder="Ex: 40% ou R$ 200.000"
+                            value={formData.directPayment.minEntry}
+                            onChange={v => setFormData(p => ({ ...p, directPayment: { ...p.directPayment, minEntry: v } }))} />
+                          <LineInput label="Prazo Máximo (Meses)" type="number" placeholder="Ex: 36"
+                            value={formData.directPayment.maxMonths}
+                            onChange={v => setFormData(p => ({ ...p, directPayment: { ...p.directPayment, maxMonths: v } }))} />
+                        </div>
+                      </CollapsibleSection>
+                    </div>
+                  </CardSection>
+
+                  {/* Bloco 4 – Permuta */}
+                  <CardSection>
+                    <CardHeader icon="🔄" title="Estratégia de Permuta" subtitle="Crucial para imóveis de alto padrão" />
+                    <div className="space-y-6">
+                      <BinaryToggle label="O proprietário estuda permuta?"
+                        value={formData.acceptsExchange}
+                        onChange={v => setFormData(p => ({ ...p, acceptsExchange: v }))} />
+                      <CollapsibleSection open={formData.acceptsExchange}>
+                        <div className="space-y-6">
+                          <div className="flex items-end gap-4 max-w-xs">
+                            <LineInput label="Limite da Permuta (% do Valor Total)" type="number" placeholder="Ex: 40"
+                              value={formData.exchange.limitPercent}
+                              onChange={v => setFormData(p => ({ ...p, exchange: { ...p.exchange, limitPercent: v } }))} />
+                            {excValue && (
+                              <span className="font-manrope text-sm text-[#775A19] pb-2 whitespace-nowrap">≈ {excValue}</span>
+                            )}
+                          </div>
+                          <TagGroup label="Tipos de Ativos Aceitos"
+                            tags={['Apartamento', 'Casa', 'Terreno em Condomínio', 'Sala Comercial', 'Veículo Premium']}
+                            selected={formData.exchange.assetTypes}
+                            onChange={v => setFormData(p => ({ ...p, exchange: { ...p.exchange, assetTypes: v } }))} />
+                          <LineInput label="Regiões Aceitas para o Imóvel da Permuta"
+                            placeholder="Ex: Apenas Jardins, Moema ou Itaim Bibi"
+                            value={formData.exchange.regions}
+                            onChange={v => setFormData(p => ({ ...p, exchange: { ...p.exchange, regions: v } }))} />
+                          <div className="flex flex-col gap-2">
+                            <label className="font-manrope text-[9px] uppercase tracking-[0.2em] text-[#002B49]/40">Observações adicionais da permuta</label>
+                            <textarea
+                              className="bg-transparent border-b border-[#002B49]/15 pb-2 font-manrope text-sm text-[#002B49] focus:outline-none focus:border-[#775A19] transition-colors min-h-[80px] resize-none"
+                              placeholder="Ex: Carro apenas SUVs acima de 2021, tabela FIPE menos 10%…"
+                              value={formData.exchange.notes}
+                              onChange={e => setFormData(p => ({ ...p, exchange: { ...p.exchange, notes: e.target.value } }))}
+                            />
+                          </div>
+                        </div>
+                      </CollapsibleSection>
+                    </div>
+                  </CardSection>
+
+                  {/* Bloco 5 – Situação Documental Financeira */}
+                  <CardSection>
+                    <CardHeader icon="📄" title="Situação Documental Financeira" subtitle="Ônus, alienação e saldo devedor" />
+                    <div className="space-y-6">
+                      <BinaryToggle label="O imóvel possui ônus financeiro ou alienação?"
+                        labelTrue="Sim, alienado / financiado"
+                        labelFalse="Não, totalmente quitado"
+                        value={formData.financialStatus.hasEncumbrance}
+                        onChange={v => setFormData(p => ({ ...p, financialStatus: { ...p.financialStatus, hasEncumbrance: v } }))} />
+                      <CollapsibleSection open={formData.financialStatus.hasEncumbrance}>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                          <MoneyInput label="Saldo Devedor Atualizado"
+                            value={formData.financialStatus.balance}
+                            onChange={v => setFormData(p => ({ ...p, financialStatus: { ...p.financialStatus, balance: v } }))} />
+                          <SelectLine label="Banco / Credor"
+                            value={formData.financialStatus.bank}
+                            onChange={v => setFormData(p => ({ ...p, financialStatus: { ...p.financialStatus, bank: v } }))}
+                            options={['Caixa Econômica Federal', 'Itaú', 'Bradesco', 'Banco do Brasil', 'Santander', 'Nubank', 'Sicoob / Sicredi', 'BRB', 'Outro']} />
+                        </div>
+                      </CollapsibleSection>
+                    </div>
+                  </CardSection>
+                </motion.div>
+              );
+            })()}
 
             {/* ── STEP 4: Localização Avançada ─────────────────────────────── */}
             {step === 4 && (

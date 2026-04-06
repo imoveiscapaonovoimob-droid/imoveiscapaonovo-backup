@@ -72,6 +72,36 @@ export interface IProperty {
 
   createdAt: Date;
   updatedAt: Date;
+
+  // ── Novos campos UX (Step 2 – Características) ───────────────────────────────────
+  areas?: {
+    privateArea?: number;
+    totalArea?: number;
+    terrainArea?: number;
+    terrainDimensions?: string;
+  };
+  garageType?: string[];
+
+  // ── Novos campos UX (Step 3 – Financeiro) ─────────────────────────────────────
+  iptuPeriod?: 'Anual' | 'Mensal';
+  exclusivity?: boolean;
+  paymentMethods?: string[];
+  directPaymentTerms?: {
+    minEntry?: string;
+    maxMonths?: string;
+  };
+  acceptsExchange?: boolean;
+  exchange?: {
+    limitPercent?: string;
+    assetTypes?: string[];
+    regions?: string;
+    notes?: string;
+  };
+  financialStatus?: {
+    hasEncumbrance?: boolean;
+    balance?: number;
+    bank?: string;
+  };
 }
 
 const PropertySchema = new Schema<IProperty>(
@@ -149,6 +179,36 @@ const PropertySchema = new Schema<IProperty>(
     documentation: {
       status: { type: String, enum: ['100% Regularizado', 'Em inventário', 'Falta averbação', 'Contrato de Compra e Venda'] },
       details: { type: String },
+    },
+
+    // ── Step 2: Novas dimensões e tags ────────────────────────────────────────────────
+    areas: {
+      privateArea:       { type: Number },
+      totalArea:         { type: Number },
+      terrainArea:       { type: Number },
+      terrainDimensions: { type: String },
+    },
+    garageType: [{ type: String }],
+
+    // ── Step 3: Financeiro e Negociação ──────────────────────────────────────────────
+    iptuPeriod:    { type: String, enum: ['Anual', 'Mensal'], default: 'Anual' },
+    exclusivity:   { type: Boolean, default: false },
+    paymentMethods: [{ type: String }],
+    directPaymentTerms: {
+      minEntry:  { type: String },
+      maxMonths: { type: String },
+    },
+    acceptsExchange: { type: Boolean, default: false },
+    exchange: {
+      limitPercent: { type: String },
+      assetTypes:   [{ type: String }],
+      regions:      { type: String },
+      notes:        { type: String },
+    },
+    financialStatus: {
+      hasEncumbrance: { type: Boolean, default: false },
+      balance:        { type: Number },
+      bank:           { type: String },
     },
   },
   { timestamps: true }
