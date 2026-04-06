@@ -1,8 +1,7 @@
 'use client';
 
 import { Share2, Instagram, Link as LinkIcon, Heart, Loader2 } from 'lucide-react';
-import { useState, useRef } from 'react';
-import * as htmlToImage from 'html-to-image';
+import { useState } from 'react';
 
 interface PropertyShareActionsProps {
   title: string;
@@ -16,8 +15,8 @@ interface PropertyShareActionsProps {
 export function PropertyShareActions({ title, slug, mainImage, price, bedrooms, area }: PropertyShareActionsProps) {
   const [copied, setCopied] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
-  const postRef = useRef<HTMLDivElement>(null);
   
+
   const url = typeof window !== 'undefined' 
     ? window.location.href 
     : `https://imoveiscapaonovo.com.br/imoveis-capao-novo/${slug}`;
@@ -46,37 +45,115 @@ export function PropertyShareActions({ title, slug, mainImage, price, bedrooms, 
   };
 
   const handleInstagramExport = async () => {
-    if (!postRef.current) return;
     setIsGenerating(true);
 
     try {
-      // FORÇA O CARREGAMENTO DA IMAGEM EM BASE64:
-      // Isso previne que o Safari/Chrome no celular gere o quadrado preto por causa de CORS ou Image Lazy Loading
-      const response = await fetch(mainImage, { mode: 'cors' });
-      const imageBlob = await response.blob();
-      const base64DataUrl = await new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(imageBlob);
-      });
+      const canvas = document.createElement('canvas');
+      canvas.width = 1080;
+      canvas.height = 1080;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) throw new Error("Canvas não suportado");
 
-      // Aplica o base64 diretamente no nó DOM da imagem do template
-      const imgElement = postRef.current.querySelector('img');
-      if (imgElement) {
-        imgElement.src = base64DataUrl;
-        // Tempo microscópico para a engine do Safari "printar" o base64 no DOM invisível
-        await new Promise(r => setTimeout(r, 150));
+      // Fundo
+      ctx.fillStyle = '#001629';
+      ctx.fillRect(0, 0, 1080, 1080);
+
+      // Carregar a imagem principal
+      const loadImage = (url: string): Promise<HTMLImageElement> => {
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.crossOrigin = "anonymous";
+          img.onload = () => resolve(img);
+          img.onerror = () => {
+             // Fallback para evitar travamento: tentamos sem crossOrigin, ou injetamos um fundo vazio
+             resolve(img);
+          };
+          img.src = url;
+        });
+      };
+
+      // Tenta carregar a mainImage
+      let imgObj: HTMLImageElement | null = null;
+      try {
+        imgObj = await loadImage(mainImage);
+      } catch (e) {
+        console.warn("Falha ao carregar a imagem para o canvas (CORS bloqueou)");
       }
 
-      // 1. Gera a imagem do elemento escondido
-      const blob = await htmlToImage.toBlob(postRef.current, {
-        cacheBust: true,
-        quality: 1,
-        pixelRatio: 1, // Fix memory load issues
-      });
+      // Desenhar a Imagem (75% altura = 810px) com o recurso de cortar proporcional (object-fit: cover)
+      if (imgObj && imgObj.width > 0) {
+        const targetW = 1080;
+        const targetH = 810;
+        const imgRatio = imgObj.width / imgObj.height;
+        const targetRatio = targetW / targetH;
+        let drawW, drawH, drawX, drawY;
 
-      if (!blob) throw new Error("Erro ao gerar imagem");
+        if (imgRatio > targetRatio) {
+           drawH = imgObj.height;
+           drawW = imgObj.height * targetRatio;
+           drawX = (imgObj.width - drawW) / 2;
+           drawY = 0;
+        } else {
+           drawW = imgObj.width;
+           drawH = imgObj.width / targetRatio;
+           drawX = 0;
+           drawY = (imgObj.height - drawH) / 2;
+        }
+        ctx.drawImage(imgObj, drawX, drawY, drawW, drawH, 0, 0, targetW, targetH);
+      } else {
+        ctx.fillStyle = '#112233';
+        ctx.fillRect(0, 0, 1080, 810);
+      }
+
+      // Logo/Marca D'água
+      ctx.fillStyle = 'rgba(0, 22, 41, 0.85)';
+      ctx.beginPath();
+      ctx.roundRect(40, 40, 420, 80, 10);
+      ctx.fill();
+      
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = '36px "Times New Roman", serif'; // Simula Manrope Serif
+      ctx.fillText('Imóveis', 70, 92);
+      ctx.fillStyle = '#C3A562';
+      ctx.font = 'bold 24px Arial, sans-serif'; 
+      ctx.fillText('CAPÃO NOVO', 200, 90);
+
+      // Rodapé Textos (Y = 810 a 1080)
+      ctx.fillStyle = '#C3A562';
+      ctx.font = 'bold 20px Arial';
+      ctx.fillText('LANÇAMENTO EXCLUSIVO', 60, 870);
+
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = 'bold 46px "Times New Roman", serif';
+      // Quebrar o título se for muito grande
+      const maxTitleWidth = 960;
+      let titleText = title;
+      if (ctx.measureText(titleText).width > maxTitleWidth) {
+         titleText = titleText.substring(0, 45) + '...';
+      }
+      ctx.fillText(titleText, 60, 940);
+
+      // Linha Separadora
+      ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+      ctx.beginPath();
+      ctx.moveTo(60, 990);
+      ctx.lineTo(1020, 990);
+      ctx.stroke();
+
+      // Features + Preço
+      ctx.fillStyle = 'rgba(255,255,255,0.7)';
+      ctx.font = 'bold 24px Arial';
+      const features = [area ? `${area}M²` : '', bedrooms ? `${bedrooms} DORMS` : ''].filter(Boolean).join('   |   ');
+      ctx.fillText(features, 60, 1040);
+
+      ctx.fillStyle = '#C3A562';
+      ctx.font = 'italic bold 56px "Times New Roman", serif';
+      const priceMetrics = ctx.measureText(price);
+      ctx.fillText(price, 1020 - priceMetrics.width, 1045);
+
+      // Exportar para Arquivo
+      const blob = await new Promise<Blob | null>(res => canvas.toBlob(res, 'image/png'));
+      if (!blob) throw new Error("Falha na geração do Canvas Blob");
 
       const file = new File([blob], 'post-imovel.png', { type: 'image/png' });
 
@@ -89,21 +166,18 @@ export function PropertyShareActions({ title, slug, mainImage, price, bedrooms, 
           files: [file],
           title: title,
         });
-        // Disparar o aviso apenas DEPOIS que o share funcionou, ou não usar alert.
       } else {
-        // Fallback: Baixar no Computador
         const objUrl = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = objUrl;
         a.download = `capao-novo-${slug}.png`;
         a.click();
         URL.revokeObjectURL(objUrl);
-        // Avisar ao usuário do computador que baixou e copiou!
-        alert('📦 Imagem baixada no seu computador e texto da Legenda foi copiado para sua área de transferência! Cole no post do seu Instagram!');
+        alert('📦 Imagem salva no seu Computador! A Legenda do post também já foi copiada!');
       }
     } catch (err) {
-      console.error('Falha ao exportar imagem', err);
-      alert('Houve um erro ao processar a imagem do post.');
+      console.error('Falha ao exportar imagem nativa', err);
+      alert('Não foi possível processar a foto. O Instagram suporta apenas acesso manual neste dispositivo.');
     } finally {
       setIsGenerating(false);
     }
@@ -139,43 +213,6 @@ export function PropertyShareActions({ title, slug, mainImage, price, bedrooms, 
         >
           <Heart size={18} className="group-hover:scale-110 transition-transform" />
         </button>
-      </div>
-
-      {/* INSTAGRAM POST TEMPLATE (ESCONDIDO DA TELA: Renderiza fora do viewport para capturar canvas) */}
-      <div 
-        ref={postRef}
-        className="fixed top-0 left-0 bg-[#001629] overflow-hidden flex flex-col justify-between shadow-none border-none outline-none"
-        style={{ width: '1080px', height: '1080px', zIndex: -9999, transform: 'translate(-200vw, -200vh)' }}
-      >
-        {/* Imagem do Imóvel Ocupando 75% da altura */}
-        <div className="h-[750px] w-full relative">
-          <img 
-            src={mainImage} 
-            alt="Imagem Capa" 
-            crossOrigin="anonymous"
-            style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-          />
-          {/* Logo overlay superior */}
-          <div className="absolute top-12 left-12 bg-[#001629]/80 backdrop-blur-md px-8 py-4 rounded-sm flex items-center gap-4">
-             <span className="text-white font-serif text-3xl">Imóveis</span>
-             <span className="text-accent font-sans uppercase font-black tracking-widest mt-1">Capão Novo</span>
-          </div>
-        </div>
-
-        {/* Informações Inferiores (25%) */}
-        <div className="h-[330px] bg-[#001629] w-full px-16 py-12 flex flex-col justify-center">
-          <span className="text-accent text-lg font-black uppercase tracking-[0.4em] mb-4">Lançamento Exclusivo</span>
-          <h1 className="text-white text-5xl font-serif mb-8 line-clamp-2 leading-tight">{title}</h1>
-          <div className="flex justify-between items-end border-t border-white/20 pt-8 mt-2">
-            <div className="text-white/60 text-2xl font-sans tracking-widest uppercase flex gap-8">
-              {area && <span>{area}M²</span>}
-              {bedrooms && <span>{bedrooms} DORMS</span>}
-            </div>
-            <div className="text-accent text-6xl font-serif italic">
-              {price}
-            </div>
-          </div>
-        </div>
       </div>
     </>
   );
