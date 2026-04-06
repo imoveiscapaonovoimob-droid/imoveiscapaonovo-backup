@@ -10,15 +10,15 @@ export const metadata = {
   description: 'Encontre as melhores casas e apartamentos em Capão Novo e região.',
 };
 
-export default async function SearchResultsPage({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
+export default async function SearchResultsPage(props: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }> | { [key: string]: string | string[] | undefined };
 }) {
-  const tipo = searchParams.tipo as string;
-  const min = searchParams.min as string;
-  const max = searchParams.max as string;
-  const local = searchParams.local as string;
+  const searchParams = await props.searchParams;
+  
+  const tipo = searchParams?.tipo as string;
+  const min = searchParams?.min as string;
+  const max = searchParams?.max as string;
+  const local = searchParams?.local as string;
 
   const { properties, success } = await searchProperties({
     category: tipo,
