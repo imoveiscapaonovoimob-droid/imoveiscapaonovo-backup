@@ -104,7 +104,7 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
           </div>
 
           {/* Property Gallery (Overlapped) */}
-          <div className="w-full md:w-5/6 ml-auto relative z-10">
+          <div className="w-full relative z-10">
              <PropertyGallery 
               title={property.title} 
               images={property.images} 
