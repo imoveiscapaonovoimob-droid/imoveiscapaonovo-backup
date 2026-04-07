@@ -11,7 +11,7 @@ const NAV_LINKS = [
   { label: "Imóveis", href: "/imoveis-capao-novo" },
   { label: "Casas", href: "/casas-capao-novo" },
   { label: "Apartamentos", href: "/apartamentos-capao-novo" },
-  { label: "Condomínios", href: "/imoveis-costa-serena" },
+  { label: "Condomínios", href: "/imoveis-condominios" },
   { label: "Blog", href: "/blog" },
 ];
 
