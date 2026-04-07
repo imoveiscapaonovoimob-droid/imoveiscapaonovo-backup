@@ -46,10 +46,6 @@ export const metadata: Metadata = {
     description: "Seleção exclusiva de imóveis em Capão Novo.",
     images: ["/hero.webp"],
   },
-  icons: {
-    icon: "/favicon.png",
-    apple: "/apple-touch-icon.png",
-  },
 };
 
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
