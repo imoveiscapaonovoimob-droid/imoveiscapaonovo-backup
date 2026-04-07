@@ -3,6 +3,7 @@ export const PROPERTY_CATEGORIES = [
   { value: 'apartamento', label: 'Apartamento' },
   { value: 'terreno', label: 'Terreno' },
   { value: 'comercial', label: 'Comercial' },
+  { value: 'condominio', label: 'Condomínio Fechado' },
 ];
 
 export const PROPERTY_LOCATIONS = [

@@ -51,6 +51,7 @@ export const SearchBar = () => {
                 <option value="apartamento">Apartamentos</option>
                 <option value="terreno">Terrenos</option>
                 <option value="comercial">Comercial</option>
+                <option value="condominio">Condomínio Fechado</option>
               </select>
               <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-primary/40 pointer-events-none" />
             </div>

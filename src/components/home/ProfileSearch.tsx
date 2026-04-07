@@ -29,7 +29,7 @@ const PROFILES = [
     title: "🏡 Condomínios em Capão Novo",
     description: "Segurança, lazer e alto padrão para morar ou investir com tranquilidade.",
     cta: "👉 Ver imóveis em condomínio",
-    href: "/condominios-capao-novo", // Link interno para SEO
+    href: "/imoveis-condominios", // Link interno para SEO
   },
 ];
 

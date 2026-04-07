@@ -1,15 +1,19 @@
 import { Metadata } from 'next';
 import { Header } from "@/components/layout/Header";
-import { PropertyGrid } from "@/components/home/PropertyGrid";
+import { ProfileSearch } from "@/components/home/ProfileSearch";
 import { CTA } from "@/components/home/CTA";
 import { Footer } from "@/components/home/Footer";
+import { searchProperties } from "@/lib/actions/property.actions";
+import { PropertyCard } from "@/components/home/PropertyCard";
 
 export const metadata: Metadata = {
   title: "Casas em Capão Novo | Alto Padrão e Frente Mar",
   description: "Encontre as melhores casas à venda em Capão Novo. Opções em condomínios de luxo, próximo à praia e Posto 4.",
 };
 
-export default function Page() {
+export default async function Page() {
+  const { properties } = await searchProperties({ category: "casa" });
+
   return (
     <main className="min-h-screen">
       <Header />
@@ -28,10 +32,34 @@ export default function Page() {
         </article>
       </section>
 
-      {/* VITRINE */}
-      <div className="bg-secondary/5 py-8">
-        <PropertyGrid />
+      {/* Grid de Imóveis (Casas) */}
+      <div className="bg-surface-container-low py-16 px-6 lg:px-10">
+        <div className="max-w-[1440px] mx-auto">
+          {properties && properties.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {properties.map((property: any) => (
+                <PropertyCard 
+                  key={property._id}
+                  id={property._id}
+                  title={property.title}
+                  price={property.price}
+                  location={property.location}
+                  beds={property.features?.bedrooms || 0}
+                  image={property.images?.find((i: any) => i.isMain)?.url || property.images?.[0]?.url || "/images/placeholder-property.jpg"}
+                  slug={property.slug}
+                  tags={[property.category].filter(Boolean)}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-20 bg-white border border-black/5 rounded-lg">
+              <h3 className="font-noto text-2xl text-primary mb-4">Nenhuma casa encontrada no momento.</h3>
+            </div>
+          )}
+        </div>
       </div>
+
+      <ProfileSearch />
 
       {/* FAQ DE CONVERSÃO */}
       <section className="py-16 px-6 lg:px-10 max-w-3xl mx-auto">

@@ -7,31 +7,28 @@ import { searchProperties } from "@/lib/actions/property.actions";
 import { PropertyCard } from "@/components/home/PropertyCard";
 
 export const metadata: Metadata = {
-  title: "Apartamentos Capão da Canoa Capão Novo",
-  description: "Encontre os melhores apartamentos em Capão Novo, Capão da Canoa. Mobiliados, vista para o mar e mais.",
+  title: "Imóveis em Condomínios | Capão Novo",
+  description: "Encontre os melhores imóveis em condomínios fechados em Capão Novo. Segurança, lazer e alto padrão.",
 };
 
 export default async function Page() {
-  const { properties } = await searchProperties({ category: "apartamento" });
+  const { properties } = await searchProperties({ category: "condominio" });
 
   return (
     <main className="min-h-screen">
       <Header />
-      
-      {/* HEADER SEO */}
       <section className="pt-32 pb-8 px-6 lg:px-10 max-w-7xl mx-auto">
         <h1 className="text-4xl md:text-5xl font-serif text-primary mb-6">
-          Apartamentos Capão da Canoa Capão Novo
+          Condomínios Fechados
         </h1>
         <article className="prose prose-lg text-secondary/80 max-w-none">
           <p>
-            A conveniência e luxuosidade vertical reunida de forma única no litoral. A nossa vitrine de <strong>Apartamentos em Capão Novo</strong> foi montada para entregar a melhor experiência - seja buscando um duplex que respire a brisa do oceano ou um mobiliado pronto para morar no próximo verão.
-            Buscamos sempre destacar projetos de segurança robusta e lazer ininterrupto para a sua família inteira.
+            Viver em <strong>Condomínios Fechados</strong> é mergulhar no design praiano com total segurança. Residências luxuosas, assinaturas modernas e clubes completos idealizados para atender os desejos e tranquilidade exigidos por famílias de alto poder aquisitivo no Rio Grande do Sul.
           </p>
         </article>
       </section>
 
-      {/* Grid de Imóveis (Apartamentos) */}
+      {/* Grid de Imóveis (Condomínios) */}
       <div className="bg-surface-container-low py-16 px-6 lg:px-10">
         <div className="max-w-[1440px] mx-auto">
           {properties && properties.length > 0 ? (
@@ -52,7 +49,7 @@ export default async function Page() {
             </div>
           ) : (
             <div className="text-center py-20 bg-white border border-black/5 rounded-lg">
-              <h3 className="font-noto text-2xl text-primary mb-4">Nenhum apartamento encontrado no momento.</h3>
+              <h3 className="font-noto text-2xl text-primary mb-4">Nenhum imóvel em condomínio encontrado no momento.</h3>
             </div>
           )}
         </div>

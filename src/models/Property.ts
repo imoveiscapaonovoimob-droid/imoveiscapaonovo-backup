@@ -7,7 +7,7 @@ export interface IProperty {
   description: string;
   call?: string; // Chamada rápida de marketing
   price: number;
-  category: 'casa' | 'apartamento' | 'terreno' | 'comercial';
+  category: 'casa' | 'apartamento' | 'terreno' | 'comercial' | 'condominio';
   location: string;
   address: string;
   youtubeId?: string;
@@ -114,7 +114,7 @@ const PropertySchema = new Schema<IProperty>(
     category: {
       type: String,
       required: true,
-      enum: ['casa', 'apartamento', 'terreno', 'comercial'],
+      enum: ['casa', 'apartamento', 'terreno', 'comercial', 'condominio'],
       default: 'casa'
     },
     location: { type: String, default: 'Capão Novo' },
