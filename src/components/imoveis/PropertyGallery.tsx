@@ -118,7 +118,7 @@ export function PropertyGallery({ title, images, mainImageFallback }: PropertyGa
                   i === currentIndex ? 'border-[#C9A96E] opacity-100' : 'border-transparent opacity-40 hover:opacity-70'
                 }`}
               >
-                <CloudinaryImage size="thumb" src={img.url} alt="" fill className="object-cover" />
+                <CloudinaryImage size="thumbnail" src={img.url} alt="" fill className="object-cover" />
               </button>
             ))}
           </div>
