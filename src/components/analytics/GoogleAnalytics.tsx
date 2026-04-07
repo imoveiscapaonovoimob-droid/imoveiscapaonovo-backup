@@ -2,7 +2,7 @@
 
 import Script from "next/script";
 
-export const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_ID || "G-XXXXXXXXXX";
+export const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_ID || "G-C05LD50V07";
 
 type GAEventProps = {
   action: string;
