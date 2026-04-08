@@ -1,9 +1,14 @@
 export const PROPERTY_CATEGORIES = [
-  { value: 'casa', label: 'Casa' },
   { value: 'apartamento', label: 'Apartamento' },
-  { value: 'terreno', label: 'Terreno' },
+  { value: 'casa', label: 'Casa' },
   { value: 'comercial', label: 'Comercial' },
   { value: 'condominio', label: 'Condomínio Fechado' },
+  { value: 'duplex', label: 'Duplex' },
+  { value: 'jk', label: 'JK' },
+  { value: 'sobrado', label: 'Sobrado' },
+  { value: 'studio', label: 'Studio' },
+  { value: 'terreno', label: 'Terreno' },
+  { value: 'vivenda', label: 'Vivenda' },
 ];
 
 export const PROPERTY_LOCATIONS = [
