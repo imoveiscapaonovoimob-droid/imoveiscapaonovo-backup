@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { Search, ChevronDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 
+import { PROPERTY_CATEGORIES } from "@/constants/property-options";
+
 export const SearchBar = () => {
   const router = useRouter();
   const [filters, setFilters] = useState({
@@ -46,12 +48,12 @@ export const SearchBar = () => {
                 value={filters.type}
                 onChange={(e) => setFilters({ ...filters, type: e.target.value })}
               >
-                <option value="all">Todos os imóveis</option>
-                <option value="casa">Casas à venda</option>
-                <option value="apartamento">Apartamentos</option>
-                <option value="terreno">Terrenos</option>
-                <option value="comercial">Comercial</option>
-                <option value="condominio">Condomínio Fechado</option>
+                <option value="all">Todos os tipos</option>
+                {PROPERTY_CATEGORIES.map((c) => (
+                  <option key={c.value} value={c.value}>
+                    {c.label}
+                  </option>
+                ))}
               </select>
               <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-primary/40 pointer-events-none" />
             </div>
