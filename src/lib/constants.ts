@@ -11,6 +11,6 @@ export const WHATSAPP_MESSAGES = {
 
 export const SOCIAL_LINKS = {
   facebook: "https://www.facebook.com/share/1Aq5PBWqPa/",
-  instagram: "https://www.instagram.com/imoveiscapaonovoimob?igsh=MWk5bTlnamxtc2M0OA==",
+  instagram: "https://www.instagram.com/imoveiscapaonovoimob/",
   youtube: "", // adicionar quando disponível
 };
