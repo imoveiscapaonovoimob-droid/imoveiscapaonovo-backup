@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import { CheckCircle2, MessageCircle, ArrowRight } from "lucide-react";
 import { WHATSAPP_MESSAGES } from "@/lib/constants";
 
@@ -106,6 +107,15 @@ export const SEOBlock = () => {
               </h3>
               
               <div className="space-y-6 mb-12">
+                <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 shadow-lg">
+                  <Image
+                    src="/images/corretor_escritorio.jpg"
+                    alt="Corretor em Capão Novo"
+                    fill
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-primary/40 to-transparent" />
+                </div>
                 <p className="text-white/60 text-sm font-sans italic leading-relaxed">
                   Nossa equipe especializada está pronta para apresentar as melhores oportunidades antes mesmo de chegarem ao mercado aberto.
                 </p>
