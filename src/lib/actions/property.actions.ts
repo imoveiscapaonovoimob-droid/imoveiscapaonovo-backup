@@ -47,6 +47,7 @@ export async function createProperty(formData: any) {
       location,
       address,
       youtubeId,
+      instagramUrl,
       link360,
       features,
       values,
@@ -104,6 +105,7 @@ export async function createProperty(formData: any) {
       location,
       address,
       youtubeId,
+      instagramUrl,
       link360,
       features: {
         bedrooms:  Number(features.bedrooms),

@@ -35,7 +35,7 @@ export async function updateProperty(id: string, formData: any) {
     const sanitized = sanitizeEnums(formData);
     const {
       title, description, call, price, category, location,
-      address, youtubeId, link360, features, values, buildingInfo,
+      address, youtubeId, instagramUrl, link360, features, values, buildingInfo,
       amenities, images, isPublished, isFeatured,
     } = sanitized;
 
@@ -79,6 +79,7 @@ export async function updateProperty(id: string, formData: any) {
       location,
       address,
       youtubeId,
+      instagramUrl,
       link360,
       features: {
         bedrooms:  Number(features?.bedrooms  ?? 0),

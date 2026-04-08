@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { getPropertyBySlugOrId } from '@/lib/actions/property.actions';
 import { PropertyGallery } from '@/components/imoveis/PropertyGallery';
+import { VideoEmbed } from '@/components/imoveis/VideoEmbed';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/home/Footer';
 import { 
@@ -200,7 +201,16 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
               </div>
             )}
 
-          </div>
+            {/* Video Tour — YouTube or Instagram */}
+            {(property.youtubeId || property.instagramUrl) && (
+              <VideoEmbed
+                youtubeUrl={property.youtubeId}
+                instagramUrl={property.instagramUrl}
+                title={property.title}
+              />
+            )}
+
+          </div>{/* end lg:col-span-8 */}
 
           {/* Sticky Sidebar */}
           <div className="lg:col-span-4 relative">

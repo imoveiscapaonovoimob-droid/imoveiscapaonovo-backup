@@ -96,56 +96,67 @@ export const SEOBlock = () => {
 
           {/* Sidebar CTA */}
           <div className="lg:col-span-4">
-            <div className="sticky top-32 p-10 bg-primary text-white rounded-3xl shadow-2xl overflow-hidden relative">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16" />
+            <div className="sticky top-32 p-8 md:p-10 bg-primary text-white rounded-3xl shadow-2xl overflow-hidden relative border border-white/5">
+              {/* Decorative Background Element */}
+              <div className="absolute top-0 right-0 w-64 h-64 bg-secondary/5 rounded-full -mr-32 -mt-32 blur-3xl pointer-events-none" />
               
-              <span className="text-secondary text-[10px] font-sans font-black tracking-[0.4em] uppercase mb-6 block">
-                Conversão Direta
+              <span className="text-secondary text-[10px] font-sans font-black tracking-[0.4em] uppercase mb-8 block relative z-10 text-center">
+                Consultoria Direta
               </span>
-              <h3 className="text-3xl font-serif mb-8 leading-tight">
-                Quer encontrar o melhor imóvel em Capão Novo?
-              </h3>
               
-              <div className="space-y-6 mb-12">
-                <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 shadow-lg">
+              <div className="space-y-8 relative z-10 flex flex-col items-center">
+                {/* Broker Photo - Premium Adjustment */}
+                <div className="group relative w-full h-[340px] rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-white/5">
                   <Image
-                    src="/images/corretor_escritorio.jpg"
-                    alt="Corretor em Capão Novo"
+                    src="/images/corretor_escritorio.webp"
+                    alt="Lenine Kerber - Corretor Especialista"
                     fill
-                    className="object-cover"
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    sizes="(max-width: 1024px) 100vw, 400px"
+                    priority
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-primary/40 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-primary via-transparent to-transparent opacity-90" />
+                  <div className="absolute bottom-6 inset-x-0 px-6 text-center">
+                    <p className="text-secondary text-[8px] font-black uppercase tracking-[0.3em] mb-1">Especialista Local</p>
+                    <h4 className="text-xl md:text-2xl font-serif text-white tracking-wide">Lenine Kerber</h4>
+                  </div>
                 </div>
-                <p className="text-white/60 text-sm font-sans italic leading-relaxed">
-                  Nossa equipe especializada está pronta para apresentar as melhores oportunidades antes mesmo de chegarem ao mercado aberto.
-                </p>
-                <ul className="space-y-4">
-                  {[
-                    "Oportunidades exclusivas",
-                    "Alto potencial de valorização",
-                    "Negociações estratégicas"
-                  ].map(item => (
-                    <li key={item} className="flex items-center gap-3 text-[11px] font-sans font-bold uppercase tracking-widest">
-                      <div className="w-1.5 h-1.5 rounded-full bg-secondary" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
 
-              <a
-                href={WHATSAPP_MESSAGES.geral}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-3 w-full bg-secondary text-primary py-6 px-4 rounded-xl font-sans font-black text-[10px] uppercase tracking-[0.2em] hover:bg-white transition-all duration-300"
-              >
-                <MessageCircle size={18} fill="currentColor" />
-                Falar pelo WhatsApp
-              </a>
-              
-              <p className="text-center text-[9px] text-white/30 uppercase tracking-[0.2em] mt-6 font-bold">
-                Receba as melhores ofertas hoje
-              </p>
+                <div className="space-y-6 w-full">
+                  <p className="text-white/80 text-sm font-sans leading-relaxed text-center">
+                    Nossa equipe especializada está pronta para apresentar as melhores oportunidades antes mesmo de chegarem ao mercado aberto.
+                  </p>
+                  
+                  <ul className="space-y-4">
+                    {[
+                      "Oportunidades exclusivas",
+                      "Alto potencial de valorização",
+                      "Negociações estratégicas"
+                    ].map(item => (
+                      <li key={item} className="flex items-center gap-3 text-[10px] font-sans font-bold uppercase tracking-widest text-white/90">
+                        <div className="w-1.5 h-1.5 rounded-full bg-secondary shadow-[0_0_8px_rgba(212,175,55,0.6)] shrink-0" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+
+                  <div className="pt-2">
+                    <a
+                      href={WHATSAPP_MESSAGES.geral}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-3 w-full bg-secondary text-primary py-5 px-4 rounded-xl font-sans font-black text-[10px] uppercase tracking-[0.2em] hover:bg-white hover:scale-[1.02] transition-all duration-300 shadow-xl shadow-black/20"
+                    >
+                      <MessageCircle size={18} fill="currentColor" />
+                      Falar Agora
+                    </a>
+                    
+                    <p className="text-center text-[9px] text-white/30 uppercase tracking-[0.3em] mt-6 font-bold">
+                      Plantão de Vendas Capão Novo
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 

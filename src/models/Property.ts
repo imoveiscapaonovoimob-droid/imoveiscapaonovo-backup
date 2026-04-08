@@ -11,6 +11,7 @@ export interface IProperty {
   location: string;
   address: string;
   youtubeId?: string;
+  instagramUrl?: string;
   link360?: string;
   features: {
     bedrooms: number;
@@ -120,6 +121,7 @@ const PropertySchema = new Schema<IProperty>(
     location: { type: String, default: 'Capão Novo' },
     address: { type: String, required: true },
     youtubeId: { type: String },
+    instagramUrl: { type: String },
     link360: { type: String },
     features: {
       bedrooms: { type: Number, default: 0 },

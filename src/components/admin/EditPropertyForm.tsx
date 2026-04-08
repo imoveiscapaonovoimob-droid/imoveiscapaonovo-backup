@@ -163,10 +163,11 @@ export default function EditPropertyForm({ property }: Props) {
     },
 
     // Step 6 – Publicação
-    youtubeId:   property.youtubeId  || '',
-    link360:     property.link360     || '',
-    isPublished: property.isPublished ?? true,
-    isFeatured:  property.isFeatured  ?? false,
+    youtubeId:    property.youtubeId    || '',
+    instagramUrl: property.instagramUrl || '',
+    link360:      property.link360      || '',
+    isPublished:  property.isPublished ?? true,
+    isFeatured:   property.isFeatured  ?? false,
   });
 
   const nextStep = () => setStep(s => s + 1);
@@ -554,12 +555,27 @@ export default function EditPropertyForm({ property }: Props) {
                 </div>
 
                 <div>
-                  <SectionTitle icon="🎬" title="Mídia Digital" subtitle="YouTube e Tour 360" />
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                    <FormInput label="ID YouTube (Ex: jNQXAC9IVRw)" value={formData.youtubeId}
-                      onChange={e => setFormData({ ...formData, youtubeId: e.target.value })} />
-                    <FormInput label="Link Tour 360" value={formData.link360}
-                      onChange={e => setFormData({ ...formData, link360: e.target.value })} />
+                  <SectionTitle icon="🎬" title="Mídia Digital" subtitle="YouTube, Instagram e Tour 360" />
+                  <div className="grid grid-cols-1 gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      <FormInput
+                        label="YouTube — URL completa ou ID"
+                        placeholder="https://youtu.be/jNQXAC9IVRw"
+                        value={formData.youtubeId}
+                        onChange={e => setFormData({ ...formData, youtubeId: e.target.value })}
+                      />
+                      <FormInput
+                        label="Instagram — URL do Post / Reel / TV"
+                        placeholder="https://www.instagram.com/p/ABC123/"
+                        value={formData.instagramUrl}
+                        onChange={e => setFormData({ ...formData, instagramUrl: e.target.value })}
+                      />
+                    </div>
+                    <FormInput
+                      label="Link Tour 360"
+                      value={formData.link360}
+                      onChange={e => setFormData({ ...formData, link360: e.target.value })}
+                    />
                   </div>
                 </div>
 
