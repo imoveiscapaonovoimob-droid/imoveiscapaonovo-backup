@@ -1,18 +1,40 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { Search, ChevronDown } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { PROPERTY_CATEGORIES } from "@/constants/property-options";
 
-export const SearchBar = () => {
+const SearchBarContent = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  
   const [filters, setFilters] = useState({
     type: "all",
     priceRange: "all",
     location: "all",
   });
+
+  useEffect(() => {
+    if (searchParams) {
+      const tipo = searchParams.get("tipo") || "all";
+      const min = searchParams.get("min");
+      const max = searchParams.get("max");
+      const local = searchParams.get("local") || "all";
+      
+      let priceRange = "all";
+      if (min && max) {
+        if (min === "0" && max === "400000") priceRange = "0-400000";
+        else if (min === "400000" && max === "800000") priceRange = "400000-800000";
+        else if (min === "800000" && max === "1500000") priceRange = "800000-1500000";
+        else if (min === "1500000" && max === "999999999") priceRange = "1500000-999999999";
+        else priceRange = `${min}-${max}`;
+      }
+      
+      setFilters({ type: tipo, priceRange, location: local });
+    }
+  }, [searchParams]);
 
   const handleSearch = () => {
     const params = new URLSearchParams();
@@ -116,6 +138,14 @@ export const SearchBar = () => {
         </p>
       </div>
     </div>
+  );
+};
+
+export const SearchBar = () => {
+  return (
+    <Suspense fallback={<div className="w-full h-32 bg-white/95 backdrop-blur-md shadow-2xl border-t border-white/20"></div>}>
+      <SearchBarContent />
+    </Suspense>
   );
 };
 
