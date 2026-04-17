@@ -1,18 +1,31 @@
 import { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://imoveiscapaonovo.com.br' // Usando o TLD oficial .com.br
+  const baseUrl = 'https://imoveiscapaonovo.com.br'
 
   const routes = [
     '',
-    '/posto-5',
-    '/terrenos',
     '/sobre',
     '/blog',
+    '/blog/investir-capao-da-canoa',
     '/casas-capao-novo',
     '/apartamentos-capao-novo',
+    '/sobrados-capao-novo',
+    '/duplex-capao-novo',
+    '/studios-capao-novo',
+    '/vivendas-capao-novo',
+    '/jks-capao-novo',
+    '/terrenos-capao-novo',
+    '/imoveis-capao-novo',
+    '/imoveis-capao-novo-posto-4',
+    '/imoveis-capao-novo-posto-5',
+    '/imoveis-capao-novo-village',
+    '/imoveis-condominios',
     '/imoveis-costa-serena',
     '/imoveis-velas-da-marina',
+    '/imoveis-terrasul',
+    '/exclusividades',
+    '/portfolio',
   ].map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
