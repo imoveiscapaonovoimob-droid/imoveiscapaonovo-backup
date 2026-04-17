@@ -4,6 +4,7 @@ import { Footer } from "@/components/home/Footer";
 import { MapPin, Waves, Utensils, Trees, ShoppingBag, Car } from "lucide-react";
 import type { Metadata } from "next";
 import { WHATSAPP_MESSAGES } from "@/lib/constants";
+import { ShareButtons } from "@/components/shared/ShareButtons";
 
 export const metadata: Metadata = {
   title: "Guia Capão Novo | Imóveis Capão Novo",
@@ -93,6 +94,17 @@ export default function GuiaPage() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Share */}
+      <section className="py-10 px-6 lg:px-10 bg-white">
+        <div className="max-w-3xl mx-auto">
+          <ShareButtons
+            title="Guia Capão Novo | Tudo sobre o Litoral Norte Gaúcho"
+            description="Praias, restaurantes, pontos turísticos e por que Capão Novo é o melhor lugar para viver e investir no litoral gaúcho."
+            url="https://imoveiscapaonovo.com.br/guia"
+          />
         </div>
       </section>
 

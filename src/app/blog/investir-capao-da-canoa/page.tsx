@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/home/Footer";
+import { ShareButtons } from "@/components/shared/ShareButtons";
 import { TrendingUp, ArrowLeft, AlertTriangle, CheckCircle2, BarChart3, Home, Building2, Landmark } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -390,8 +391,15 @@ export default function Page() {
           </p>
         </div>
 
+        {/* Share */}
+        <ShareButtons
+          title="Por que investir em Capão da Canoa agora?"
+          description="Uma análise técnica sobre valorização e infraestrutura no Litoral Norte gaúcho."
+          url="https://imoveiscapaonovo.com.br/blog/investir-capao-da-canoa"
+        />
+
         {/* CTA */}
-        <div className="border-t border-outline-variant pt-12 mt-12 text-center">
+        <div className="border-t border-outline-variant pt-12 mt-4 text-center">
           <p className="text-primary/50 text-[9px] font-sans font-black tracking-[0.4em] uppercase mb-4">
             Próximo Passo
           </p>
