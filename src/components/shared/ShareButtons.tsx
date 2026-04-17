@@ -1,16 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Link2, Check } from "lucide-react";
+import { Link2, Check, Share2 } from "lucide-react";
 
 interface ShareButtonsProps {
-  /** Page title used in share text */
   title: string;
-  /** Short description/excerpt for networks that support it */
   description?: string;
-  /** Canonical URL — defaults to window.location.href */
   url?: string;
-  /** Compact row layout (default) or grid */
   layout?: "row" | "grid";
 }
 
@@ -23,7 +19,7 @@ interface Network {
   Icon: React.FC<{ size?: number }>;
 }
 
-/* ── Inline SVG icons (no extra dependency) ─────────────────────── */
+/* ── Inline SVG icons ────────────────────────────────────────────── */
 const WhatsAppIcon: React.FC<{ size?: number }> = ({ size = 18 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
@@ -55,7 +51,14 @@ const TelegramIcon: React.FC<{ size?: number }> = ({ size = 18 }) => (
   </svg>
 );
 
-/* ── Network config ─────────────────────────────────────────────── */
+/** Gradient Instagram icon (official brand colors) */
+const InstagramIcon: React.FC<{ size?: number }> = ({ size = 18 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z" />
+  </svg>
+);
+
+/* ── Network config ──────────────────────────────────────────────── */
 const NETWORKS: Network[] = [
   {
     id: "whatsapp",
@@ -81,10 +84,8 @@ const NETWORKS: Network[] = [
     color: "text-[#000000]",
     hoverColor: "hover:bg-[#000000]",
     Icon: XIcon,
-    buildUrl: (url, title, description) =>
-      `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-        title
-      )}&url=${encodeURIComponent(url)}&via=ImoveisCapaoNovo`,
+    buildUrl: (url, title) =>
+      `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}&via=ImoveisCapaoNovo`,
   },
   {
     id: "linkedin",
@@ -93,11 +94,7 @@ const NETWORKS: Network[] = [
     hoverColor: "hover:bg-[#0A66C2]",
     Icon: LinkedInIcon,
     buildUrl: (url, title, description) =>
-      `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
-        url
-      )}&title=${encodeURIComponent(title)}&summary=${encodeURIComponent(
-        description
-      )}`,
+      `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}&summary=${encodeURIComponent(description)}`,
   },
   {
     id: "telegram",
@@ -106,13 +103,11 @@ const NETWORKS: Network[] = [
     hoverColor: "hover:bg-[#26A5E4]",
     Icon: TelegramIcon,
     buildUrl: (url, title) =>
-      `https://t.me/share/url?url=${encodeURIComponent(
-        url
-      )}&text=${encodeURIComponent(title)}`,
+      `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`,
   },
 ];
 
-/* ── Component ──────────────────────────────────────────────────── */
+/* ── Component ───────────────────────────────────────────────────── */
 export function ShareButtons({
   title,
   description = "",
@@ -121,18 +116,44 @@ export function ShareButtons({
 }: ShareButtonsProps) {
   const [pageUrl, setPageUrl] = useState(url ?? "");
   const [copied, setCopied] = useState(false);
+  const [igCopied, setIgCopied] = useState(false);
+  const [canNativeShare, setCanNativeShare] = useState(false);
+  const [nativeShared, setNativeShared] = useState(false);
 
   useEffect(() => {
     if (!url) setPageUrl(window.location.href);
+    // Web Share API is available in modern mobile browsers
+    setCanNativeShare(typeof navigator !== "undefined" && !!navigator.share);
   }, [url]);
 
+  /** Standard copy-link */
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(pageUrl);
       setCopied(true);
       setTimeout(() => setCopied(false), 2500);
-    } catch {
-      /* fallback: do nothing silently */
+    } catch { /* silent */ }
+  };
+
+  /**
+   * Instagram — two strategies:
+   * 1. Mobile: Web Share API → opens native share sheet → user picks Instagram
+   * 2. Desktop: copy link + tooltip instructing to paste in Stories/bio
+   */
+  const handleInstagram = async () => {
+    if (canNativeShare) {
+      try {
+        await navigator.share({ title, text: description, url: pageUrl });
+        setNativeShared(true);
+        setTimeout(() => setNativeShared(false), 2500);
+      } catch { /* user cancelled */ }
+    } else {
+      // Desktop fallback: copy the link
+      try {
+        await navigator.clipboard.writeText(pageUrl);
+        setIgCopied(true);
+        setTimeout(() => setIgCopied(false), 4000);
+      } catch { /* silent */ }
     }
   };
 
@@ -140,6 +161,9 @@ export function ShareButtons({
     const shareUrl = network.buildUrl(pageUrl, title, description);
     window.open(shareUrl, "_blank", "noopener,noreferrer,width=640,height=480");
   };
+
+  const btnBase =
+    "group flex items-center gap-2.5 border border-outline-variant px-4 py-2.5 text-[9px] font-sans font-bold uppercase tracking-[0.25em] text-primary/60 hover:text-white hover:border-transparent transition-all duration-300 cursor-pointer";
 
   return (
     <div className="my-10 py-8 border-t border-b border-outline-variant">
@@ -154,38 +178,91 @@ export function ShareButtons({
             : "flex flex-wrap items-center gap-3"
         }
       >
+        {/* Standard networks */}
         {NETWORKS.map((network) => (
           <button
             key={network.id}
             onClick={() => handleShare(network)}
             title={`Compartilhar no ${network.label}`}
             aria-label={`Compartilhar no ${network.label}`}
-            className={`
-              group flex items-center gap-2.5
-              border border-outline-variant
-              px-4 py-2.5
-              text-[9px] font-sans font-bold uppercase tracking-[0.25em]
-              text-primary/60
-              ${network.color}
-              ${network.hoverColor}
-              hover:text-white hover:border-transparent
-              transition-all duration-300
-              cursor-pointer
-            `}
+            className={`${btnBase} ${network.color} ${network.hoverColor}`}
           >
             <network.Icon size={15} />
             <span className="hidden sm:inline">{network.label}</span>
           </button>
         ))}
 
-        {/* Copy link button */}
+        {/* ── Instagram ─────────────────────────────────────── */}
+        <div className="relative">
+          <button
+            onClick={handleInstagram}
+            title={
+              canNativeShare
+                ? "Compartilhar no Instagram"
+                : "Copiar link para colar no Instagram"
+            }
+            aria-label="Compartilhar no Instagram"
+            className={`
+              ${btnBase}
+              ${
+                igCopied || nativeShared
+                  ? "border-[#E1306C] bg-[#E1306C] text-white"
+                  : "text-[#E1306C] hover:bg-[#E1306C]"
+              }
+            `}
+          >
+            {igCopied || nativeShared ? (
+              <>
+                <Check size={15} />
+                <span className="hidden sm:inline">
+                  {nativeShared ? "Compartilhado!" : "Copiado!"}
+                </span>
+              </>
+            ) : (
+              <>
+                <InstagramIcon size={15} />
+                <span className="hidden sm:inline">Instagram</span>
+              </>
+            )}
+          </button>
+
+          {/* Desktop tooltip — explains how to use the link on Instagram */}
+          {igCopied && (
+            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-56 bg-primary text-white text-[9px] font-sans leading-relaxed px-3 py-2.5 z-10 pointer-events-none">
+              <p className="font-black tracking-widest uppercase mb-1">Instagram</p>
+              <p className="text-white/70 normal-case tracking-normal">
+                Link copiado! Cole nos seus Stories, bio ou DMs para compartilhar.
+              </p>
+              {/* Arrow */}
+              <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-primary" />
+            </div>
+          )}
+        </div>
+
+        {/* ── Web Share API (mobile "Mais apps") ────────────── */}
+        {canNativeShare && (
+          <button
+            onClick={async () => {
+              try {
+                await navigator.share({ title, text: description, url: pageUrl });
+              } catch { /* user cancelled */ }
+            }}
+            title="Compartilhar via outros aplicativos"
+            aria-label="Mais opções de compartilhamento"
+            className={`${btnBase} text-primary/40 hover:bg-primary/80`}
+          >
+            <Share2 size={15} />
+            <span className="hidden sm:inline">Mais apps</span>
+          </button>
+        )}
+
+        {/* ── Copy link ─────────────────────────────────────── */}
         <button
           onClick={handleCopy}
           title="Copiar link do artigo"
           aria-label="Copiar link do artigo"
           className={`
-            group flex items-center gap-2.5
-            border px-4 py-2.5
+            group flex items-center gap-2.5 border px-4 py-2.5
             text-[9px] font-sans font-bold uppercase tracking-[0.25em]
             transition-all duration-300 cursor-pointer
             ${
