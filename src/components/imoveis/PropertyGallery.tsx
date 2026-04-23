@@ -3,7 +3,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import CloudinaryImage from '@/components/ui/CloudinaryImage';
-import { ChevronLeft, ChevronRight, X, Camera } from 'lucide-react';
+import { LeadCaptureModal } from '@/components/imoveis/LeadCaptureModal';
+import { ChevronLeft, ChevronRight, X, Camera, Lock } from 'lucide-react';
 
 interface PropertyImage {
   url: string;
@@ -14,22 +15,87 @@ interface PropertyGalleryProps {
   title: string;
   images: PropertyImage[];
   mainImageFallback: string;
+  /** Se true, desabilita o gated content (ex: painel admin) */
+  disableGate?: boolean;
 }
 
-export function PropertyGallery({ title, images, mainImageFallback }: PropertyGalleryProps) {
+/** Número máximo de fotos gratuitas antes de exigir lead capture */
+const FREE_PHOTO_LIMIT = 4;
+
+export function PropertyGallery({ title, images, mainImageFallback, disableGate = false }: PropertyGalleryProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [mounted, setMounted] = useState(false);
+  const [isUnlocked, setIsUnlocked] = useState(disableGate);
+  const [showLeadModal, setShowLeadModal] = useState(false);
+  const [pendingIndex, setPendingIndex] = useState<number | null>(null);
 
-  useEffect(() => { setMounted(true); }, []);
+  useEffect(() => {
+    setMounted(true);
+
+    // Verifica se o lead já foi verificado em sessões anteriores
+    if (!disableGate) {
+      const verified = localStorage.getItem('lead_whatsapp_verified');
+      if (verified === 'true') {
+        setIsUnlocked(true);
+      }
+    }
+  }, [disableGate]);
+
+  const allImages = images && images.length > 0 ? images : [{ url: mainImageFallback }];
+  const mainImg = allImages.find((img) => img.isMain) || allImages[0];
+  const mainIdx = allImages.indexOf(mainImg);
+  const totalCount = allImages.length;
+
+  /** Verifica se o índice requer desbloqueio */
+  const isGated = useCallback((idx: number): boolean => {
+    if (disableGate || isUnlocked) return false;
+    return idx >= FREE_PHOTO_LIMIT;
+  }, [disableGate, isUnlocked]);
+
+  /** Tenta abrir a galeria em um índice específico */
+  const openAt = (idx: number) => {
+    if (isGated(idx)) {
+      setPendingIndex(idx);
+      setShowLeadModal(true);
+      return;
+    }
+    setCurrentIndex(idx);
+    setIsOpen(true);
+  };
+
+  /** Callback ao sucesso do lead capture */
+  const handleLeadSuccess = () => {
+    setIsUnlocked(true);
+    setShowLeadModal(false);
+
+    // Abre diretamente na foto que o usuário tentou ver
+    if (pendingIndex !== null) {
+      setCurrentIndex(pendingIndex);
+      setIsOpen(true);
+      setPendingIndex(null);
+    }
+  };
 
   const nextImage = useCallback(() => {
-    setCurrentIndex((prev) => (prev + 1) % images.length);
-  }, [images.length]);
+    const nextIdx = (currentIndex + 1) % totalCount;
+    if (isGated(nextIdx)) {
+      setPendingIndex(nextIdx);
+      setShowLeadModal(true);
+      return;
+    }
+    setCurrentIndex(nextIdx);
+  }, [currentIndex, totalCount, isGated]);
 
   const prevImage = useCallback(() => {
-    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
-  }, [images.length]);
+    const prevIdx = (currentIndex - 1 + totalCount) % totalCount;
+    if (isGated(prevIdx)) {
+      setPendingIndex(prevIdx);
+      setShowLeadModal(true);
+      return;
+    }
+    setCurrentIndex(prevIdx);
+  }, [currentIndex, totalCount, isGated]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -45,16 +111,6 @@ export function PropertyGallery({ title, images, mainImageFallback }: PropertyGa
       document.body.style.overflow = '';
     };
   }, [isOpen, nextImage, prevImage]);
-
-  const allImages = images && images.length > 0 ? images : [{ url: mainImageFallback }];
-  const mainImg = allImages.find((img) => img.isMain) || allImages[0];
-  const mainIdx = allImages.indexOf(mainImg);
-  const totalCount = allImages.length;
-
-  const openAt = (idx: number) => {
-    setCurrentIndex(idx);
-    setIsOpen(true);
-  };
 
   /* ── LIGHTBOX ─────────────────────────────────────────────── */
   const modal = isOpen ? (
@@ -104,17 +160,32 @@ export function PropertyGallery({ title, images, mainImageFallback }: PropertyGa
       {totalCount > 1 && (
         <div className="shrink-0 px-6 pb-10 pt-4" onClick={(e) => e.stopPropagation()}>
           <div className="flex gap-3 overflow-x-auto justify-center scrollbar-none">
-            {allImages.map((img, i) => (
-              <button
-                key={i}
-                onClick={() => setCurrentIndex(i)}
-                className={`relative shrink-0 w-20 h-14 rounded-lg overflow-hidden border-2 transition-all duration-300 ${
-                  i === currentIndex ? 'border-[#C9A96E] scale-110 shadow-lg brightness-110' : 'border-transparent opacity-30 hover:opacity-100 hover:scale-105'
-                }`}
-              >
-                <CloudinaryImage size="thumbnail" src={img.url} alt="" fill className="object-cover" />
-              </button>
-            ))}
+            {allImages.map((img, i) => {
+              const locked = isGated(i);
+              return (
+                <button
+                  key={i}
+                  onClick={() => {
+                    if (locked) {
+                      setPendingIndex(i);
+                      setShowLeadModal(true);
+                      return;
+                    }
+                    setCurrentIndex(i);
+                  }}
+                  className={`relative shrink-0 w-20 h-14 rounded-lg overflow-hidden border-2 transition-all duration-300 ${
+                    i === currentIndex ? 'border-[#C9A96E] scale-110 shadow-lg brightness-110' : 'border-transparent opacity-30 hover:opacity-100 hover:scale-105'
+                  }`}
+                >
+                  <CloudinaryImage size="thumbnail" src={img.url} alt="" fill className={`object-cover ${locked ? 'blur-md' : ''}`} />
+                  {locked && (
+                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                      <Lock size={14} className="text-white/80" />
+                    </div>
+                  )}
+                </button>
+              );
+            })}
           </div>
         </div>
       )}
@@ -122,7 +193,6 @@ export function PropertyGallery({ title, images, mainImageFallback }: PropertyGa
   ) : null;
 
   /* ── SMART GRID LOGIC ───────────────────────────────────────── */
-  // Determine layout based on image count
   const renderDesktopGrid = () => {
     if (totalCount === 1) {
       return (
@@ -146,14 +216,9 @@ export function PropertyGallery({ title, images, mainImageFallback }: PropertyGa
     }
 
     // Default: 1 main + others (up to 4 small)
-    // We'll use a dynamic grid based on how many "small" images we have
     const smallImages = allImages.filter((_, i) => i !== mainIdx).slice(0, 4);
     const smallCount = smallImages.length;
-    
-    // Grid class based on count of small images:
-    // 1 -> 1 col, 1 row
-    // 2 -> 1 col, 2 rows
-    // 3,4 -> 2 cols, 2 rows
+
     const smallGridClass = smallCount <= 2 ? 'grid-cols-1' : 'grid-cols-2';
     const smallRowsClass = smallCount === 1 ? 'grid-rows-1' : 'grid-rows-2';
 
@@ -161,13 +226,13 @@ export function PropertyGallery({ title, images, mainImageFallback }: PropertyGa
       <div className="grid grid-cols-[2fr_1fr] md:grid-cols-[2.5fr_1fr] lg:grid-cols-[3fr_1.2fr] gap-2 h-[540px] rounded-2xl overflow-hidden">
         {/* Main Large Image */}
         <div className="relative cursor-pointer overflow-hidden group" onClick={() => openAt(mainIdx)}>
-          <CloudinaryImage 
-            size="full" 
-            src={mainImg.url} 
-            alt={title} 
-            fill 
-            className="object-cover transition-transform duration-700 group-hover:scale-[1.03]" 
-            priority 
+          <CloudinaryImage
+            size="full"
+            src={mainImg.url}
+            alt={title}
+            fill
+            className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+            priority
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         </div>
@@ -178,22 +243,43 @@ export function PropertyGallery({ title, images, mainImageFallback }: PropertyGa
             const isLast = i === smallImages.length - 1;
             const remaining = totalCount - (smallCount + 1);
             const realIdx = allImages.indexOf(img);
-            
+            const locked = isGated(realIdx);
+
             return (
               <div key={i} className="relative cursor-pointer overflow-hidden group" onClick={() => openAt(realIdx)}>
-                <CloudinaryImage 
-                  size="list" 
-                  src={img.url} 
-                  alt={`${title} - Foto ${i + 2}`} 
-                  fill 
-                  className="object-cover transition-transform duration-700 group-hover:scale-110" 
+                <CloudinaryImage
+                  size="list"
+                  src={img.url}
+                  alt={`${title} - Foto ${i + 2}`}
+                  fill
+                  className={`object-cover transition-transform duration-700 group-hover:scale-110 ${locked ? 'blur-sm' : ''}`}
                 />
-                
-                {isLast && remaining > 0 ? (
-                  <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center gap-1 hover:bg-black/70 transition-all duration-300 backdrop-blur-[2px]">
-                    <Camera size={26} className="text-accent animate-pulse" />
-                    <span className="text-white font-black text-2xl">+{remaining}</span>
-                    <span className="text-white/60 text-[10px] font-black uppercase tracking-[0.2em]">fotos</span>
+
+                {/* Overlay de conteúdo bloqueado */}
+                {locked && !isLast ? (
+                  <div className="absolute inset-0 bg-[#001629]/70 flex flex-col items-center justify-center gap-1.5 backdrop-blur-[3px] transition-all duration-300">
+                    <Lock size={22} className="text-[#C9A96E]" />
+                    <span className="text-white/80 text-[9px] font-black uppercase tracking-[0.2em]">Desbloquear</span>
+                  </div>
+                ) : isLast && remaining > 0 ? (
+                  <div className={`absolute inset-0 flex flex-col items-center justify-center gap-1 transition-all duration-300 ${
+                    locked
+                      ? 'bg-[#001629]/80 backdrop-blur-[3px]'
+                      : 'bg-black/60 hover:bg-black/70 backdrop-blur-[2px]'
+                  }`}>
+                    {locked ? (
+                      <>
+                        <Lock size={22} className="text-[#C9A96E]" />
+                        <span className="text-white font-black text-xl">+{remaining}</span>
+                        <span className="text-[#C9A96E]/80 text-[9px] font-black uppercase tracking-[0.2em]">Desbloquear</span>
+                      </>
+                    ) : (
+                      <>
+                        <Camera size={26} className="text-accent animate-pulse" />
+                        <span className="text-white font-black text-2xl">+{remaining}</span>
+                        <span className="text-white/60 text-[10px] font-black uppercase tracking-[0.2em]">fotos</span>
+                      </>
+                    )}
                   </div>
                 ) : (
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors duration-500" />
@@ -217,32 +303,42 @@ export function PropertyGallery({ title, images, mainImageFallback }: PropertyGa
         {/* Mobile: Elegant Horizontal Strip */}
         <div className="md:hidden">
           <div className="flex gap-2 overflow-x-auto snap-x snap-mandatory rounded-2xl h-[340px] scrollbar-none items-center">
-            {allImages.slice(0, 5).map((img, i) => (
-              <div
-                key={i}
-                className="relative shrink-0 w-[85vw] h-full snap-center cursor-pointer rounded-2xl overflow-hidden shadow-xl"
-                onClick={() => openAt(i)}
-              >
-                <CloudinaryImage
-                  size="list"
-                  src={img.url}
-                  alt={`${title} - Foto ${i + 1}`}
-                  fill
-                  className="object-cover"
-                  priority={i === 0}
-                />
-                <div className="absolute top-4 right-4 bg-black/50 text-white text-[10px] px-2 py-1 rounded-md font-bold backdrop-blur-md">
-                  {i + 1} / {totalCount}
+            {allImages.slice(0, 5).map((img, i) => {
+              const locked = isGated(i);
+              return (
+                <div
+                  key={i}
+                  className="relative shrink-0 w-[85vw] h-full snap-center cursor-pointer rounded-2xl overflow-hidden shadow-xl"
+                  onClick={() => openAt(i)}
+                >
+                  <CloudinaryImage
+                    size="list"
+                    src={img.url}
+                    alt={`${title} - Foto ${i + 1}`}
+                    fill
+                    className={`object-cover ${locked ? 'blur-sm' : ''}`}
+                    priority={i === 0}
+                  />
+                  <div className="absolute top-4 right-4 bg-black/50 text-white text-[10px] px-2 py-1 rounded-md font-bold backdrop-blur-md">
+                    {i + 1} / {totalCount}
+                  </div>
+                  {locked && (
+                    <div className="absolute inset-0 bg-[#001629]/60 backdrop-blur-[4px] flex flex-col items-center justify-center gap-2">
+                      <Lock size={28} className="text-[#C9A96E]" />
+                      <span className="text-white text-xs font-black uppercase tracking-widest">Conteúdo Exclusivo</span>
+                      <span className="text-white/50 text-[10px]">Desbloqueie via WhatsApp</span>
+                    </div>
+                  )}
                 </div>
-              </div>
-            ))}
+              );
+            })}
             {totalCount > 5 && (
-              <div 
+              <div
                 className="shrink-0 w-[50vw] h-full snap-center bg-[#001629] rounded-2xl flex flex-col items-center justify-center gap-4 cursor-pointer active:scale-95 transition-transform"
                 onClick={() => openAt(5)}
               >
                 <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center text-accent">
-                  <Camera size={24} />
+                  {isGated(5) ? <Lock size={24} /> : <Camera size={24} />}
                 </div>
                 <span className="text-white text-xs font-black uppercase tracking-widest">+ {totalCount - 5} Fotos</span>
               </div>
@@ -263,7 +359,21 @@ export function PropertyGallery({ title, images, mainImageFallback }: PropertyGa
         </div>
       </div>
 
+      {/* Lightbox Portal */}
       {mounted && modal && createPortal(modal, document.body)}
+
+      {/* Lead Capture Modal Portal */}
+      {mounted && createPortal(
+        <LeadCaptureModal
+          isOpen={showLeadModal}
+          onClose={() => {
+            setShowLeadModal(false);
+            setPendingIndex(null);
+          }}
+          onSuccess={handleLeadSuccess}
+        />,
+        document.body
+      )}
     </>
   );
 }
