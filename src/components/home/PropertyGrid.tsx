@@ -5,7 +5,7 @@ import { getLatestProperties } from "@/lib/actions/property.actions";
 import Link from "next/link";
 
 export const PropertyGrid = async () => {
-  const { properties: dbProperties } = await getLatestProperties(8);
+  const { properties: dbProperties } = await getLatestProperties(12);
   
   // Use DB properties if they exist, otherwise fallback to static for development
   const displayProperties = dbProperties.length > 0 
