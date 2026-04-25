@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { kv } from '@vercel/kv';
 
 interface RequestCodeBody {
   name: string;
@@ -35,82 +36,52 @@ export async function POST(request: NextRequest): Promise<NextResponse<RequestCo
     // Gera um código OTP de 6 dígitos
     const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
 
-    /* ================================================================
-     * 📦 SALVAR OTP NO VERCEL KV (Redis) — IMPLEMENTAR AQUI
-     * ================================================================
-     * 
-     * Instale o pacote: npm install @vercel/kv
-     * 
-     * import { kv } from '@vercel/kv';
-     * 
-     * // Salva o código OTP com expiração de 10 minutos (600 segundos)
-     * // A chave é baseada no telefone sanitizado para fácil recuperação
-     * await kv.set(`otp:${cleanPhone}`, otpCode, { ex: 600 });
-     * 
-     * // Para recuperar depois na rota /validate-code:
-     * // const storedCode = await kv.get(`otp:${cleanPhone}`);
-     * 
-     * Variáveis de ambiente necessárias no .env.local e Vercel:
-     *   KV_REST_API_URL=<sua-url>
-     *   KV_REST_API_TOKEN=<seu-token>
-     * 
-     * ================================================================ */
+    // Salva o código OTP no Redis com expiração de 10 minutos
+    await kv.set(`otp:${cleanPhone}`, otpCode, { ex: 600 });
 
-    /* ================================================================
-     * 📲 ENVIAR OTP VIA API DO WHATSAPP — IMPLEMENTAR AQUI
-     * ================================================================
-     * 
-     * Exemplo com Z-API (https://developer.z-api.io/):
-     * 
-     * const ZAPI_INSTANCE_ID = process.env.ZAPI_INSTANCE_ID;
-     * const ZAPI_TOKEN = process.env.ZAPI_TOKEN;
-     * const ZAPI_CLIENT_TOKEN = process.env.ZAPI_CLIENT_TOKEN;
-     * 
-     * await fetch(
-     *   `https://api.z-api.io/instances/${ZAPI_INSTANCE_ID}/token/${ZAPI_TOKEN}/send-text`,
-     *   {
-     *     method: 'POST',
-     *     headers: {
-     *       'Content-Type': 'application/json',
-     *       'Client-Token': ZAPI_CLIENT_TOKEN!,
-     *     },
-     *     body: JSON.stringify({
-     *       phone: `55${cleanPhone}`,
-     *       message: `🏡 *Imóveis Capão Novo*\n\nOlá ${name}! Seu código de acesso é:\n\n🔑 *${otpCode}*\n\nInsira no site para desbloquear todas as fotos do imóvel.\n\nEsse código expira em 10 minutos.`,
-     *     }),
-     *   }
-     * );
-     * 
-     * ────────────────────────────────────────────────────
-     * 
-     * Exemplo com Evolution API (https://doc.evolution-api.com/):
-     * 
-     * const EVOLUTION_URL = process.env.EVOLUTION_API_URL;
-     * const EVOLUTION_KEY = process.env.EVOLUTION_API_KEY;
-     * const EVOLUTION_INSTANCE = process.env.EVOLUTION_INSTANCE;
-     * 
-     * await fetch(
-     *   `${EVOLUTION_URL}/message/sendText/${EVOLUTION_INSTANCE}`,
-     *   {
-     *     method: 'POST',
-     *     headers: {
-     *       'Content-Type': 'application/json',
-     *       'apikey': EVOLUTION_KEY!,
-     *     },
-     *     body: JSON.stringify({
-     *       number: `55${cleanPhone}@s.whatsapp.net`,
-     *       text: `🏡 *Imóveis Capão Novo*\n\nOlá ${name}! Seu código de acesso é:\n\n🔑 *${otpCode}*\n\nInsira no site para desbloquear todas as fotos do imóvel.\n\nEsse código expira em 10 minutos.`,
-     *     }),
-     *   }
-     * );
-     * 
-     * ================================================================ */
+    // Envia o OTP via Evolution API (WhatsApp)
+    const evolutionUrl = process.env.EVOLUTION_API_URL;
+    const evolutionKey = process.env.EVOLUTION_API_KEY;
+    const evolutionInstance = process.env.EVOLUTION_INSTANCE;
 
-    // MOCK TEMPORÁRIO: Loga o código no console do servidor
-    console.log(`[OTP] Código ${otpCode} gerado para ${name} (${cleanPhone})`);
+    if (!evolutionUrl || !evolutionKey || !evolutionInstance) {
+      console.error('[OTP] Variáveis da Evolution API não configuradas.');
+      return NextResponse.json(
+        { success: false, message: 'Serviço de WhatsApp não configurado. Contate o suporte.' },
+        { status: 500 }
+      );
+    }
+
+    const whatsappNumber = cleanPhone.startsWith('55') ? cleanPhone : `55${cleanPhone}`;
+
+    const evolutionResponse = await fetch(
+      `${evolutionUrl}/message/sendText/${evolutionInstance}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': evolutionKey,
+        },
+        body: JSON.stringify({
+          number: whatsappNumber,
+          text: `🏡 *Imóveis Capão Novo*\n\nOlá, ${name}! Seu código de acesso é:\n\n🔑 *${otpCode}*\n\nInsira no site para desbloquear todas as fotos do imóvel.\n\n_Este código expira em 10 minutos._`,
+        }),
+      }
+    );
+
+    if (!evolutionResponse.ok) {
+      const errorBody = await evolutionResponse.text();
+      console.error(`[OTP] Evolution API retornou erro ${evolutionResponse.status}:`, errorBody);
+      return NextResponse.json(
+        { success: false, message: 'Não foi possível enviar o código. Verifique o número e tente novamente.' },
+        { status: 502 }
+      );
+    }
+
+    console.log(`[OTP] Código enviado via WhatsApp para ${whatsappNumber} (${name})`);
 
     return NextResponse.json(
-      { success: true, message: 'Código enviado com sucesso para o seu WhatsApp.' },
+      { success: true, message: 'Código enviado! Verifique seu WhatsApp.' },
       { status: 200 }
     );
   } catch (error) {

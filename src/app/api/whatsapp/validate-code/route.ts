@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-
+import { kv } from '@vercel/kv';
 interface ValidateCodeBody {
   phone: string;
   code: string;
@@ -31,43 +31,25 @@ export async function POST(request: NextRequest): Promise<NextResponse<ValidateC
       );
     }
 
-    /* ================================================================
-     * 🔐 VALIDAR OTP NO VERCEL KV (Redis) — SUBSTITUIR O MOCK ABAIXO
-     * ================================================================
-     * 
-     * import { kv } from '@vercel/kv';
-     * 
-     * // Recupera o código OTP armazenado para este telefone
-     * const storedCode = await kv.get<string>(`otp:${cleanPhone}`);
-     * 
-     * if (!storedCode) {
-     *   return NextResponse.json(
-     *     { success: false, message: 'Código expirado. Solicite um novo.' },
-     *     { status: 400 }
-     *   );
-     * }
-     * 
-     * if (storedCode !== code) {
-     *   return NextResponse.json(
-     *     { success: false, message: 'Código inválido. Verifique e tente novamente.' },
-     *     { status: 400 }
-     *   );
-     * }
-     * 
-     * // Código válido — remove do Redis para impedir reutilização
-     * await kv.del(`otp:${cleanPhone}`);
-     * 
-     * ================================================================ */
-
-    // MOCK TEMPORÁRIO: Aceita o código fixo "123456" para testes
-    const MOCK_VALID_CODE = '123456';
-
-    if (code !== MOCK_VALID_CODE) {
+    // Recupera o código OTP armazenado para este telefone
+    const storedCode = await kv.get<string | number>(`otp:${cleanPhone}`);
+    
+    if (!storedCode) {
+      return NextResponse.json(
+        { success: false, message: 'Código expirado. Solicite um novo.' },
+        { status: 400 }
+      );
+    }
+    
+    if (storedCode.toString() !== code) {
       return NextResponse.json(
         { success: false, message: 'Código inválido. Verifique e tente novamente.' },
         { status: 400 }
       );
     }
+    
+    // Código válido — remove do Redis para impedir reutilização
+    await kv.del(`otp:${cleanPhone}`);
 
     console.log(`[OTP] Código validado com sucesso para ${cleanPhone}`);
 
