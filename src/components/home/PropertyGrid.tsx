@@ -49,6 +49,16 @@ export const PropertyGrid = async () => {
             <PropertyCard key={property.id || property.slug} {...property} />
           ))}
         </div>
+
+        <div className="mt-16 flex justify-center">
+          <Link
+            href="/imoveis-capao-novo"
+            className="inline-flex items-center justify-center px-10 py-5 bg-primary text-white text-[11px] font-bold uppercase tracking-[0.25em] rounded transition-all duration-300 hover:bg-primary/90 hover:-translate-y-0.5 shadow-2xl group"
+          >
+            Ver Portfólio Completo
+            <span className="ml-3 transform transition-transform duration-300 group-hover:translate-x-1">→</span>
+          </Link>
+        </div>
       </div>
     </section>
   );

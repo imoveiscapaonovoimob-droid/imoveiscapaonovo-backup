@@ -45,18 +45,18 @@ export const MarketStats = () => {
               <p className="text-primary/80 font-sans leading-relaxed text-sm">
                 O mercado imobiliário de Capão Novo vive um dos seus melhores ciclos de valorização. A combinação de infraestrutura em expansão e alta procura por qualidade de vida impulsiona os preços.
               </p>
-              <ul className="space-y-3">
+              <ul className="space-y-4">
                 <li className="flex items-center gap-3 text-sm font-sans font-bold text-primary">
-                  <div className="w-1.5 h-1.5 rounded-full bg-secondary shrink-0" />
-                  +12% ao ano de valorização média
+                  <span className="text-xl">📈</span>
+                  Capão Novo está valorizando +12% ao ano
                 </li>
                 <li className="flex items-center gap-3 text-sm font-sans font-bold text-primary">
-                  <div className="w-1.5 h-1.5 rounded-full bg-secondary shrink-0" />
-                  Alta demanda por imóveis no litoral
+                  <span className="text-xl">💰</span>
+                  Imóveis ainda abaixo de Capão da Canoa
                 </li>
                 <li className="flex items-center gap-3 text-sm font-sans font-bold text-primary">
-                  <div className="w-1.5 h-1.5 rounded-full bg-secondary shrink-0" />
-                  Crescimento contínuo da região
+                  <span className="text-xl">🚀</span>
+                  Alta demanda e crescimento constante
                 </li>
               </ul>
             </div>

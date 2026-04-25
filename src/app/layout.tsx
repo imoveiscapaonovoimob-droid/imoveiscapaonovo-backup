@@ -17,8 +17,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Imóveis Capão Novo | Apartamentos e Casas de Luxo no Litoral",
-  description: "Encontre seu imóvel ideal em Capão Novo. Apartamentos, casas e terrenos com as melhores condições e localização privilegiada no litoral gaúcho.",
+  title: "Casas e Terrenos em Capão Novo RS | Oportunidades de Alto Valor",
+  description: "Casas, apartamentos e terrenos à venda em Capão Novo RS. Encontre imóveis em Capão Novo com alto potencial de valorização. Veja agora.",
   keywords: ["imóveis capão novo", "apartamentos litoral norte rs", "casas capão da canoa", "imobiliária capão novo", "investimento imobiliário litoral"],
   authors: [{ name: "Imóveis Capão Novo" }],
   viewport: "width=device-width, initial-scale=1",
@@ -30,8 +30,8 @@ export const metadata: Metadata = {
     type: "website",
     locale: "pt_BR",
     url: "https://imoveiscapaonovo.com.br",
-    title: "Imóveis Capão Novo | Luxo e Exclusividade no Litoral",
-    description: "A melhor seleção de imóveis em Capão Novo. Encontre seu refúgio no litoral gaúcho com especialistas locais.",
+    title: "Casas e Terrenos em Capão Novo RS | Oportunidades de Alto Valor",
+    description: "Casas, apartamentos e terrenos à venda em Capão Novo RS. Encontre imóveis em Capão Novo com alto potencial de valorização. Veja agora.",
     siteName: "Imóveis Capão Novo",
     images: [{
       url: "/hero.webp",
@@ -42,14 +42,15 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Imóveis Capão Novo | Luxo no Litoral",
-    description: "Seleção exclusiva de imóveis em Capão Novo.",
+    title: "Casas e Terrenos em Capão Novo RS | Oportunidades de Alto Valor",
+    description: "Casas, apartamentos e terrenos à venda em Capão Novo RS. Encontre imóveis em Capão Novo com alto potencial de valorização. Veja agora.",
     images: ["/hero.webp"],
   },
 };
 
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import ScrollTracker from "@/components/analytics/ScrollTracker";
+import FloatingWhatsAppChat from "@/components/shared/FloatingWhatsAppChat";
 
 import AuthProvider from "@/components/providers/AuthProvider";
 
@@ -108,6 +109,7 @@ export default function RootLayout({
         <AuthProvider>
           {children}
         </AuthProvider>
+        <FloatingWhatsAppChat />
       </body>
     </html>
   );
