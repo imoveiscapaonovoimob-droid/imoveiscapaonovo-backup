@@ -40,9 +40,9 @@ export async function POST(request: NextRequest): Promise<NextResponse<RequestCo
     await kv.set(`otp:${cleanPhone}`, otpCode, { ex: 600 });
 
     // Envia o OTP via Evolution API (WhatsApp)
-    const evolutionUrl = process.env.EVOLUTION_API_URL;
-    const evolutionKey = process.env.EVOLUTION_API_KEY;
-    const evolutionInstance = process.env.EVOLUTION_INSTANCE;
+    const evolutionUrl = process.env.EVOLUTION_API_URL?.trim();
+    const evolutionKey = process.env.EVOLUTION_API_KEY?.trim();
+    const evolutionInstance = process.env.EVOLUTION_INSTANCE?.trim();
 
     if (!evolutionUrl || !evolutionKey || !evolutionInstance) {
       console.error('[OTP] Variáveis da Evolution API não configuradas.');
