@@ -50,26 +50,33 @@ export function PropertyShareActions({ title, slug, mainImage, price, bedrooms, 
     try {
       const canvas = document.createElement('canvas');
       canvas.width = 1080;
-      canvas.height = 1080;
+      canvas.height = 1440;
       const ctx = canvas.getContext('2d');
       if (!ctx) throw new Error("Canvas não suportado");
 
       // Fundo
       ctx.fillStyle = '#001629';
-      ctx.fillRect(0, 0, 1080, 1080);
+      ctx.fillRect(0, 0, 1080, 1440);
 
-      // Carregar a imagem principal
-      const loadImage = (url: string): Promise<HTMLImageElement> => {
-        return new Promise((resolve, reject) => {
-          const img = new Image();
-          img.crossOrigin = "anonymous";
-          img.onload = () => resolve(img);
-          img.onerror = () => {
-             // Fallback para evitar travamento: tentamos sem crossOrigin, ou injetamos um fundo vazio
-             resolve(img);
-          };
-          img.src = url;
-        });
+      // Carregar a imagem principal contornando CORS com fetch
+      const loadImage = async (imgUrl: string): Promise<HTMLImageElement> => {
+        try {
+          const res = await fetch(imgUrl);
+          const blob = await res.blob();
+          const objUrl = URL.createObjectURL(blob);
+          
+          return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => resolve(img);
+            img.onerror = () => resolve(img);
+            img.src = objUrl;
+          });
+        } catch(e) {
+          return new Promise((resolve) => {
+            const img = new Image();
+            resolve(img);
+          });
+        }
       };
 
       // Tenta carregar a mainImage
@@ -77,13 +84,13 @@ export function PropertyShareActions({ title, slug, mainImage, price, bedrooms, 
       try {
         imgObj = await loadImage(mainImage);
       } catch (e) {
-        console.warn("Falha ao carregar a imagem para o canvas (CORS bloqueou)");
+        console.warn("Falha ao carregar a imagem para o canvas");
       }
 
-      // Desenhar a Imagem (2/3 da altura = 720px) com object-fit: cover
+      // Desenhar a Imagem (2/3 da altura = 960px) com object-fit: cover
       if (imgObj && imgObj.width > 0) {
         const targetW = 1080;
-        const targetH = 720;
+        const targetH = 960;
         const imgRatio = imgObj.width / imgObj.height;
         const targetRatio = targetW / targetH;
         let drawW, drawH, drawX, drawY;
@@ -102,19 +109,19 @@ export function PropertyShareActions({ title, slug, mainImage, price, bedrooms, 
         ctx.drawImage(imgObj, drawX, drawY, drawW, drawH, 0, 0, targetW, targetH);
       } else {
         ctx.fillStyle = '#112233';
-        ctx.fillRect(0, 0, 1080, 720);
+        ctx.fillRect(0, 0, 1080, 960);
       }
 
       // Adicionar gradiente escuro de transição entre a imagem e o texto
-      const gradient = ctx.createLinearGradient(0, 600, 0, 720);
+      const gradient = ctx.createLinearGradient(0, 840, 0, 960);
       gradient.addColorStop(0, 'rgba(0, 22, 41, 0)');
       gradient.addColorStop(1, 'rgba(0, 22, 41, 1)');
       ctx.fillStyle = gradient;
-      ctx.fillRect(0, 600, 1080, 120);
+      ctx.fillRect(0, 840, 1080, 120);
 
       // Fundo Inferior (Azul super escuro/preto da marca)
-      ctx.fillStyle = '#00101C'; // Um pouco mais escuro para maior contraste
-      ctx.fillRect(0, 720, 1080, 360);
+      ctx.fillStyle = '#00101C'; 
+      ctx.fillRect(0, 960, 1080, 480);
 
       // Logo/Marca D'água mais sutil
       ctx.fillStyle = 'rgba(0, 16, 28, 0.9)';
@@ -129,11 +136,11 @@ export function PropertyShareActions({ title, slug, mainImage, price, bedrooms, 
       ctx.font = '900 22px system-ui, -apple-system, sans-serif'; 
       ctx.fillText('CAPÃO NOVO', 200, 85);
 
-      // Rodapé Textos (Y = 720 a 1080)
+      // Rodapé Textos (Y = 960 a 1440)
       ctx.fillStyle = '#C3A562';
       ctx.font = '800 18px system-ui, -apple-system, sans-serif';
-      ctx.letterSpacing = '4px'; // Supported no chrome moderno
-      ctx.fillText('LANÇAMENTO EXCLUSIVO', 60, 790);
+      ctx.letterSpacing = '4px'; 
+      ctx.fillText('LANÇAMENTO EXCLUSIVO', 60, 1090);
       ctx.letterSpacing = '0px';
 
       // Quebra de Texto Automática para o Título (Line wrap)
@@ -170,27 +177,27 @@ export function PropertyShareActions({ title, slug, mainImage, price, bedrooms, 
       };
 
       // Escreve até 2 linhas de texto para o título sem cortar a última palavra
-      wrapText(ctx, title, 60, 860, 960, 60);
+      wrapText(ctx, title, 60, 1160, 960, 60);
 
       // Linha Separadora Finíssima
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
       ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.moveTo(60, 980);
-      ctx.lineTo(1020, 980);
+      ctx.moveTo(60, 1280);
+      ctx.lineTo(1020, 1280);
       ctx.stroke();
 
       // Features / Metragens
       ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
       ctx.font = '600 22px system-ui, -apple-system, sans-serif';
       const features = [area ? `${area} M²` : '', bedrooms ? `${bedrooms} DORMS` : ''].filter(Boolean).join('   •   ');
-      ctx.fillText(features, 60, 1030);
+      ctx.fillText(features, 60, 1330);
 
       // Preço Extra Gigante e Destacado
       ctx.fillStyle = '#C3A562';
       ctx.font = '800 58px system-ui, -apple-system, sans-serif';
       const priceMetrics = ctx.measureText(price);
-      ctx.fillText(price, 1020 - priceMetrics.width, 1035);
+      ctx.fillText(price, 1020 - priceMetrics.width, 1335);
 
       // Exportar para Arquivo
       const blob = await new Promise<Blob | null>(res => canvas.toBlob(res, 'image/png'));

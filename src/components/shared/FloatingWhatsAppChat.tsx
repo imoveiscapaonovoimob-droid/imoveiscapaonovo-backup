@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, type FormEvent } from "react";
 import Image from "next/image";
 import { X, Send, ChevronDown } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 /* ────────────────────────────────────────────
    Configuração — substitua pelo número real
@@ -33,6 +34,12 @@ export default function FloatingWhatsAppChat({
   const [hasBeenOpened, setHasBeenOpened] = useState(false);
   const [message, setMessage] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const pathname = usePathname();
+
+  // Esconder no painel admin
+  if (pathname?.startsWith("/admin")) {
+    return null;
+  }
 
   /* Timer de auto-abertura (30 s após montagem) */
   useEffect(() => {

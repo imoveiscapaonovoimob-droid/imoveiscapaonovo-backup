@@ -17,33 +17,33 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Casas e Terrenos em Capão Novo RS | Oportunidades de Alto Valor",
-  description: "Casas, apartamentos e terrenos à venda em Capão Novo RS. Encontre imóveis em Capão Novo com alto potencial de valorização. Veja agora.",
+  title: "Imóveis Capão Novo RS | Casas e Apartamentos à Venda",
+  description: "Encontre imóveis à venda em Capão Novo RS. Casas, apartamentos e terrenos selecionados. Veja as melhores oportunidades no litoral.",
   keywords: ["imóveis capão novo", "apartamentos litoral norte rs", "casas capão da canoa", "imobiliária capão novo", "investimento imobiliário litoral"],
   authors: [{ name: "Imóveis Capão Novo" }],
-  viewport: "width=device-width, initial-scale=1",
+  viewport: "width=device-width, initial-scale=1.0",
   robots: "index, follow",
   alternates: {
-    canonical: "https://imoveiscapaonovo.com.br",
+    canonical: "https://www.imoveiscapaonovo.com.br/",
   },
   openGraph: {
     type: "website",
     locale: "pt_BR",
-    url: "https://imoveiscapaonovo.com.br",
-    title: "Casas e Terrenos em Capão Novo RS | Oportunidades de Alto Valor",
-    description: "Casas, apartamentos e terrenos à venda em Capão Novo RS. Encontre imóveis em Capão Novo com alto potencial de valorização. Veja agora.",
+    url: "https://www.imoveiscapaonovo.com.br/",
+    title: "Imóveis Capão Novo RS | Casas e Apartamentos à Venda",
+    description: "Encontre imóveis à venda em Capão Novo RS. Casas, apartamentos e terrenos selecionados. Veja as melhores oportunidades no litoral.",
     siteName: "Imóveis Capão Novo",
     images: [{
       url: "/hero.webp",
       width: 1200,
       height: 630,
-      alt: "Imóveis Capão Novo",
+      alt: "Casa à venda em Capão Novo com pátio e churrasqueira",
     }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Casas e Terrenos em Capão Novo RS | Oportunidades de Alto Valor",
-    description: "Casas, apartamentos e terrenos à venda em Capão Novo RS. Encontre imóveis em Capão Novo com alto potencial de valorização. Veja agora.",
+    title: "Imóveis Capão Novo RS | Casas e Apartamentos à Venda",
+    description: "Encontre imóveis à venda em Capão Novo RS. Casas, apartamentos e terrenos selecionados. Veja as melhores oportunidades no litoral.",
     images: ["/hero.webp"],
   },
 };
