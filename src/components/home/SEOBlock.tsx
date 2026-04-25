@@ -13,10 +13,10 @@ export const SEOBlock = () => {
           <div className="lg:col-span-8 space-y-12">
             <div>
               <h2 className="text-3xl md:text-5xl font-serif text-primary mb-8 leading-tight">
-                Imóveis à venda em Capão Novo RS
+                Tudo sobre imóveis em Capão Novo
               </h2>
               <p className="text-lg text-primary/70 font-sans leading-relaxed mb-8">
-                Se você está buscando imóveis em Capão Novo RS, saiba que a região oferece diversas opções para diferentes perfis, desde quem busca a tranquilidade da moradia fixa até investidores focados em alta rentabilidade.
+                Seja para morar ou investir, Capão Novo oferece opções para todos os perfis. Aqui você encontra segurança, lazer e rentabilidade no mesmo lugar.
               </p>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
@@ -37,31 +37,41 @@ export const SEOBlock = () => {
             </div>
 
             <div className="bg-primary/5 p-10 rounded-2xl border border-primary/10">
-              <h3 className="text-xl font-serif text-primary mb-6">Capão Novo é ideal para:</h3>
-              <ul className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {[
-                  { title: "Morar com qualidade", desc: "Infraestrutura completa e segurança." },
-                  { title: "Investir com valorização", desc: "Mercado em plena expansão no litoral." },
-                  { title: "Imóvel para veraneio", desc: "A melhor relação custo-benefício do RS." },
-                  { title: "Renda com aluguel", desc: "Alta demanda na temporada de verão." }
-                ].map((item) => (
-                  <li key={item.title} className="flex gap-4">
-                    <div className="w-1.5 h-1.5 rounded-full bg-secondary mt-2 shrink-0" />
-                    <div>
-                      <strong className="block text-primary text-sm uppercase tracking-widest mb-1">{item.title}</strong>
-                      <span className="text-xs text-primary/60 font-sans">{item.desc}</span>
-                    </div>
-                  </li>
-                ))}
+              <h3 className="text-xl font-serif text-primary mb-6">Benefícios da localização</h3>
+              <ul className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <li className="flex gap-4">
+                  <div className="w-1.5 h-1.5 rounded-full bg-secondary mt-2 shrink-0" />
+                  <div>
+                    <strong className="block text-primary text-sm uppercase tracking-widest mb-1">Qualidade de Vida</strong>
+                    <span className="text-xs text-primary/60 font-sans">Infraestrutura completa, segurança e tranquilidade o ano todo.</span>
+                  </div>
+                </li>
+                <li className="flex gap-4">
+                  <div className="w-1.5 h-1.5 rounded-full bg-secondary mt-2 shrink-0" />
+                  <div>
+                    <strong className="block text-primary text-sm uppercase tracking-widest mb-1">Rentabilidade</strong>
+                    <span className="text-xs text-primary/60 font-sans">Mercado em expansão com alta demanda na temporada.</span>
+                  </div>
+                </li>
               </ul>
+
+              <h3 className="text-xl font-serif text-primary mb-6">Perfil dos imóveis</h3>
+              <p className="text-primary/70 font-sans text-sm mb-8">
+                Imóveis com excelente padrão construtivo, perfeitos para famílias que buscam espaço, conforto e proximidade com a praia.
+              </p>
+
+              <h3 className="text-xl font-serif text-primary mb-6">Infraestrutura da região</h3>
+              <p className="text-primary/70 font-sans text-sm">
+                Comércio ativo, mercados, farmácias e espaços de lazer bem preservados que garantem comodidade sem precisar ir a outras praias.
+              </p>
             </div>
 
             {/* Content Segments */}
             <div className="space-y-16 pt-8">
               <div className="border-l-4 border-secondary pl-8">
-                <h4 className="text-2xl font-serif text-primary mb-4">Casas à venda em Capão Novo</h4>
+                <h2 className="text-2xl font-serif text-primary mb-4">Casas à Venda em Capão Novo</h2>
                 <p className="text-primary/70 leading-relaxed mb-6 font-sans">
-                  As casas em Capão Novo oferecem terrenos amplos, localizações privilegiadas em regiões de moradores consolidadas e uma proximidade única com o mar, mantendo um excelente custo-benefício para quem deseja sair do agito mas estar perto de tudo.
+                  Nossas casas em Capão Novo possuem terrenos amplos e excelente localização. Elas garantem o melhor custo-benefício para quem quer tranquilidade perto do mar.
                 </p>
                 <div className="flex flex-wrap gap-3">
                   {["Terrenos Amplos", "Regiões de Moradores", "Proximidade com o Mar"].map(tag => (
@@ -71,9 +81,9 @@ export const SEOBlock = () => {
               </div>
 
               <div className="border-l-4 border-secondary pl-8">
-                <h4 className="text-2xl font-serif text-primary mb-4">Apartamentos em Capão Novo</h4>
+                <h2 className="text-2xl font-serif text-primary mb-4">Apartamentos à Venda em Capão Novo</h2>
                 <p className="text-primary/70 leading-relaxed mb-6 font-sans">
-                  Perfeitos para quem busca praticidade e segurança. Nossos apartamentos selecionados oferecem proximidade com a praia e ótimas opções financiáveis, muitos deles já mobiliados e prontos para o seu veraneio ou para gerar renda imediata.
+                  Ideais para quem valoriza praticidade e segurança. Selecionamos opções perto da praia, ideais para gerar renda extra ou passar o verão.
                 </p>
                 <div className="flex flex-wrap gap-3">
                   {["Praticidade", "Segurança", "Opções Financiáveis"].map(tag => (

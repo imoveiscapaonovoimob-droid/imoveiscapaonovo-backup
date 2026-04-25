@@ -37,10 +37,9 @@ export const MarketStats = () => {
             <h2 className="text-[10px] font-sans font-black uppercase tracking-[0.4em] text-secondary mb-6">
               Investimento e Valorização
             </h2>
-            <h3 className="text-3xl md:text-4xl font-serif text-primary leading-tight mb-8">
-              O momento ideal para <br className="hidden md:block" />
-              investir em <em className="italic font-normal">Capão Novo</em>
-            </h3>
+            <h2 className="text-3xl md:text-4xl font-serif text-primary leading-tight mb-8">
+              Por que investir em <em className="italic font-normal">Capão Novo?</em>
+            </h2>
             <div className="space-y-6 mb-10">
               <p className="text-primary/80 font-sans leading-relaxed text-sm">
                 O mercado imobiliário de Capão Novo vive um dos seus melhores ciclos de valorização. A combinação de infraestrutura em expansão e alta procura por qualidade de vida impulsiona os preços.

@@ -11,9 +11,10 @@ export const Hero = () => {
       <div className="absolute inset-0 z-0">
         <Image
           src="/hero.webp"
-          alt="Imóveis Capão Novo - Vista aérea privilegiada dos melhores condomínios do litoral"
+          alt="Casa à venda em Capão Novo com pátio e churrasqueira"
           fill
           className="object-cover opacity-50"
+          sizes="(max-width: 768px) 100vw, 100vw"
           priority
         />
         <div className="absolute inset-0 bg-gradient-to-b from-primary/70 via-primary/50 to-primary/90" />
@@ -22,15 +23,12 @@ export const Hero = () => {
       {/* Hero Content */}
       <div className="relative z-10 max-w-[1440px] mx-auto px-6 lg:px-10 pt-32 sm:pt-40 lg:pt-44 pb-0 flex flex-col items-center text-center">
         <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif text-white font-bold leading-tight mb-8 md:mb-10 tracking-tight max-w-5xl">
-          Imóveis à Venda em <em className="italic font-normal text-secondary">Capão Novo, RS</em><br />
-          <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl block mt-4 opacity-90">
-            Casas, Apartamentos e Terrenos com Alto Potencial de Valorização
-          </span>
+          Imóveis à Venda em <em className="italic font-normal text-secondary">Capão Novo RS</em>
         </h1>
 
         <div className="max-w-4xl mb-12">
           <p className="text-lg md:text-xl text-white/90 font-sans leading-relaxed">
-            Encontre imóveis selecionados com base em localização, preço e potencial real de crescimento — ideais para morar ou investir no litoral norte gaúcho.
+            Casas, apartamentos e terrenos selecionados em Capão Novo. Encontre oportunidades reais para morar, investir ou veranear no litoral.
           </p>
         </div>
 
