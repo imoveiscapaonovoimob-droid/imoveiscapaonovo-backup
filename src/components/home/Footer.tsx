@@ -103,7 +103,6 @@ export const Footer = () => {
               <address className="not-italic">
                 Rua das Sempre-Vivas, 3813, Posto 4 — Capão Novo, Capão da Canoa, RS
               </address>
-              <span className="text-primary/20">Curadoria premium em parceria com Montenegro Imóveis</span>
             </div>
             <div className="flex gap-12 text-primary/30 text-[9px] font-sans font-black uppercase tracking-[0.3em]">
               <Link href="/politica-privacidade" className="hover:text-secondary transition-colors">Privacidade</Link>

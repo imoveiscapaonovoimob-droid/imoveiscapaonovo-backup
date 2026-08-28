@@ -64,7 +64,7 @@ export default function SobrePage() {
                 A <strong>Imóveis Capão Novo</strong> nasceu da paixão pelo litoral norte gaúcho. Entendemos que um imóvel na praia não é apenas tijolo e cimento; é o cenário onde memórias familiares serão construídas.
               </p>
               <p>
-                Liderada por <strong>Lenine Kerber</strong>, um dos corretores mais experientes da região, nossa equipe curatorial seleciona cada oportunidade com o rigor de quem vive o dia a dia de Capão da Canoa há mais de três décadas. Nossa aliança estratégica com a Montenegro Imóveis potencializa nossa entrega, unindo curadoria local com força comercial.
+                Liderada por <strong>Lenine Kerber</strong>, um dos corretores mais experientes da região, nossa equipe curatorial seleciona cada oportunidade com o rigor de quem vive o dia a dia de Capão da Canoa há mais de três décadas.
               </p>
               <div className="flex items-center gap-3 pt-4 text-primary font-bold">
                 <ShieldCheck className="text-secondary" />
