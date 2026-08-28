@@ -11,6 +11,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/imoveis',
     '/blog',
     '/blog/investir-capao-da-canoa',
+    '/blog/melhores-imoveis-frente-mar-2026',
     '/casas-capao-novo',
     '/apartamentos-capao-novo',
     '/sobrados-capao-novo',

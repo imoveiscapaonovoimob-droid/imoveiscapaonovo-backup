@@ -18,7 +18,7 @@ const ARTICLES = [
     excerpt: "Nossa seleção anual de residências que redefinem o conceito de luxo e 'pé-na-areia' no litoral gaúcho.",
     image: "/blog2_new.jpeg",
     icon: <PenTool size={14} />,
-    href: "/blog",
+    href: "/blog/melhores-imoveis-frente-mar-2026",
   },
 ];
 
