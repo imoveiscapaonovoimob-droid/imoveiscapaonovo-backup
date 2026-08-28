@@ -53,6 +53,7 @@ import ScrollTracker from "@/components/analytics/ScrollTracker";
 import FloatingWhatsAppChat from "@/components/shared/FloatingWhatsAppChat";
 
 import AuthProvider from "@/components/providers/AuthProvider";
+import { BUSINESS_INFO, SOCIAL_LINKS } from "@/lib/constants";
 
 export default function RootLayout({
   children,
@@ -62,23 +63,25 @@ export default function RootLayout({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "RealEstateAgent",
-    "name": "Imóveis Capão Novo",
-    "image": "https://imoveiscapaonovo.com.br/hero.webp",
-    "@id": "https://imoveiscapaonovo.com.br",
-    "url": "https://imoveiscapaonovo.com.br",
-    "telephone": "+5551999999999",
+    "name": BUSINESS_INFO.legalName,
+    "image": BUSINESS_INFO.image,
+    "description": BUSINESS_INFO.description,
+    "@id": BUSINESS_INFO.url,
+    "url": BUSINESS_INFO.url,
+    "telephone": BUSINESS_INFO.telephone,
+    "founder": {
+      "@type": "Person",
+      "name": BUSINESS_INFO.founder
+    },
+    "areaServed": BUSINESS_INFO.areaServed,
+    "sameAs": [SOCIAL_LINKS.facebook, SOCIAL_LINKS.instagram].filter(Boolean),
     "address": {
       "@type": "PostalAddress",
-      "streetAddress": "Av. Paraguassu",
-      "addressLocality": "Capão da Canoa",
-      "addressRegion": "RS",
-      "postalCode": "95555-000",
-      "addressCountry": "BR"
+      ...BUSINESS_INFO.address
     },
     "geo": {
       "@type": "GeoCoordinates",
-      "latitude": -29.7611,
-      "longitude": -50.0125
+      ...BUSINESS_INFO.geo
     },
     "openingHoursSpecification": {
       "@type": "OpeningHoursSpecification",

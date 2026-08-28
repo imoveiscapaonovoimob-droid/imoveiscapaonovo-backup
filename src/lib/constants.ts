@@ -14,3 +14,26 @@ export const SOCIAL_LINKS = {
   instagram: "https://www.instagram.com/imoveiscapaonovors/",
   youtube: "", // adicionar quando disponível
 };
+
+// Fonte única de verdade para NAP (Nome/Endereço/Telefone) usado no schema.org
+// RealEstateAgent em todas as páginas — mantenha o telefone igual ao WHATSAPP_URL acima.
+export const BUSINESS_INFO = {
+  legalName: "Imóveis Capão Novo",
+  telephone: "+5551992340058",
+  url: "https://www.imoveiscapaonovo.com.br",
+  image: "https://www.imoveiscapaonovo.com.br/hero.webp",
+  description: "Imobiliária especializada em imóveis de alto padrão e terrenos em Capão Novo, litoral norte gaúcho.",
+  founder: "Lenine Kerber",
+  areaServed: ["Capão Novo", "Capão da Canoa", "Costa Serena", "Velas da Marina", "Terrasul", "Village"],
+  address: {
+    streetAddress: "Av. Paraguassu",
+    addressLocality: "Capão da Canoa",
+    addressRegion: "RS",
+    postalCode: "95555-000",
+    addressCountry: "BR",
+  },
+  geo: {
+    latitude: -29.7611,
+    longitude: -50.0125,
+  },
+};

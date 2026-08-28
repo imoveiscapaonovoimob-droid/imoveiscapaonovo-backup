@@ -4,7 +4,6 @@ import { Footer } from "@/components/home/Footer";
 import { Award, Clock, Heart, MessageCircle, Building2, ShieldCheck, TrendingUp } from "lucide-react";
 import type { Metadata } from "next";
 import { WHATSAPP_MESSAGES } from "@/lib/constants";
-import Script from "next/script";
 
 export const metadata: Metadata = {
   title: "Sobre Nós | Imóveis Capão Novo | 30 Anos de Tradição",
@@ -30,35 +29,9 @@ const VALUES = [
 ];
 
 export default function SobrePage() {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "RealEstateAgent",
-    "name": "Imóveis Capão Novo",
-    "image": "https://imoveiscapaonovo.site/hero.webp",
-    "description": "Imobiliária especializada em imóveis de alto padrão e terrenos em Capão Novo, litoral norte gaúcho.",
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "Capão Novo, Capão da Canoa",
-      "addressRegion": "RS",
-      "addressCountry": "BR"
-    },
-    "telephone": "+5551984241088",
-    "url": "https://imoveiscapaonovo.site",
-    "areaServed": ["Capão Novo", "Capão da Canoa", "Costa Serena", "Velas da Marina"],
-    "founder": {
-      "@type": "Person",
-      "name": "Lenine Kerber"
-    }
-  };
-
   return (
     <main className="min-h-screen bg-white">
       <Header />
-      <Script
-        id="real-estate-jsonld"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
 
       {/* Hero */}
       <section className="bg-primary pt-44 pb-32 px-6 lg:px-10 relative overflow-hidden">
