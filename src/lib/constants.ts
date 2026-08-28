@@ -26,14 +26,14 @@ export const BUSINESS_INFO = {
   founder: "Lenine Kerber",
   areaServed: ["Capão Novo", "Capão da Canoa", "Costa Serena", "Velas da Marina", "Terrasul", "Village"],
   address: {
-    streetAddress: "Av. Paraguassu",
+    streetAddress: "Rua das Sempre-Vivas, 3813",
     addressLocality: "Capão da Canoa",
     addressRegion: "RS",
-    postalCode: "95555-000",
+    postalCode: "94696-068",
     addressCountry: "BR",
   },
   geo: {
-    latitude: -29.7611,
-    longitude: -50.0125,
+    latitude: -29.6800775,
+    longitude: -49.9883512,
   },
 };

@@ -101,7 +101,7 @@ export const Footer = () => {
             <div className="flex flex-col gap-2 text-primary/30 text-[9px] font-sans font-black uppercase tracking-[0.3em] leading-tight">
               <span>© 2026 Imóveis Capão Novo. CRECI/RS 85784</span>
               <address className="not-italic">
-                Av. Paraguassu, Capão Novo — Capão da Canoa, RS
+                Rua das Sempre-Vivas, 3813, Posto 4 — Capão Novo, Capão da Canoa, RS
               </address>
               <span className="text-primary/20">Curadoria premium em parceria com Montenegro Imóveis</span>
             </div>
