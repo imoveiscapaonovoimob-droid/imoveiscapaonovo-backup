@@ -1,4 +1,5 @@
 import React from 'react';
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { getPropertyBySlugOrId } from '@/lib/actions/property.actions';
@@ -6,13 +7,13 @@ import { PropertyGallery } from '@/components/imoveis/PropertyGallery';
 import { VideoEmbed } from '@/components/imoveis/VideoEmbed';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/home/Footer';
-import { 
-  Bed, 
-  Square, 
-  Bath, 
-  Car, 
-  CheckCircle2, 
-  MapPin, 
+import {
+  Bed,
+  Square,
+  Bath,
+  Car,
+  CheckCircle2,
+  MapPin,
   ArrowLeft,
   MessageSquare,
   Building,
@@ -22,6 +23,49 @@ import {
 import Link from 'next/link';
 import { WHATSAPP_URL } from '@/lib/constants';
 import { PropertyShareActions } from '@/components/imoveis/PropertyShareActions';
+
+const BASE_URL = 'https://imoveiscapaonovo.com.br';
+
+function formatCurrency(value: number) {
+  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(value);
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+  const result = await getPropertyBySlugOrId(id);
+
+  if (!result.success || !result.property) {
+    return { title: 'Imóvel não encontrado | Imóveis Capão Novo' };
+  }
+
+  const property = result.property;
+  const priceFormatted = formatCurrency(property.price);
+  const location = property.location || property.address || 'Capão Novo';
+  const mainImage = property.images?.find((i: any) => i.isMain)?.url || property.images?.[0]?.url;
+  const description = `${property.title} em ${location}. ${priceFormatted}${property.features?.bedrooms ? ` · ${property.features.bedrooms} dorm.` : ''}${property.features?.area ? ` · ${property.features.area}m²` : ''}. Fale com a Imóveis Capão Novo.`;
+  const url = `${BASE_URL}/imoveis/${property.slug}`;
+
+  return {
+    title: `${property.title} | ${priceFormatted} | Imóveis Capão Novo`,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      type: 'website',
+      locale: 'pt_BR',
+      url,
+      siteName: 'Imóveis Capão Novo',
+      title: property.title,
+      description,
+      images: mainImage ? [{ url: mainImage, width: 1200, height: 630, alt: property.title }] : undefined,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: property.title,
+      description,
+      images: mainImage ? [mainImage] : undefined,
+    },
+  };
+}
 
 const amenityMap: Record<string, string> = {
   barbecue: 'Churrasqueira',
@@ -57,12 +101,37 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
   }
 
   const property = result.property;
-  const priceFormatted = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(property.price);
+  const priceFormatted = formatCurrency(property.price);
+  const mainImageUrl = property.images?.find((i: any) => i.isMain)?.url || property.images?.[0]?.url;
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: property.title,
+    description: property.description,
+    image: property.images?.map((i: any) => i.url) || (mainImageUrl ? [mainImageUrl] : undefined),
+    category: property.category,
+    offers: {
+      '@type': 'Offer',
+      url: `${BASE_URL}/imoveis/${property.slug}`,
+      priceCurrency: 'BRL',
+      price: property.price,
+      availability: 'https://schema.org/InStock',
+      seller: {
+        '@type': 'RealEstateAgent',
+        name: 'Imóveis Capão Novo',
+      },
+    },
+  };
 
   return (
     <main className="min-h-screen bg-[#f9f9f9] text-[#001629]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Header />
-      
+
       {/* Floating Glass Navigation */}
       <div className="sticky top-20 z-40 bg-[#f9f9f9]/70 backdrop-blur-[20px]">
         <div className="max-w-[1400px] mx-auto px-6 h-16 flex items-center justify-between">
