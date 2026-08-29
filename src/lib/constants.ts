@@ -19,6 +19,7 @@ export const SOCIAL_LINKS = {
 // RealEstateAgent em todas as páginas — mantenha o telefone igual ao WHATSAPP_URL acima.
 export const BUSINESS_INFO = {
   legalName: "Imóveis Capão Novo",
+  alternateName: "Imobiliária Capão Novo",
   telephone: "+5551992340058",
   url: "https://www.imoveiscapaonovo.com.br",
   image: "https://www.imoveiscapaonovo.com.br/hero.webp",

@@ -17,9 +17,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Imóveis Capão Novo RS | Casas e Apartamentos à Venda",
-  description: "Encontre imóveis à venda em Capão Novo RS. Casas, apartamentos e terrenos selecionados. Veja as melhores oportunidades no litoral.",
-  keywords: ["imóveis capão novo", "apartamentos litoral norte rs", "casas capão da canoa", "imobiliária capão novo", "investimento imobiliário litoral"],
+  title: "Imóveis Capão Novo | Imobiliária em Capão Novo, RS",
+  description: "Imobiliária em Capão Novo (RS) especializada em casas, apartamentos e terrenos à venda. Curadoria local, atendimento direto e as melhores oportunidades do litoral.",
+  keywords: ["imóveis capão novo", "imobiliária capão novo", "imobiliária em capão novo rs", "apartamentos litoral norte rs", "casas capão da canoa", "investimento imobiliário litoral"],
   authors: [{ name: "Imóveis Capão Novo" }],
   viewport: "width=device-width, initial-scale=1.0",
   robots: "index, follow",
@@ -30,8 +30,8 @@ export const metadata: Metadata = {
     type: "website",
     locale: "pt_BR",
     url: "https://www.imoveiscapaonovo.com.br/",
-    title: "Imóveis Capão Novo RS | Casas e Apartamentos à Venda",
-    description: "Encontre imóveis à venda em Capão Novo RS. Casas, apartamentos e terrenos selecionados. Veja as melhores oportunidades no litoral.",
+    title: "Imóveis Capão Novo | Imobiliária em Capão Novo, RS",
+    description: "Imobiliária em Capão Novo (RS) especializada em casas, apartamentos e terrenos à venda. Curadoria local, atendimento direto e as melhores oportunidades do litoral.",
     siteName: "Imóveis Capão Novo",
     images: [{
       url: "/hero.webp",
@@ -42,8 +42,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Imóveis Capão Novo RS | Casas e Apartamentos à Venda",
-    description: "Encontre imóveis à venda em Capão Novo RS. Casas, apartamentos e terrenos selecionados. Veja as melhores oportunidades no litoral.",
+    title: "Imóveis Capão Novo | Imobiliária em Capão Novo, RS",
+    description: "Imobiliária em Capão Novo (RS) especializada em casas, apartamentos e terrenos à venda. Curadoria local, atendimento direto e as melhores oportunidades do litoral.",
     images: ["/hero.webp"],
   },
 };
@@ -64,6 +64,7 @@ export default function RootLayout({
     "@context": "https://schema.org",
     "@type": "RealEstateAgent",
     "name": BUSINESS_INFO.legalName,
+    "alternateName": BUSINESS_INFO.alternateName,
     "image": BUSINESS_INFO.image,
     "description": BUSINESS_INFO.description,
     "@id": BUSINESS_INFO.url,

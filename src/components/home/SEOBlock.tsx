@@ -15,8 +15,11 @@ export const SEOBlock = () => {
               <h2 className="text-3xl md:text-5xl font-serif text-primary mb-8 leading-tight">
                 Tudo sobre imóveis em Capão Novo
               </h2>
-              <p className="text-lg text-primary/70 font-sans leading-relaxed mb-8">
+              <p className="text-lg text-primary/70 font-sans leading-relaxed mb-4">
                 Seja para morar ou investir, Capão Novo oferece opções para todos os perfis. Aqui você encontra segurança, lazer e rentabilidade no mesmo lugar.
+              </p>
+              <p className="text-lg text-primary/70 font-sans leading-relaxed mb-8">
+                Somos a imobiliária em Capão Novo focada em curadoria: cada imóvel do nosso portfólio passa por uma análise de localização, documentação e potencial de valorização antes de chegar até você.
               </p>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
