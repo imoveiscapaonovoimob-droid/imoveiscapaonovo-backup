@@ -92,7 +92,7 @@ export default function Page() {
 
       {/* Authority Content / Article */}
       <section className="py-24 px-6 lg:px-10 max-w-4xl mx-auto">
-        <article className="prose prose-lg prose-headings:font-serif prose-headings:text-primary prose-p:text-secondary/80 max-w-none">
+        <article className="prose prose-lg prose-headings:font-serif prose-headings:text-primary prose-p:text-secondary max-w-none">
           <h2 className="text-3xl mb-8">O refúgio perfeito para investir ou morar</h2>
           <p>
             O mercado de <strong>imóveis no Posto 5 de Capão Novo</strong> atingiu um novo patamar de interesse por parte de investidores de Porto Alegre e da Serra Gaúcha. A combinação de baixa densidade demográfica e alta qualidade construtiva atrai aqueles que buscam um ativo imobiliário sólido.

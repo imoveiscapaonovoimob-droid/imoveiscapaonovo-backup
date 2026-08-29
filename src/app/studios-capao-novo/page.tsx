@@ -23,7 +23,7 @@ export default async function Page() {
         <h1 className="text-4xl md:text-5xl font-serif text-primary mb-6">
           Studios em Capão Novo
         </h1>
-        <article className="prose prose-lg text-secondary/80 max-w-none">
+        <article className="prose prose-lg text-secondary max-w-none">
           <p>
             O mercado imobiliário litorâneo evoluiu e os <strong>Studios em Capão Novo</strong> lideram as procuras de investidores e de quem quer um cantinho na praia fácil de manter.
             Com metragens inteligentes, essas unidades trazem conceitos de arquitetura contemporânea e foco no que mais importa: aproveitar comércios, infraestrutura da região e, claro, o mar.
@@ -67,11 +67,11 @@ export default async function Page() {
         <div className="space-y-4">
           <details className="p-4 border border-secondary/20 bg-white rounded-lg">
             <summary className="font-bold cursor-pointer text-primary">Studios são recomendados para aluguel de temporada?</summary>
-            <p className="mt-4 text-secondary/80">Sim, são o produto estrela para aplicativos de hospedagem sazonal (como Airbnb). Seu layout em ambiente único exige baixa manutenção e é muito buscado por solteiros e casais.</p>
+            <p className="mt-4 text-secondary">Sim, são o produto estrela para aplicativos de hospedagem sazonal (como Airbnb). Seu layout em ambiente único exige baixa manutenção e é muito buscado por solteiros e casais.</p>
           </details>
           <details className="p-4 border border-secondary/20 bg-white rounded-lg">
             <summary className="font-bold cursor-pointer text-primary">Qual o custo de um condomínio de Studio?</summary>
-            <p className="mt-4 text-secondary/80">O valor do condomínio costuma ser reduzido pela metragem mais compacta, gerando ótimo retorno de operação mensal. Fale com um consultor para mais detalhes financeiros.</p>
+            <p className="mt-4 text-secondary">O valor do condomínio costuma ser reduzido pela metragem mais compacta, gerando ótimo retorno de operação mensal. Fale com um consultor para mais detalhes financeiros.</p>
           </details>
         </div>
       </section>

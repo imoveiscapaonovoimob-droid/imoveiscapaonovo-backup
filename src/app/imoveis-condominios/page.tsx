@@ -21,7 +21,7 @@ export default async function Page() {
         <h1 className="text-4xl md:text-5xl font-serif text-primary mb-6">
           Condomínios Fechados
         </h1>
-        <article className="prose prose-lg text-secondary/80 max-w-none">
+        <article className="prose prose-lg text-secondary max-w-none">
           <p>
             Viver em <strong>Condomínios Fechados</strong> é mergulhar no design praiano com total segurança. Residências luxuosas, assinaturas modernas e clubes completos idealizados para atender os desejos e tranquilidade exigidos por famílias de alto poder aquisitivo no Rio Grande do Sul.
           </p>

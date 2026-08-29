@@ -17,7 +17,7 @@ export default function Page() {
         <h1 className="text-4xl md:text-5xl font-serif text-primary mb-6">
           Capão Novo Village
         </h1>
-        <article className="prose prose-lg text-secondary/80 max-w-none">
+        <article className="prose prose-lg text-secondary max-w-none">
           <p>
             Beleza natural e um requinte intocável. Os <strong>imóveis no Capão Novo Village</strong> entregam mais do que moradia, entregam a segurança de um ecossistema projetado do zero para famílias com o padrão de exigência inegociável. 
           </p>

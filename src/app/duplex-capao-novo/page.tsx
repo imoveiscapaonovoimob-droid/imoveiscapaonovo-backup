@@ -23,7 +23,7 @@ export default async function Page() {
         <h1 className="text-4xl md:text-5xl font-serif text-primary mb-6">
           Apartamentos Duplex em Capão Novo
         </h1>
-        <article className="prose prose-lg text-secondary/80 max-w-none">
+        <article className="prose prose-lg text-secondary max-w-none">
           <p>
             Vistas panorâmicas, ambientes muito bem dimensionados e o prestígio característico: encontre aqui os melhores <strong>Apartamentos Duplex em Capão Novo</strong>.
             Combinando as qualidades da vida em condomínio com o conforto que imita em área uma casa, o duplex atende famílias grandes, encontros de finais de semana e reuniões inesquecíveis em torno de terraços deslumbrantes.
@@ -67,11 +67,11 @@ export default async function Page() {
         <div className="space-y-4">
           <details className="p-4 border border-secondary/20 bg-white rounded-lg">
             <summary className="font-bold cursor-pointer text-primary">Os duplex costumam ter terraços próprios?</summary>
-            <p className="mt-4 text-secondary/80">Muitos dos projetos trazem no seu segundo andar áreas de convívio generosas com terrações e possibilidade de fechamento em vidro, explorando a posição solar.</p>
+            <p className="mt-4 text-secondary">Muitos dos projetos trazem no seu segundo andar áreas de convívio generosas com terrações e possibilidade de fechamento em vidro, explorando a posição solar.</p>
           </details>
           <details className="p-4 border border-secondary/20 bg-white rounded-lg">
             <summary className="font-bold cursor-pointer text-primary">Qual o perfil preferido dos compradores?</summary>
-            <p className="mt-4 text-secondary/80">Quem avalia duplex geralmente deseja o tamanho e a independência física de andares de uma casa, mas atrelados à segurança reforçada de edifícios novos do litoral gaúcho.</p>
+            <p className="mt-4 text-secondary">Quem avalia duplex geralmente deseja o tamanho e a independência física de andares de uma casa, mas atrelados à segurança reforçada de edifícios novos do litoral gaúcho.</p>
           </details>
         </div>
       </section>

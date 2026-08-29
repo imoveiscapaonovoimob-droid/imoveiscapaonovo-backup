@@ -17,7 +17,7 @@ export default function Page() {
         <h1 className="text-4xl md:text-5xl font-serif text-primary mb-6">
           Condomínio Velas da Marina
         </h1>
-        <article className="prose prose-lg text-secondary/80 max-w-none">
+        <article className="prose prose-lg text-secondary max-w-none">
           <p>
             Experimente o puro estilo de vida sofisticado e náutico. Conheça e reserve exclusividades dos <strong>imóveis de alto luxo no Velas da Marina</strong>. Uma marina à disposição, praias artificiais particulares, quadras de esporte premium num projeto incomparável de requinte litorâneo no sul do Brasil.
           </p>

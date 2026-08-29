@@ -23,7 +23,7 @@ export default async function Page() {
         <h1 className="text-4xl md:text-5xl font-serif text-primary mb-6">
           Apartamentos Capão da Canoa Capão Novo
         </h1>
-        <article className="prose prose-lg text-secondary/80 max-w-none">
+        <article className="prose prose-lg text-secondary max-w-none">
           <p>
             A conveniência e luxuosidade vertical reunida de forma única no litoral. A nossa vitrine de <strong>Apartamentos em Capão Novo</strong> foi montada para entregar a melhor experiência - seja buscando um duplex que respire a brisa do oceano ou um mobiliado pronto para morar no próximo verão.
             Buscamos sempre destacar projetos de segurança robusta e lazer ininterrupto para a sua família inteira.

@@ -97,7 +97,7 @@ export default function Page() {
       {/* Buying Guide Section (SEO Content) */}
       <section className="py-24 px-6 lg:px-10 bg-secondary/5">
         <div className="max-w-4xl mx-auto">
-          <article className="prose prose-lg prose-headings:font-serif prose-headings:text-primary prose-p:text-secondary/80 max-w-none">
+          <article className="prose prose-lg prose-headings:font-serif prose-headings:text-primary prose-p:text-secondary max-w-none">
             <h2 className="text-3xl mb-8">Guia: O que considerar ao comprar um terreno em Capão Novo?</h2>
             <p>
               Comprar um terreno no litoral requer atenção a detalhes geográficos e legislações ambientais. Em Capão Novo, é fundamental verificar a proximidade com a zona de dunas e respeitar os recuos municipais para garantir que sua obra possa ser averbada sem entraves.

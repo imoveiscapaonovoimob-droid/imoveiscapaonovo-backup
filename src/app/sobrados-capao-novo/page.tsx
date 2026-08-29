@@ -23,7 +23,7 @@ export default async function Page() {
         <h1 className="text-4xl md:text-5xl font-serif text-primary mb-6">
           Sobrados em Capão Novo
         </h1>
-        <article className="prose prose-lg text-secondary/80 max-w-none">
+        <article className="prose prose-lg text-secondary max-w-none">
           <p>
             Encontrar o sobrado dos sonhos nunca foi tão simples e seguro. Trabalhamos exclusivamente com os mais selecionados <strong>Sobrados em Capão Novo</strong>.
             Nossa carteira atende quem busca alto padrão e tranquilidade, opções de frente mar ou localizadas nas áreas mais reservadas e cobiçadas como o Capão Novo Village ou o Posto 4.
@@ -67,11 +67,11 @@ export default async function Page() {
         <div className="space-y-4">
           <details className="p-4 border border-secondary/20 bg-white rounded-lg">
             <summary className="font-bold cursor-pointer text-primary">Qual o perfil de um sobrado em Capão Novo?</summary>
-            <p className="mt-4 text-secondary/80">Os sobrados oferecem ótima separação entre áreas sociais e privativas, garantindo conforto e privacidade. São muito buscados por famílias que desejam espaço e proximidade à praia sem perder as características únicas do litoral.</p>
+            <p className="mt-4 text-secondary">Os sobrados oferecem ótima separação entre áreas sociais e privativas, garantindo conforto e privacidade. São muito buscados por famílias que desejam espaço e proximidade à praia sem perder as características únicas do litoral.</p>
           </details>
           <details className="p-4 border border-secondary/20 bg-white rounded-lg">
             <summary className="font-bold cursor-pointer text-primary">Há sobrados em condomínios fechados?</summary>
-            <p className="mt-4 text-secondary/80">Sim, dispomos de excelentes unidades em condomínios selecionados, garantindo segurança estendida e alto padrão construtivo. Converse com nossa consultoria pelo WhatsApp para saber mais.</p>
+            <p className="mt-4 text-secondary">Sim, dispomos de excelentes unidades em condomínios selecionados, garantindo segurança estendida e alto padrão construtivo. Converse com nossa consultoria pelo WhatsApp para saber mais.</p>
           </details>
         </div>
       </section>

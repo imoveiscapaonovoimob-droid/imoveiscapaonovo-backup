@@ -29,7 +29,7 @@ export default function Page() {
         <h1 className="text-4xl md:text-5xl font-serif text-primary mb-6">
           Condomínio Costa Serena
         </h1>
-        <article className="prose prose-lg text-secondary/80 max-w-none">
+        <article className="prose prose-lg text-secondary max-w-none">
           <p>
             Descubra a serenidade litorânea com exclusividade no <strong>Condomínio Costa Serena</strong> em Capão da Canoa. 
             Um empreendimento de alto padrão que une conforto, infraestrutura completa e a beleza incomparável do litoral norte gaúcho. 

@@ -23,7 +23,7 @@ export default async function Page() {
         <h1 className="text-4xl md:text-5xl font-serif text-primary mb-6">
           Vivendas em Capão Novo
         </h1>
-        <article className="prose prose-lg text-secondary/80 max-w-none">
+        <article className="prose prose-lg text-secondary max-w-none">
           <p>
             Tradição, refino e extrema exclusividade: assim definimos nossa carteira premium de <strong>Vivendas em Capão Novo</strong>.
             Propriedades selecionadas que encantam por sua identidade arquitetônica formidável, jardins muito bem cuidados e a verdadeira sensação de casa de verão espetacular.
@@ -67,11 +67,11 @@ export default async function Page() {
         <div className="space-y-4">
           <details className="p-4 border border-secondary/20 bg-white rounded-lg">
             <summary className="font-bold cursor-pointer text-primary">Qual a diferença de uma casa comum para uma Vivenda?</summary>
-            <p className="mt-4 text-secondary/80">Vivendas destacam-se pelo seu estilo de construção imponente, metragens amplas, terrenos arborizados e aquele charme familiar intemporal em loteamentos de qualidade superior.</p>
+            <p className="mt-4 text-secondary">Vivendas destacam-se pelo seu estilo de construção imponente, metragens amplas, terrenos arborizados e aquele charme familiar intemporal em loteamentos de qualidade superior.</p>
           </details>
           <details className="p-4 border border-secondary/20 bg-white rounded-lg">
             <summary className="font-bold cursor-pointer text-primary">Elas possuem operação de venda off-market?</summary>
-            <p className="mt-4 text-secondary/80">Muitas propriedades que classificamos no altíssimo padrão funcionam como Pocket Deals ou Venda Discreta (off-market). Nossa equipe realiza a curadoria após um primeiro contato.</p>
+            <p className="mt-4 text-secondary">Muitas propriedades que classificamos no altíssimo padrão funcionam como Pocket Deals ou Venda Discreta (off-market). Nossa equipe realiza a curadoria após um primeiro contato.</p>
           </details>
         </div>
       </section>

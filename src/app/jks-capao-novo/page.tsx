@@ -23,7 +23,7 @@ export default async function Page() {
         <h1 className="text-4xl md:text-5xl font-serif text-primary mb-6">
           Apartamentos JK em Capão Novo
         </h1>
-        <article className="prose prose-lg text-secondary/80 max-w-none">
+        <article className="prose prose-lg text-secondary max-w-none">
           <p>
             Otimização financeira e lazer: conheça as opções de investimentos em aptos de 1 ambiente, os clássicos e modernos <strong>JKs em Capão Novo</strong>.
             Garantindo custos de manutenção diminutos mas aproveitando as incríveis belezas da orla gaúcha, estas unidades encantam investidores, casais e clientes exigentes em facilidades.
@@ -67,11 +67,11 @@ export default async function Page() {
         <div className="space-y-4">
           <details className="p-4 border border-secondary/20 bg-white rounded-lg">
             <summary className="font-bold cursor-pointer text-primary">O que difere um JK de um Apartamento tradicional?</summary>
-            <p className="mt-4 text-secondary/80">O JK (abreviação baseada no formato de Quarto/Conjugado) costuma ser um living de peça única onde as divisórias são formadas pelos próprios móveis, conferindo um ambiente unificado otimizado.</p>
+            <p className="mt-4 text-secondary">O JK (abreviação baseada no formato de Quarto/Conjugado) costuma ser um living de peça única onde as divisórias são formadas pelos próprios móveis, conferindo um ambiente unificado otimizado.</p>
           </details>
           <details className="p-4 border border-secondary/20 bg-white rounded-lg">
             <summary className="font-bold cursor-pointer text-primary">JK é fácil de mobiliar na praia?</summary>
-            <p className="mt-4 text-secondary/80">Extremamente. O layout de um bom projeto marcenaria viabiliza que poucos itens se tornem uma casa acolhedora para veraneio completo.</p>
+            <p className="mt-4 text-secondary">Extremamente. O layout de um bom projeto marcenaria viabiliza que poucos itens se tornem uma casa acolhedora para veraneio completo.</p>
           </details>
         </div>
       </section>

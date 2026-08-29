@@ -16,7 +16,7 @@ export default function Page() {
         <h1 className="text-4xl md:text-5xl font-serif text-primary mb-6">
           Guia Oficial Capão Novo
         </h1>
-        <article className="prose prose-lg text-secondary/80 max-w-none">
+        <article className="prose prose-lg text-secondary max-w-none">
           <p>
             Explore artigos, análises do mercado aquecido do ramo de propriedades de luxo, guias práticos e informações minuciosas que respondem o porquê morar ou investir nas praias de Capão é uma decisão sólida e incomparável.
           </p>

@@ -17,7 +17,7 @@ export default function Page() {
         <h1 className="text-4xl md:text-5xl font-serif text-primary mb-6">
           Imóveis Capão Novo Posto 4
         </h1>
-        <article className="prose prose-lg text-secondary/80 max-w-none">
+        <article className="prose prose-lg text-secondary max-w-none">
           <p>
             O prestígio e a tranquilidade no coração do litoral. Descubra nossas seleções premium de <strong>imóveis Capão Novo Posto 4</strong> e faça um negócio seguro e garantido na faixa de areia mais desejada.
           </p>

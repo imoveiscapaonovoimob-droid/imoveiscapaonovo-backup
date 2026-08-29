@@ -17,7 +17,7 @@ export default function Page() {
         <h1 className="text-4xl md:text-5xl font-serif text-primary mb-6">
           Condomínio Terrasul
         </h1>
-        <article className="prose prose-lg text-secondary/80 max-w-none">
+        <article className="prose prose-lg text-secondary max-w-none">
           <p>
             Viver no <strong>Condomínio Terrasul</strong> é escolher o refúgio perfeito sem abrir mão da segurança e do lazer completo. Imóveis alto padrão e lotes na medida certa para construir sua história em Capão Novo.
           </p>
