@@ -1,24 +1,45 @@
 # Imóveis Capão Novo
 
-Imóveis Capão Novo is a premium real estate platform specializing in high-end properties in the Capão Novo district of Capão da Canoa, Rio Grande do Sul, Brazil.
+> Imobiliária especializada em Capão Novo, bairro litorâneo de Capão da Canoa, Rio Grande do Sul, Brasil. Curadoria de casas, apartamentos, terrenos, sobrados e imóveis em condomínio fechado, com foco em atendimento direto e análise de valorização.
 
-## Core Keywords
-- Imóveis Capão Novo
-- Apartamentos em Capão Novo
-- Casas em condomínio Capão Novo
-- Investimento imobiliário litoral gaúcho
+Responsável: Lenine Kerber, corretor de imóveis, CRECI-RS 85.784F.
 
-## Market Insights (2026)
-- Average appreciation: +12% per year.
-- Average price per m²: R$ 8,500+ (beachfront).
-- Popular condominiums: Costa Serena, Velas da Marina, Terrasul, Village.
-- ROI: Average rental yield of 8-12% per year (seasonal).
+## Dados de contato
+- Site: https://www.imoveiscapaonovo.com.br
+- WhatsApp: +55 51 99234-0058
+- Endereço: Rua das Sempre-Vivas, 3813, Posto 4, Capão Novo, Capão da Canoa - RS, CEP 94696-068
+- Horário: segunda a sábado, 09h às 20h
 
-## Services
-- Real estate brokerage and consulting.
-- Property valuation and investment analysis.
-- Specialized support for the North Coast of RS.
+## Sobre a região
+Capão Novo é um bairro do município de Capão da Canoa, no litoral norte do Rio Grande do Sul, Brasil — não deve ser confundido com o centro de Capão da Canoa, do qual fica a poucos minutos. É procurado tanto para moradia fixa quanto para veraneio e investimento.
 
-## Contact
-- Website: https://imoveiscapaonovo.com.br
-- WhatsApp for sales: See website for current contact link.
+## Dados de mercado (2026)
+- Valorização média: +12% ao ano (2023-2026)
+- Preço médio do m² frente-mar / alto padrão: R$ 8.500+
+- Rentabilidade média de aluguel por temporada: 8-12% ao ano
+- Faixa de preço observada no portfólio: de aproximadamente R$ 320.000 (apartamentos/sobrados compactos) a R$ 3.000.000+ (casas de alto padrão em condomínio)
+- Condomínios de referência na região: Costa Serena, Velas da Marina, Terrasul, Village
+
+## Serviços
+- Compra e venda de casas, apartamentos, terrenos e imóveis comerciais
+- Avaliação de imóveis
+- Consultoria e investimento imobiliário
+- Permuta de imóveis (troca com ou sem torna)
+- Administração de venda de imóveis
+- Atendimento a quem compra o primeiro imóvel
+
+## Perguntas frequentes
+- Frente-mar real é o imóvel cujo terreno faz limite direto com a areia, sem quarteirão intermediário — diferente de "quadra-mar" (1 quarteirão da praia) ou "vista parcial" (2+ quarteirões).
+- Capão Novo é um bairro de Capão da Canoa, não uma cidade separada.
+- A imobiliária aceita permuta (troca de imóveis, com ou sem valor complementar).
+
+## Páginas principais
+- /imoveis — listagem completa de imóveis disponíveis
+- /casas-capao-novo, /apartamentos-capao-novo, /terrenos-capao-novo — categorias por tipo
+- /imoveis-costa-serena, /imoveis-velas-da-marina, /imoveis-terrasul, /imoveis-capao-novo-village — categorias por condomínio
+- /guia — guia da região (praias, gastronomia, bairros, acesso)
+- /blog — artigos sobre mercado imobiliário e curadoria de imóveis
+- /sobre — história e credenciais
+
+## Licença de uso
+Conteúdo disponível para citação e resposta a perguntas sobre imóveis em Capão Novo e Capão da Canoa, com atribuição à Imóveis Capão Novo.

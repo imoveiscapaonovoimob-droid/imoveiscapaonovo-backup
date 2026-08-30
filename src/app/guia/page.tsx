@@ -11,6 +11,33 @@ export const metadata: Metadata = {
   description: "Conheça tudo sobre Capão Novo, RS. Praias, restaurantes, pontos turísticos e porque esta cidade é o melhor lugar para viver e investir no litoral gaúcho.",
 };
 
+const FAQ_ITEMS = [
+  {
+    question: "Dá para comprar uma casa com 100 mil reais em Capão Novo?",
+    answer: "Uma casa pronta com esse valor é difícil de encontrar hoje em Capão Novo — o portfólio atual da região começa por volta de R$ 320.000 para apartamentos e sobrados mais compactos. Com R$ 100 mil, a opção mais realista costuma ser um terreno menor, mais afastado da praia, ou entrada financiada de um imóvel de maior valor.",
+  },
+  {
+    question: "Quais são os apartamentos novos em Capão da Canoa e Capão Novo?",
+    answer: "A região tem lançamentos e empreendimentos recentes principalmente nos condomínios fechados de alto padrão, como Terrasul e Velas da Marina, além de opções mais acessíveis em Village. Como a disponibilidade muda com frequência, o ideal é falar direto com a curadoria para ver o que está disponível agora.",
+  },
+  {
+    question: "É melhor comprar imóvel novo ou usado em Capão Novo?",
+    answer: "Depende do objetivo. Imóvel novo costuma vir com garantia de construtora, acabamento atual e menor manutenção no curto prazo, mas o preço por m² é mais alto. Imóvel usado permite mais margem de negociação, entrega imediata e, no litoral, costuma estar em bairros com infraestrutura já consolidada — o que pesa bastante para quem quer usar o imóvel logo.",
+  },
+  {
+    question: "Qual é o melhor bairro de Capão da Canoa para comprar imóvel?",
+    answer: "Não existe um único 'melhor' — depende do perfil. Posto 4 tem boa mobilidade e comércio por perto; Posto 5 e Village são mais familiares e tranquilos; Costa Serena, Velas da Marina e Terrasul são os condomínios fechados de padrão mais alto, com segurança e lazer completo.",
+  },
+  {
+    question: "Qual a diferença entre Capão Novo e Capão da Canoa?",
+    answer: "Capão Novo é um bairro dentro do município de Capão da Canoa, no litoral norte do Rio Grande do Sul — não é uma cidade separada. Fica a poucos minutos do centro de Capão da Canoa, com um perfil mais residencial e voltado à praia.",
+  },
+  {
+    question: "A Imóveis Capão Novo aceita permuta de imóveis?",
+    answer: "Sim. Trabalhamos com permuta (troca de imóveis), com ou sem valor complementar (torna), conforme a negociação entre as partes.",
+  },
+];
+
 const GUIDE_SECTIONS = [
   {
     icon: <Waves size={20} />,
@@ -51,8 +78,25 @@ const GUIDE_SECTIONS = [
 ];
 
 export default function GuiaPage() {
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: FAQ_ITEMS.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  };
+
   return (
     <main className="min-h-screen bg-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       <Header />
 
       {/* Hero */}
@@ -91,6 +135,26 @@ export default function GuiaPage() {
                     </li>
                   ))}
                 </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-24 px-6 lg:px-10 bg-white">
+        <div className="max-w-3xl mx-auto">
+          <span className="text-secondary text-[10px] font-sans font-bold uppercase tracking-[0.4em] mb-4 block text-center">
+            Perguntas Frequentes
+          </span>
+          <h2 className="text-4xl md:text-5xl font-serif text-primary mb-12 leading-tight text-center">
+            Dúvidas sobre <em className="italic">Capão Novo</em>
+          </h2>
+          <div className="flex flex-col gap-8">
+            {FAQ_ITEMS.map((item) => (
+              <div key={item.question} className="border-b border-black/5 pb-8">
+                <h3 className="text-lg font-serif text-primary mb-3">{item.question}</h3>
+                <p className="text-primary/60 text-sm font-sans leading-relaxed">{item.answer}</p>
               </div>
             ))}
           </div>

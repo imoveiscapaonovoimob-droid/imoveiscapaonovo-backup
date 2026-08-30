@@ -9,13 +9,37 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/api/', '/admin/'], // Bloqueia diretórios técnicos
       },
       {
-        userAgent: 'GPTBot', // Garante que o ChatGPT indexe para respostas diretas (GEO)
+        userAgent: 'GPTBot', // ChatGPT (OpenAI)
+        allow: '/',
+      },
+      {
+        userAgent: 'OAI-SearchBot', // Busca do ChatGPT
         allow: '/',
       },
       {
         userAgent: 'PerplexityBot',
         allow: '/',
-      }
+      },
+      {
+        userAgent: 'Google-Extended', // Gemini e AI Overviews / Modo IA
+        allow: '/',
+      },
+      {
+        userAgent: 'ClaudeBot', // Claude (Anthropic)
+        allow: '/',
+      },
+      {
+        userAgent: 'anthropic-ai',
+        allow: '/',
+      },
+      {
+        userAgent: 'CCBot', // Common Crawl, usado no treino de vários LLMs
+        allow: '/',
+      },
+      {
+        userAgent: 'Applebot-Extended', // Apple Intelligence
+        allow: '/',
+      },
     ],
     sitemap: 'https://imoveiscapaonovo.com.br/sitemap.xml',
     host: 'https://imoveiscapaonovo.com.br',
