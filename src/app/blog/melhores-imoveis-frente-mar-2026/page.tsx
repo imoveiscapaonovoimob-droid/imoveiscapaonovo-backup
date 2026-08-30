@@ -102,6 +102,14 @@ export default function Page() {
       {/* Article Body */}
       <article className="max-w-3xl mx-auto px-6 lg:px-10 py-16 sm:py-24">
 
+        {/* Direct Answer */}
+        <div className="bg-secondary/5 border border-secondary/20 rounded-lg p-6 sm:p-8 mb-12">
+          <p className="text-[9px] font-sans font-black tracking-[0.3em] uppercase text-secondary mb-3">Resposta direta</p>
+          <p className="text-primary text-base sm:text-lg font-sans leading-relaxed">
+            Um imóvel frente-mar real é aquele cujo terreno faz limite direto com a faixa de areia, sem quarteirão intermediário, com vista de mar aberta e permanente. Isso é diferente de &ldquo;quadra-mar&rdquo; (um quarteirão da praia) ou &ldquo;vista parcial&rdquo; (dois ou mais quarteirões) — categorias que não deveriam ter o mesmo preço, mas frequentemente são anunciadas como sinônimos.
+          </p>
+        </div>
+
         {/* Intro */}
         <div className="border-l-2 border-secondary pl-6 mb-16">
           <p className="text-primary/80 text-lg sm:text-xl font-serif leading-relaxed">

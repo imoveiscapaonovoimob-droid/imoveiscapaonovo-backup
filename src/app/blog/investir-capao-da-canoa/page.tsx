@@ -91,6 +91,14 @@ export default function Page() {
       {/* Article Body */}
       <article className="max-w-3xl mx-auto px-6 lg:px-10 py-16 sm:py-24">
 
+        {/* Direct Answer */}
+        <div className="bg-secondary/5 border border-secondary/20 rounded-lg p-6 sm:p-8 mb-12">
+          <p className="text-[9px] font-sans font-black tracking-[0.3em] uppercase text-secondary mb-3">Resposta direta</p>
+          <p className="text-primary text-base sm:text-lg font-sans leading-relaxed">
+            Capão da Canoa reúne, hoje, crescimento populacional acima da média do RS, oferta restrita de imóveis bem localizados, custo de construção em alta (o que valoriza os imóveis já prontos) e juros elevados reduzindo a concorrência entre compradores. Juntos, esses fatores criam uma janela em que os fundamentos do mercado já estão presentes, mas o preço ainda não reflete totalmente esse potencial.
+          </p>
+        </div>
+
         {/* Intro */}
         <div className="border-l-2 border-secondary pl-6 mb-16">
           <p className="text-primary/80 text-lg sm:text-xl font-serif leading-relaxed">
