@@ -43,16 +43,16 @@ export const CTA = () => {
 
         <div className="grid grid-cols-3 gap-4 sm:gap-12 md:gap-20 pt-10 sm:pt-20 border-t border-white/5">
           <div className="flex flex-col items-center">
-            <span className="text-3xl sm:text-4xl md:text-5xl font-serif text-white mb-2">30+</span>
+            <span className="text-3xl sm:text-4xl md:text-5xl font-serif text-white mb-2">2</span>
             <span className="text-[9px] font-sans font-black tracking-[0.4em] text-white/30 uppercase">Anos de Mercado</span>
           </div>
           <div className="flex flex-col items-center border-x-0 md:border-x border-white/5 px-0 md:px-8">
-            <span className="text-3xl sm:text-4xl md:text-5xl font-serif text-white mb-2">18%</span>
-            <span className="text-[9px] font-sans font-black tracking-[0.4em] text-white/30 uppercase">Valorização Média</span>
+            <span className="text-3xl sm:text-4xl md:text-5xl font-serif text-white mb-2">5,0★</span>
+            <span className="text-[9px] font-sans font-black tracking-[0.4em] text-white/30 uppercase">Avaliação Google</span>
           </div>
           <div className="flex flex-col items-center">
-            <span className="text-3xl sm:text-4xl md:text-5xl font-serif text-white mb-2">+1k</span>
-            <span className="text-[9px] font-sans font-black tracking-[0.4em] text-white/30 uppercase">Clientes Premium</span>
+            <span className="text-3xl sm:text-4xl md:text-5xl font-serif text-white mb-2">CRECI</span>
+            <span className="text-[9px] font-sans font-black tracking-[0.4em] text-white/30 uppercase">RS 85.784F</span>
           </div>
         </div>
       </div>

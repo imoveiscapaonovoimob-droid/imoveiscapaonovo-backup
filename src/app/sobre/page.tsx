@@ -6,7 +6,7 @@ import type { Metadata } from "next";
 import { WHATSAPP_MESSAGES } from "@/lib/constants";
 
 export const metadata: Metadata = {
-  title: "Sobre Nós | Imóveis Capão Novo | 30 Anos de Tradição",
+  title: "Sobre Nós | Imóveis Capão Novo",
   description: "Conheça a história da Imóveis Capão Novo. Especialistas em curadoria imobiliária no litoral gaúcho com foco em qualidade e transparência.",
 };
 
@@ -14,7 +14,7 @@ const VALUES = [
   {
     icon: <Award size={20} />,
     title: "Expertise Local",
-    description: "Mais de 30 anos de mercado no litoral norte gaúcho. Conhecemos cada rua, cada bairro, cada oportunidade antes de surgir.",
+    description: "Conhecemos cada rua, cada bairro, cada oportunidade de Capão Novo antes de surgir no mercado aberto.",
   },
   {
     icon: <Clock size={20} />,
@@ -54,7 +54,7 @@ export default function SobrePage() {
         <div className="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
           <div>
             <span className="text-secondary text-[10px] font-sans font-bold uppercase tracking-[0.4em] mb-4 block">
-              Desde 1994 no Litoral
+              Curadoria Local em Capão Novo
             </span>
             <h2 className="text-4xl md:text-5xl font-serif text-primary mb-8 leading-tight">
               Uma imobiliária que<br /><em className="italic text-secondary">respira o mar</em>
@@ -64,7 +64,7 @@ export default function SobrePage() {
                 A <strong>Imóveis Capão Novo</strong> nasceu da paixão pelo litoral norte gaúcho. Entendemos que um imóvel na praia não é apenas tijolo e cimento; é o cenário onde memórias familiares serão construídas.
               </p>
               <p>
-                Liderada por <strong>Lenine Kerber</strong>, um dos corretores mais experientes da região, nossa equipe curatorial seleciona cada oportunidade com o rigor de quem vive o dia a dia de Capão da Canoa há mais de três décadas.
+                Liderada por <strong>Lenine Kerber</strong>, corretor especialista na região, nossa curadoria seleciona cada oportunidade com o rigor de quem vive o dia a dia de Capão da Canoa.
               </p>
               <div className="flex items-center gap-3 pt-4 text-primary font-bold">
                 <ShieldCheck className="text-secondary" />
@@ -76,9 +76,9 @@ export default function SobrePage() {
           {/* Stats Grid */}
           <div className="grid grid-cols-2 gap-6 md:gap-8">
             {[
-              { value: "30+", label: "Anos de Mercado", icon: <Clock className="w-4 h-4 text-secondary mb-2" /> },
-              { value: "+1.000", label: "Contratos Fechados", icon: <Building2 className="w-4 h-4 text-secondary mb-2" /> },
-              { value: "18%", label: "Valorização Média", icon: <TrendingUp className="w-4 h-4 text-secondary mb-2" /> },
+              { value: "2", label: "Anos de Mercado", icon: <Clock className="w-4 h-4 text-secondary mb-2" /> },
+              { value: "5,0★", label: "Avaliação Google", icon: <Building2 className="w-4 h-4 text-secondary mb-2" /> },
+              { value: "CRECI-RS", label: "85.784F", icon: <TrendingUp className="w-4 h-4 text-secondary mb-2" /> },
               { value: "100%", label: "Foco no Cliente", icon: <Heart className="w-4 h-4 text-secondary mb-2" /> },
             ].map((stat, i) => (
               <div key={i} className="p-8 bg-surface-container-lowest border border-outline-variant/5 rounded-sm shadow-sm flex flex-col items-center group hover:border-secondary/20 transition-all">

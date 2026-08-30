@@ -55,7 +55,7 @@ export const Hero = () => {
               Oportunidades Posto 5
             </Link>
             <Link href="/sobre" className="text-[9px] md:text-[10px] font-sans font-bold text-white/60 hover:text-secondary uppercase tracking-[0.3em] transition-colors border-b border-white/10 hover:border-secondary pb-1">
-              30 Anos de Confiança
+              Curadoria de Confiança
             </Link>
           </div>
         </div>
