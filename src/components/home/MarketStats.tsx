@@ -3,27 +3,27 @@ import { TrendingUp, Home, DollarSign, LineChart } from "lucide-react";
 
 const STATS = [
   {
-    label: "Valorização Média",
-    value: "+12%",
-    sub: "ao ano (2023-2026)",
+    label: "Valorização",
+    value: "+7,9%",
+    sub: "ao ano — 2ª maior do litoral norte",
     Icon: TrendingUp,
   },
   {
     label: "Preço Médio m²",
-    value: "R$ 8.500",
-    sub: "frente mar / premium",
+    value: "R$ 2.080",
+    sub: "média no município (2026)",
     Icon: Home,
   },
   {
-    label: "Demanda Alta",
-    value: "18%",
-    sub: "crescimento em vendas",
+    label: "Volume de Vendas",
+    value: "R$ 1,9 Bi",
+    sub: "VGV 2025 — maior do litoral norte",
     Icon: LineChart,
   },
   {
     label: "Rentabilidade",
-    value: "8-12%",
-    sub: "aluguel temporada",
+    value: "5-8%",
+    sub: "aluguel de temporada, estimativa realista",
     Icon: DollarSign,
   },
 ];
@@ -47,15 +47,15 @@ export const MarketStats = () => {
               <ul className="space-y-4">
                 <li className="flex items-center gap-3 text-sm font-sans font-bold text-primary">
                   <span className="text-xl">📈</span>
-                  Capão Novo está valorizando +12% ao ano
+                  Capão da Canoa valoriza cerca de 7,9% ao ano
                 </li>
                 <li className="flex items-center gap-3 text-sm font-sans font-bold text-primary">
                   <span className="text-xl">💰</span>
-                  Imóveis ainda abaixo de Capão da Canoa
+                  Frente-mar valoriza 30-50% a mais que a média
                 </li>
                 <li className="flex items-center gap-3 text-sm font-sans font-bold text-primary">
                   <span className="text-xl">🚀</span>
-                  Alta demanda e crescimento constante
+                  Maior volume de vendas do litoral norte em 2025
                 </li>
               </ul>
             </div>
@@ -65,7 +65,7 @@ export const MarketStats = () => {
               </div>
               <div>
                 <p className="text-[9px] font-sans font-black uppercase tracking-widest text-primary">Market Intelligence 2026</p>
-                <p className="text-[9px] font-sans font-bold uppercase tracking-widest text-primary/30">Dados Reais de Mercado</p>
+                <p className="text-[9px] font-sans font-bold uppercase tracking-widest text-primary/30">Estimativas de mercado regional</p>
               </div>
             </div>
           </div>
