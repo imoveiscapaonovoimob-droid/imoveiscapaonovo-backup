@@ -9,9 +9,9 @@ const STATS = [
     Icon: TrendingUp,
   },
   {
-    label: "Preço Médio m²",
-    value: "R$ 2.080",
-    sub: "média no município (2026)",
+    label: "Preço do m²",
+    value: "R$ 3.700-7.700",
+    sub: "em Capão Novo, conforme localização",
     Icon: Home,
   },
   {
