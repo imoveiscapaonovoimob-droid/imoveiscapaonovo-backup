@@ -1,6 +1,7 @@
 import { MetadataRoute } from 'next'
 import connectDB from '@/lib/mongodb'
 import Property from '@/models/Property'
+import Condominium from '@/models/Condominium'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://imoveiscapaonovo.com.br'
@@ -25,6 +26,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/imoveis-capao-novo-posto-5',
     '/imoveis-capao-novo-village',
     '/imoveis-condominios',
+    '/condominios',
     '/imoveis-costa-serena',
     '/imoveis-velas-da-marina',
     '/imoveis-terrasul',
@@ -50,7 +52,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.9,
     }))
 
-    return [...staticRoutes, ...propertyRoutes]
+    const condominiums = await Condominium.find({ isPublished: true })
+      .select('slug updatedAt')
+      .lean()
+
+    const condominiumRoutes: MetadataRoute.Sitemap = condominiums.map((condominium: any) => ({
+      url: `${baseUrl}/condominios/${condominium.slug}`,
+      lastModified: condominium.updatedAt ?? new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.8,
+    }))
+
+    return [...staticRoutes, ...propertyRoutes, ...condominiumRoutes]
   } catch (error) {
     console.error('sitemap: failed to load properties, returning static routes only', error)
     return staticRoutes
