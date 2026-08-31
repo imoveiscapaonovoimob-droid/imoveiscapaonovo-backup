@@ -3,9 +3,9 @@
 import { redirect } from 'next/navigation';
 import connectDB from '@/lib/mongodb';
 import Property from '@/models/Property';
-import cloudinary from '@/lib/cloudinary';
 import { slugify } from '@/lib/utils';
 import { revalidatePath } from 'next/cache';
+import { resolveImages } from '@/lib/image-sync';
 
 // Remove campos com string vazia que têm enum no schema
 function sanitizeEnums(data: any) {
@@ -44,29 +44,9 @@ export async function updateProperty(id: string, formData: any) {
 
     // 1. Process Images
     // Se as imagens já foram enviadas pelo client (API route), usamos as URLs diretamente.
-    // Caso contrário (imagens existentes ou fallback), processamos de acordo.
-    const finalImages = [];
-    for (const img of images || []) {
-      if (img.url && img.public_id) {
-        // Já está no Cloudinary (seja nova via client ou existente)
-        finalImages.push({
-          url: img.url,
-          public_id: img.public_id,
-          isMain: img.isMain,
-        });
-      } else if (img.data) {
-        // Fallback: Upload síncrono no servidor (sujeito a limites)
-        const uploadResponse = await cloudinary.uploader.upload(img.data, {
-          folder: 'imoveis-capao-novo',
-          resource_type: 'image',
-        });
-        finalImages.push({
-          url: uploadResponse.secure_url,
-          public_id: uploadResponse.public_id,
-          isMain: img.isMain,
-        });
-      }
-    }
+    // Se vierem em base64 (formulário do site) ou como URL externa (sincronização
+    // do CRM), `resolveImages` faz o upload/re-hospedagem no Cloudinary.
+    const finalImages = await resolveImages(images, 'imoveis-capao-novo');
 
     const updatedImages = finalImages.length > 0 ? finalImages : existing.images;
 

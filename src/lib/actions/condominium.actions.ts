@@ -5,21 +5,10 @@ import connectDB from '@/lib/mongodb';
 import Condominium from '@/models/Condominium';
 import cloudinary from '@/lib/cloudinary';
 import { slugify } from '@/lib/utils';
+import { resolveImages } from '@/lib/image-sync';
 
-async function processImages(images: any[]) {
-  const finalImages = [];
-  for (const img of images || []) {
-    if (img.url && img.public_id) {
-      finalImages.push({ url: img.url, public_id: img.public_id, isMain: !!img.isMain });
-    } else if (img.data) {
-      const uploadResponse = await cloudinary.uploader.upload(img.data, {
-        folder: 'imoveis-capao-novo/condominios',
-        resource_type: 'image',
-      });
-      finalImages.push({ url: uploadResponse.secure_url, public_id: uploadResponse.public_id, isMain: !!img.isMain });
-    }
-  }
-  return finalImages;
+function processImages(images: any[]) {
+  return resolveImages(images, 'imoveis-capao-novo/condominios');
 }
 
 export async function createCondominium(formData: any) {
