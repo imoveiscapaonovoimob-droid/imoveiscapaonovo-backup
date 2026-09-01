@@ -64,7 +64,7 @@ export default async function CondominiumPage({ params }: { params: Promise<{ sl
         <div className="max-w-[1400px] mx-auto px-6 h-16 flex items-center">
           <Link href="/condominios" className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#001629]/60 hover:text-accent transition-colors">
             <ArrowLeft size={16} />
-            Voltar para Condomínios
+            Voltar para Condomínios Residenciais
           </Link>
         </div>
       </div>

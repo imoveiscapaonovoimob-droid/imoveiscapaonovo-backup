@@ -11,8 +11,8 @@ const NAV_LINKS = [
   { label: "Imóveis", href: "/imoveis-capao-novo" },
   { label: "Casas", href: "/casas-capao-novo" },
   { label: "Apartamentos", href: "/apartamentos-capao-novo" },
-  { label: "Condomínios", href: "/imoveis-condominios" },
-  { label: "Residenciais", href: "/condominios" },
+  { label: "Condomínios Fechados", href: "/imoveis-condominios" },
+  { label: "Condomínios Residenciais", href: "/condominios" },
   { label: "Blog", href: "/blog" },
 ];
 

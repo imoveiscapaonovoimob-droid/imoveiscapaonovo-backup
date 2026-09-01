@@ -6,8 +6,8 @@ import { getPublishedCondominiums } from "@/lib/actions/condominium.actions";
 import { CondominiumCard } from "@/components/condominios/CondominiumCard";
 
 export const metadata: Metadata = {
-  title: "Condomínios em Capão Novo | Imóveis Capão Novo",
-  description: "Conheça os principais condomínios e residenciais de Capão Novo e Capão da Canoa — segurança, lazer e infraestrutura completa no litoral norte gaúcho.",
+  title: "Condomínios Residenciais em Capão Novo | Imóveis Capão Novo",
+  description: "Conheça os principais condomínios residenciais de Capão Novo e Capão da Canoa — segurança, lazer e infraestrutura completa no litoral norte gaúcho.",
   alternates: { canonical: "https://imoveiscapaonovo.com.br/condominios" },
 };
 
@@ -19,11 +19,11 @@ export default async function Page() {
       <Header />
       <section className="pt-32 pb-8 px-6 lg:px-10 max-w-7xl mx-auto">
         <h1 className="text-4xl md:text-5xl font-serif text-primary mb-6">
-          Condomínios e Residenciais
+          Condomínios Residenciais
         </h1>
         <article className="prose prose-lg text-secondary max-w-none">
           <p>
-            Conheça os principais <strong>condomínios e residenciais</strong> de Capão Novo e região —
+            Conheça os principais <strong>condomínios residenciais</strong> de Capão Novo e região —
             cada empreendimento com sua própria infraestrutura, segurança e estilo de vida.
           </p>
         </article>
