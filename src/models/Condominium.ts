@@ -18,8 +18,11 @@ export interface ICondominium {
   adminCompany?: string;
   builtYear?: string;
   totalArea?: number;
+  youtubeId?: string;
+  link360?: string;
   isPublished: boolean;
   isFeatured: boolean;
+  isLaunch: boolean; // lançamento
 
   // ── Dados de acesso EXCLUSIVO do corretor ─────────────────────────────────
   // NUNCA selecionado pelas leituras públicas (getPublishedCondominiums,
@@ -53,8 +56,11 @@ const CondominiumSchema = new Schema<ICondominium>(
     adminCompany: { type: String },
     builtYear: { type: String },
     totalArea: { type: Number },
+    youtubeId: { type: String },
+    link360: { type: String },
     isPublished: { type: Boolean, default: false },
     isFeatured: { type: Boolean, default: false },
+    isLaunch: { type: Boolean, default: false },
 
     broker: {
       concierge: { type: String },

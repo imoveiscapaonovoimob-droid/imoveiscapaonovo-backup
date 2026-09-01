@@ -8,8 +8,16 @@ export interface IProperty {
   call?: string; // Chamada rápida de marketing
   price: number;
   category: 'casa' | 'apartamento' | 'terreno' | 'comercial' | 'condominio' | 'duplex' | 'jk' | 'sobrado' | 'studio' | 'vivenda';
+  purposes?: string[]; // finalidade: venda, locacao, temporada
+  status?: 'ativo' | 'inativo' | 'vendido';
   location: string;
   address: string;
+  addressComplement?: string; // apto/complemento
+  block?: string; // quadra
+  lot?: string; // lote
+  showStreet?: boolean; // exibir logradouro no site
+  showNumber?: boolean; // exibir número no site
+  onPromotion?: boolean; // em promoção — mostrado como selo no site
   youtubeId?: string;
   instagramUrl?: string;
   link360?: string;
@@ -75,6 +83,8 @@ export interface IProperty {
     matricula?: string;
     chaves?: string;
     internalValue?: number; // "valor no sistema" — referência interna, pode diferir do valor público (price)
+    hasSign?: boolean; // tem placa no imóvel
+    negotiationNotes?: string; // observações internas de negociação
     strategicData?: {
       sellerMotivation?: string; // Ex: Mudança, Investimento, Divórcio
       urgency?: 'Baixa' | 'Média' | 'Alta' | 'Imediata';
@@ -139,8 +149,16 @@ const PropertySchema = new Schema<IProperty>(
       enum: ['casa', 'apartamento', 'terreno', 'comercial', 'condominio', 'duplex', 'jk', 'sobrado', 'studio', 'vivenda'],
       default: 'casa'
     },
+    purposes: [{ type: String }],
+    status: { type: String, enum: ['ativo', 'inativo', 'vendido'], default: 'ativo' },
     location: { type: String, default: 'Capão Novo' },
     address: { type: String, required: true },
+    addressComplement: { type: String },
+    block: { type: String },
+    lot: { type: String },
+    showStreet: { type: Boolean, default: true },
+    showNumber: { type: Boolean, default: true },
+    onPromotion: { type: Boolean, default: false },
     youtubeId: { type: String },
     instagramUrl: { type: String },
     link360: { type: String },
@@ -208,6 +226,8 @@ const PropertySchema = new Schema<IProperty>(
       matricula: { type: String },
       chaves: { type: String },
       internalValue: { type: Number },
+      hasSign: { type: Boolean, default: false },
+      negotiationNotes: { type: String },
       strategicData: {
         sellerMotivation: { type: String },
         urgency: { type: String, enum: ['Baixa', 'Média', 'Alta', 'Imediata'] },

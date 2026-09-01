@@ -14,8 +14,8 @@ function processImages(images: any[]) {
 /** Campos seguros pra qualquer leitura PÚBLICA (nunca inclui `broker`). */
 const PUBLIC_CONDOMINIUM_FIELDS = [
   'name', 'slug', 'description', 'disposition', 'location', 'address', 'images',
-  'amenities', 'builder', 'adminCompany', 'builtYear', 'totalArea',
-  'isPublished', 'isFeatured', 'createdAt', 'updatedAt',
+  'amenities', 'builder', 'adminCompany', 'builtYear', 'totalArea', 'youtubeId', 'link360',
+  'isPublished', 'isFeatured', 'isLaunch', 'createdAt', 'updatedAt',
 ].join(' ');
 
 export async function createCondominium(formData: any) {
@@ -23,8 +23,8 @@ export async function createCondominium(formData: any) {
     await connectDB();
 
     const { name, description, disposition, location, address, images, amenities,
-      builder, adminCompany, builtYear, totalArea, isPublished, isFeatured,
-      concierge, caretaker } = formData;
+      builder, adminCompany, builtYear, totalArea, youtubeId, link360,
+      isPublished, isFeatured, isLaunch, concierge, caretaker } = formData;
 
     if (!name) {
       return { success: false, error: 'Campo obrigatório faltando (Nome)' };
@@ -46,8 +46,11 @@ export async function createCondominium(formData: any) {
       adminCompany: adminCompany || undefined,
       builtYear: builtYear || undefined,
       totalArea: totalArea ? Number(totalArea) : undefined,
+      youtubeId: youtubeId || undefined,
+      link360: link360 || undefined,
       isPublished: Boolean(isPublished),
       isFeatured: Boolean(isFeatured),
+      isLaunch: Boolean(isLaunch),
       broker: { concierge: concierge || undefined, caretaker: caretaker || undefined },
     });
 
@@ -68,8 +71,8 @@ export async function updateCondominium(id: string, formData: any) {
     if (!existing) return { success: false, error: 'Condominium not found' };
 
     const { name, description, disposition, location, address, images, amenities,
-      builder, adminCompany, builtYear, totalArea, isPublished, isFeatured,
-      concierge, caretaker } = formData;
+      builder, adminCompany, builtYear, totalArea, youtubeId, link360,
+      isPublished, isFeatured, isLaunch, concierge, caretaker } = formData;
 
     const finalImages = await processImages(images);
     const updatedImages = finalImages.length > 0 ? finalImages : existing.images;
@@ -86,8 +89,11 @@ export async function updateCondominium(id: string, formData: any) {
       adminCompany: adminCompany || undefined,
       builtYear: builtYear || undefined,
       totalArea: totalArea ? Number(totalArea) : undefined,
+      youtubeId: youtubeId || undefined,
+      link360: link360 || undefined,
       isPublished: Boolean(isPublished),
       isFeatured: Boolean(isFeatured),
+      isLaunch: Boolean(isLaunch),
       broker: { concierge: concierge || undefined, caretaker: caretaker || undefined },
     });
 

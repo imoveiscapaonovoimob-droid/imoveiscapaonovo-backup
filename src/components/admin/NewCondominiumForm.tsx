@@ -60,8 +60,11 @@ export default function NewCondominiumForm() {
     adminCompany: '',
     builtYear: '',
     totalArea: '',
+    youtubeId: '',
+    link360: '',
     isPublished: true,
     isFeatured: false,
+    isLaunch: false,
     // Acesso exclusivo do corretor — não aparece no site
     concierge: '',
     caretaker: '',
@@ -188,6 +191,17 @@ export default function NewCondominiumForm() {
           </div>
         </div>
 
+        {/* Mídia Digital */}
+        <div className="bg-[#F9FCFF] p-8 border border-[#002B49]/5">
+          <SectionTitle icon="🎬" title="Mídia Digital" subtitle="YouTube e Tour Virtual 360" />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <FormInput label="YouTube — URL completa ou ID" placeholder="https://youtu.be/jNQXAC9IVRw"
+              value={formData.youtubeId} onChange={e => updateField('youtubeId', e.target.value)} />
+            <FormInput label="Tour Virtual 360" value={formData.link360}
+              onChange={e => updateField('link360', e.target.value)} />
+          </div>
+        </div>
+
         {/* Características */}
         <div>
           <SectionTitle icon="✨" title="Infraestrutura e Amenidades" subtitle="Selecione todos que se aplicam" />
@@ -232,6 +246,12 @@ export default function NewCondominiumForm() {
                 onChange={e => updateField('isFeatured', e.target.checked)}
                 className="w-5 h-5 accent-[#775A19]" />
               <span className="font-noto text-[10px] uppercase tracking-widest text-[#775A19]">Destaque</span>
+            </label>
+            <label className="flex items-center gap-3 cursor-pointer">
+              <input type="checkbox" checked={formData.isLaunch}
+                onChange={e => updateField('isLaunch', e.target.checked)}
+                className="w-5 h-5 accent-[#775A19]" />
+              <span className="font-noto text-[10px] uppercase tracking-widest text-[#775A19]">Lançamento</span>
             </label>
           </div>
         </div>

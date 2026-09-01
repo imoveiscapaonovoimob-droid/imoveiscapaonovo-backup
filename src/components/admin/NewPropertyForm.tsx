@@ -8,7 +8,7 @@ import FormInput from '@/components/admin/property-form/FormInput';
 import AmenitiesGrid from '@/components/admin/property-form/AmenitiesGrid';
 import { createProperty } from '@/lib/actions/property.actions';
 import { getAllCondominiums } from '@/lib/actions/condominium.actions';
-import { PROPERTY_CATEGORIES, PROPERTY_LOCATIONS, CARDINAL_DIRECTIONS } from '@/constants/property-options';
+import { PROPERTY_CATEGORIES, PROPERTY_LOCATIONS, CARDINAL_DIRECTIONS, BUILDING_POSITIONS } from '@/constants/property-options';
 import PhotoUploader from '@/components/admin/property-form/PhotoUploader';
 
 interface Photo {
@@ -107,8 +107,13 @@ export default function NewPropertyForm() {
     call:        '',
     price:       '',
     category:    'casa',
+    purposes:    ['venda'] as string[],
+    status:      'ativo',
     location:    'Capão Novo',
     address:     '',
+    addressComplement: '',
+    block:       '',
+    lot:         '',
     condominiumId: '',
 
     // Step 2 – Detalhes
@@ -130,10 +135,16 @@ export default function NewPropertyForm() {
     buildingInfo: {
       year:        '',
       floors:      '',
+      aptsPerFloor: '',
+      totalApts:   '',
+      position:    '',
+      view:        '',
+      opening:     '',
       orientation: 'Norte',
       condition:   '',
       builder:     '',
       developer:   '',
+      isNeverInhabited: false,
     },
     amenities: [] as string[],
 
@@ -145,6 +156,8 @@ export default function NewPropertyForm() {
     matricula:            '',
     chaves:                '',
     internalValue:        '',
+    hasSign:              false,
+    negotiationNotes:     '',
     strategicData: {
       sellerMotivation:       '',
       urgency:                '',
@@ -178,6 +191,9 @@ export default function NewPropertyForm() {
     link360:      '',
     isPublished:  true,
     isFeatured:   false,
+    onPromotion:  false,
+    showStreet:   true,
+    showNumber:   true,
   });
 
   const nextStep = () => setStep(s => s + 1);
@@ -327,8 +343,32 @@ export default function NewPropertyForm() {
                 <FormInput label="Chamada de Marketing" value={formData.call}
                   onChange={e => setFormData({ ...formData, call: e.target.value })} className="md:col-span-2" />
 
+                <div className="md:col-span-2 flex flex-col gap-2">
+                  <label className="font-noto text-xs uppercase tracking-[0.15em] text-[#002B49]/60">Finalidade</label>
+                  <div className="flex gap-6">
+                    {[{ v: 'venda', l: 'Venda' }, { v: 'locacao', l: 'Locação' }, { v: 'temporada', l: 'Temporada' }].map(p => (
+                      <label key={p.v} className="flex items-center gap-2 text-sm text-[#002B49] cursor-pointer">
+                        <input type="checkbox" checked={formData.purposes.includes(p.v)}
+                          onChange={e => setFormData(f => ({
+                            ...f,
+                            purposes: e.target.checked ? [...f.purposes, p.v] : f.purposes.filter(x => x !== p.v),
+                          }))}
+                          className="w-4 h-4 accent-[#775A19]" />
+                        {p.l}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
                 <Select label="Categoria" value={formData.category} onChange={v => setFormData({ ...formData, category: v })}
                   options={PROPERTY_CATEGORIES.map(c => ({ label: c.label, value: c.value }))} />
+
+                <Select label="Status" value={formData.status} onChange={v => setFormData({ ...formData, status: v })}
+                  options={[
+                    { label: 'Ativo', value: 'ativo' },
+                    { label: 'Inativo', value: 'inativo' },
+                    { label: 'Vendido', value: 'vendido' },
+                  ]} />
 
                 <FormInput label="Valor de Venda (R$)" type="number" value={formData.price}
                   onChange={e => setFormData({ ...formData, price: e.target.value })} />
@@ -341,6 +381,16 @@ export default function NewPropertyForm() {
 
                 <Select label="Condomínio Vinculado" value={formData.condominiumId} onChange={pickCondominium}
                   options={condominiums.map(c => ({ label: c.name, value: c._id }))} />
+
+                <FormInput label="Apto / Complemento" value={formData.addressComplement}
+                  placeholder="Ex: Apto 101, Bloco A"
+                  onChange={e => setFormData({ ...formData, addressComplement: e.target.value })} />
+
+                <FormInput label="Quadra" value={formData.block}
+                  onChange={e => setFormData({ ...formData, block: e.target.value })} />
+
+                <FormInput label="Lote" value={formData.lot}
+                  onChange={e => setFormData({ ...formData, lot: e.target.value })} />
 
                 <div className="md:col-span-2 flex flex-col gap-2">
                   <label className="font-noto text-xs uppercase tracking-[0.15em] text-[#002B49]/60">Descrição Detalhada</label>
@@ -411,6 +461,28 @@ export default function NewPropertyForm() {
                       <FormInput label="Incorporadora" value={formData.buildingInfo.developer}
                         onChange={e => updateNested('buildingInfo', 'developer', e.target.value)} />
                     </div>
+                    <div className="grid grid-cols-2 gap-8">
+                      <Select label="Posição" value={formData.buildingInfo.position}
+                        onChange={v => updateNested('buildingInfo', 'position', v)}
+                        options={BUILDING_POSITIONS.map(p => ({ label: p, value: p }))} />
+                      <FormInput label="Vista" value={formData.buildingInfo.view}
+                        placeholder="Ex: Mar, Lagoa, Cidade"
+                        onChange={e => updateNested('buildingInfo', 'view', e.target.value)} />
+                    </div>
+                    <div className="grid grid-cols-2 gap-8">
+                      <FormInput label="Abertura (frames)" value={formData.buildingInfo.opening}
+                        onChange={e => updateNested('buildingInfo', 'opening', e.target.value)} />
+                      <FormInput label="Total de Pavimentos" type="number" value={formData.buildingInfo.floors}
+                        onChange={e => updateNested('buildingInfo', 'floors', e.target.value)} />
+                    </div>
+                    <FormInput label="Aptos neste Andar" type="number" value={formData.buildingInfo.aptsPerFloor}
+                      onChange={e => updateNested('buildingInfo', 'aptsPerFloor', e.target.value)} />
+                    <label className="flex items-center gap-2 text-sm text-[#002B49] cursor-pointer">
+                      <input type="checkbox" checked={formData.buildingInfo.isNeverInhabited}
+                        onChange={e => updateNested('buildingInfo', 'isNeverInhabited', e.target.checked)}
+                        className="w-4 h-4 accent-[#775A19]" />
+                      Nunca habitado
+                    </label>
                   </div>
                 </div>
 
@@ -449,6 +521,21 @@ export default function NewPropertyForm() {
                     <FormInput label="Valor no Sistema (R$)" type="number" value={formData.internalValue}
                       placeholder="Referência interna, pode diferir do valor de venda público"
                       onChange={e => setFormData({ ...formData, internalValue: e.target.value })} />
+                  </div>
+                  <label className="flex items-center gap-2 text-sm text-[#002B49] cursor-pointer mt-6">
+                    <input type="checkbox" checked={formData.hasSign}
+                      onChange={e => setFormData({ ...formData, hasSign: e.target.checked })}
+                      className="w-4 h-4 accent-[#775A19]" />
+                    Tem placa no imóvel
+                  </label>
+                  <div className="mt-6 flex flex-col gap-2">
+                    <label className="font-noto text-xs uppercase tracking-[0.15em] text-[#002B49]/60">Observações de Negociação</label>
+                    <textarea
+                      className="bg-transparent border-b border-[#002B49]/10 p-4 font-manrope text-sm text-[#002B49] focus:outline-none focus:border-[#775A19] min-h-[80px]"
+                      placeholder="Ex: Proprietário agora aceita veículo na troca, imóvel estava alugado e liberou..."
+                      value={formData.negotiationNotes}
+                      onChange={e => setFormData({ ...formData, negotiationNotes: e.target.value })}
+                    />
                   </div>
                 </div>
 
@@ -657,6 +744,32 @@ export default function NewPropertyForm() {
                         onChange={e => setFormData({ ...formData, isFeatured: e.target.checked })}
                         className="w-5 h-5 accent-[#775A19]" />
                       <span className="font-noto text-[10px] uppercase tracking-widest text-[#775A19]">Destaque Home</span>
+                    </label>
+                    <label className="flex items-center gap-3 cursor-pointer">
+                      <input type="checkbox" checked={formData.onPromotion}
+                        onChange={e => setFormData({ ...formData, onPromotion: e.target.checked })}
+                        className="w-5 h-5 accent-[#775A19]" />
+                      <span className="font-noto text-[10px] uppercase tracking-widest text-[#775A19]">Em Promoção</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div className="bg-[#002B49]/5 p-8 flex flex-col md:flex-row items-center justify-between gap-8 border border-[#002B49]/10">
+                  <div className="space-y-2">
+                    <SectionTitle icon="📍" title="Exibição do Endereço" subtitle="O que aparece na página pública do anúncio" />
+                  </div>
+                  <div className="flex gap-8">
+                    <label className="flex items-center gap-3 cursor-pointer">
+                      <input type="checkbox" checked={formData.showStreet}
+                        onChange={e => setFormData({ ...formData, showStreet: e.target.checked })}
+                        className="w-5 h-5 accent-[#002B49]" />
+                      <span className="font-noto text-[10px] uppercase tracking-widest text-[#002B49]">Exibir Rua</span>
+                    </label>
+                    <label className="flex items-center gap-3 cursor-pointer">
+                      <input type="checkbox" checked={formData.showNumber}
+                        onChange={e => setFormData({ ...formData, showNumber: e.target.checked })}
+                        className="w-5 h-5 accent-[#002B49]" />
+                      <span className="font-noto text-[10px] uppercase tracking-widest text-[#002B49]">Exibir Número</span>
                     </label>
                   </div>
                 </div>

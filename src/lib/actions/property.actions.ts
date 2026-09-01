@@ -46,6 +46,8 @@ function buildBrokerField(sanitized: any) {
     matricula: sanitized.matricula || undefined,
     chaves: sanitized.chaves || undefined,
     internalValue: sanitized.internalValue ? Number(sanitized.internalValue) : undefined,
+    hasSign: Boolean(sanitized.hasSign),
+    negotiationNotes: sanitized.negotiationNotes || undefined,
     strategicData: sanitized.strategicData || {},
     commercialIntelligence: {
       commissionPercentage: sanitized.commercialIntelligence?.commissionPercentage
@@ -63,8 +65,9 @@ function buildBrokerField(sanitized: any) {
 
 /** Campos seguros pra qualquer leitura PÚBLICA (nunca inclui `broker`). */
 const PUBLIC_PROPERTY_FIELDS = [
-  'title', 'slug', 'description', 'call', 'price', 'category', 'location', 'address',
-  'youtubeId', 'instagramUrl', 'link360', 'features', 'values', 'buildingInfo',
+  'title', 'slug', 'description', 'call', 'price', 'category', 'purposes', 'status',
+  'location', 'address', 'addressComplement', 'block', 'lot', 'showStreet', 'showNumber',
+  'onPromotion', 'youtubeId', 'instagramUrl', 'link360', 'features', 'values', 'buildingInfo',
   'condominiumId', 'amenities', 'images', 'isPublished', 'isFeatured',
   'propertyProfile', 'advancedLocation', 'areas', 'garageType', 'iptuPeriod',
   'exclusivity', 'paymentMethods', 'directPaymentTerms', 'acceptsExchange', 'exchange',
@@ -121,8 +124,16 @@ export async function createProperty(formData: any) {
       call,
       price: Number(price),
       category,
+      purposes: sanitized.purposes?.length ? sanitized.purposes : ['venda'],
+      status: sanitized.status || 'ativo',
       location,
       address,
+      addressComplement: sanitized.addressComplement || undefined,
+      block: sanitized.block || undefined,
+      lot: sanitized.lot || undefined,
+      showStreet: sanitized.showStreet ?? true,
+      showNumber: sanitized.showNumber ?? true,
+      onPromotion: Boolean(sanitized.onPromotion),
       youtubeId,
       instagramUrl,
       link360,
