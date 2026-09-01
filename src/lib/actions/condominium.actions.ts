@@ -11,12 +11,20 @@ function processImages(images: any[]) {
   return resolveImages(images, 'imoveis-capao-novo/condominios');
 }
 
+/** Campos seguros pra qualquer leitura PÚBLICA (nunca inclui `broker`). */
+const PUBLIC_CONDOMINIUM_FIELDS = [
+  'name', 'slug', 'description', 'disposition', 'location', 'address', 'images',
+  'amenities', 'builder', 'adminCompany', 'builtYear', 'totalArea',
+  'isPublished', 'isFeatured', 'createdAt', 'updatedAt',
+].join(' ');
+
 export async function createCondominium(formData: any) {
   try {
     await connectDB();
 
     const { name, description, disposition, location, address, images, amenities,
-      builder, adminCompany, builtYear, totalArea, isPublished, isFeatured } = formData;
+      builder, adminCompany, builtYear, totalArea, isPublished, isFeatured,
+      concierge, caretaker } = formData;
 
     if (!name) {
       return { success: false, error: 'Campo obrigatório faltando (Nome)' };
@@ -40,6 +48,7 @@ export async function createCondominium(formData: any) {
       totalArea: totalArea ? Number(totalArea) : undefined,
       isPublished: Boolean(isPublished),
       isFeatured: Boolean(isFeatured),
+      broker: { concierge: concierge || undefined, caretaker: caretaker || undefined },
     });
 
     revalidatePath('/', 'layout');
@@ -59,7 +68,8 @@ export async function updateCondominium(id: string, formData: any) {
     if (!existing) return { success: false, error: 'Condominium not found' };
 
     const { name, description, disposition, location, address, images, amenities,
-      builder, adminCompany, builtYear, totalArea, isPublished, isFeatured } = formData;
+      builder, adminCompany, builtYear, totalArea, isPublished, isFeatured,
+      concierge, caretaker } = formData;
 
     const finalImages = await processImages(images);
     const updatedImages = finalImages.length > 0 ? finalImages : existing.images;
@@ -78,6 +88,7 @@ export async function updateCondominium(id: string, formData: any) {
       totalArea: totalArea ? Number(totalArea) : undefined,
       isPublished: Boolean(isPublished),
       isFeatured: Boolean(isFeatured),
+      broker: { concierge: concierge || undefined, caretaker: caretaker || undefined },
     });
 
     revalidatePath('/', 'layout');
@@ -132,11 +143,25 @@ export async function getPublishedCondominiums() {
     await connectDB();
     const condominiums = await Condominium.find({ isPublished: true })
       .sort({ createdAt: -1 })
+      .select(PUBLIC_CONDOMINIUM_FIELDS)
       .lean();
     return { success: true, condominiums: JSON.parse(JSON.stringify(condominiums)) };
   } catch (error: any) {
     console.error('Error fetching published condominiums:', error);
     return { success: false, error: error.message, condominiums: [] };
+  }
+}
+
+/** Uso exclusivo do /admin (edição) — retorna o documento inteiro, incluindo `broker`. */
+export async function getCondominiumById(id: string) {
+  try {
+    await connectDB();
+    const condominium = await Condominium.findById(id).lean();
+    if (!condominium) return { success: false, condominium: null };
+    return { success: true, condominium: JSON.parse(JSON.stringify(condominium)) };
+  } catch (error: any) {
+    console.error('Error fetching condominium by id:', error);
+    return { success: false, error: error.message, condominium: null };
   }
 }
 
@@ -147,7 +172,7 @@ export async function getCondominiumBySlugOrId(idOrSlug: string) {
       ? { _id: idOrSlug }
       : { slug: idOrSlug };
 
-    const condominium = await Condominium.findOne(query).lean();
+    const condominium = await Condominium.findOne(query).select(PUBLIC_CONDOMINIUM_FIELDS).lean();
     if (!condominium) return { success: false, condominium: null };
 
     return { success: true, condominium: JSON.parse(JSON.stringify(condominium)) };

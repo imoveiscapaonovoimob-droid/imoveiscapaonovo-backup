@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import StepIndicator from '@/components/admin/property-form/StepIndicator';
 import FormInput from '@/components/admin/property-form/FormInput';
 import AmenitiesGrid from '@/components/admin/property-form/AmenitiesGrid';
 import { createProperty } from '@/lib/actions/property.actions';
+import { getAllCondominiums } from '@/lib/actions/condominium.actions';
 import { PROPERTY_CATEGORIES, PROPERTY_LOCATIONS, CARDINAL_DIRECTIONS } from '@/constants/property-options';
 import PhotoUploader from '@/components/admin/property-form/PhotoUploader';
 
@@ -93,6 +94,11 @@ export default function NewPropertyForm() {
   const [uploadStatus, setUploadStatus] = useState('');
 
   const [photos, setPhotos] = useState<Photo[]>([]);
+  const [condominiums, setCondominiums] = useState<any[]>([]);
+
+  useEffect(() => {
+    getAllCondominiums().then(r => { if (r.success) setCondominiums(r.condominiums); });
+  }, []);
 
   const [formData, setFormData] = useState({
     // Step 1 – Básicas
@@ -103,12 +109,17 @@ export default function NewPropertyForm() {
     category:    'casa',
     location:    'Capão Novo',
     address:     '',
+    condominiumId: '',
 
     // Step 2 – Detalhes
     features: {
       bedrooms:  0,
       suites:    0,
       bathrooms: 1,
+      restrooms: 0,
+      livings:   0,
+      storageRooms: 0,
+      furnishedStatus: '',
       parking:   0,
       area:      0,
     },
@@ -121,10 +132,19 @@ export default function NewPropertyForm() {
       floors:      '',
       orientation: 'Norte',
       condition:   '',
+      builder:     '',
+      developer:   '',
     },
     amenities: [] as string[],
 
-    // Step 3 – Estratégia Comercial
+    // Step 3 – Proprietário, Responsáveis & Estratégia Comercial (interno — não aparece no site)
+    ownerName:            '',
+    ownerContact:         '',
+    agenciador:           '',
+    correspondingAgent:   '',
+    matricula:            '',
+    chaves:                '',
+    internalValue:        '',
     strategicData: {
       sellerMotivation:       '',
       urgency:                '',
@@ -169,6 +189,18 @@ export default function NewPropertyForm() {
       [parent]: { ...(prev[parent as keyof typeof prev] as any), [field]: value },
     }));
 
+  // Vincula um condomínio e herda endereço/localização dele (mesmo comportamento
+  // que já existia no cadastro local do CRM).
+  const pickCondominium = (condominiumId: string) => {
+    const c = condominiums.find(x => x._id === condominiumId);
+    setFormData(prev => ({
+      ...prev,
+      condominiumId,
+      location: c?.location || prev.location,
+      address:  c?.address  || prev.address,
+    }));
+  };
+
   const handleSubmit = async () => {
     setLoading(true);
     setUploadProgress(0);
@@ -177,6 +209,12 @@ export default function NewPropertyForm() {
     try {
       if (photos.length === 0) {
         alert('Adicione pelo menos uma foto antes de publicar.');
+        setLoading(false);
+        return;
+      }
+
+      if (!formData.ownerName.trim()) {
+        alert('O nome do proprietário é obrigatório (Passo 3 — não aparece no site).');
         setLoading(false);
         return;
       }
@@ -301,6 +339,9 @@ export default function NewPropertyForm() {
                 <FormInput label="Endereço / Referência" value={formData.address}
                   onChange={e => setFormData({ ...formData, address: e.target.value })} />
 
+                <Select label="Condomínio Vinculado" value={formData.condominiumId} onChange={pickCondominium}
+                  options={condominiums.map(c => ({ label: c.name, value: c._id }))} />
+
                 <div className="md:col-span-2 flex flex-col gap-2">
                   <label className="font-noto text-xs uppercase tracking-[0.15em] text-[#002B49]/60">Descrição Detalhada</label>
                   <textarea
@@ -325,6 +366,18 @@ export default function NewPropertyForm() {
                     <FormInput label="Banheiros"    type="number" value={String(formData.features.bathrooms)} onChange={e => updateNested('features', 'bathrooms', e.target.value)} />
                     <FormInput label="Vagas"        type="number" value={String(formData.features.parking)}  onChange={e => updateNested('features', 'parking', e.target.value)} />
                     <FormInput label="Área m²"      type="number" value={String(formData.features.area)}     onChange={e => updateNested('features', 'area', e.target.value)} />
+                    <FormInput label="Lavabos"      type="number" value={String(formData.features.restrooms)} onChange={e => updateNested('features', 'restrooms', e.target.value)} />
+                    <FormInput label="Livings"      type="number" value={String(formData.features.livings)}  onChange={e => updateNested('features', 'livings', e.target.value)} />
+                    <FormInput label="Depósitos"    type="number" value={String(formData.features.storageRooms)} onChange={e => updateNested('features', 'storageRooms', e.target.value)} />
+                  </div>
+                  <div className="mt-8">
+                    <Select label="Mobiliado" value={formData.features.furnishedStatus}
+                      onChange={v => updateNested('features', 'furnishedStatus', v)}
+                      options={[
+                        { label: 'Não mobiliado',      value: 'Não mobiliado' },
+                        { label: 'Semi-mobiliado',     value: 'Semi-mobiliado' },
+                        { label: 'Totalmente mobiliado', value: 'Totalmente mobiliado' },
+                      ]} />
                   </div>
                 </div>
 
@@ -352,6 +405,12 @@ export default function NewPropertyForm() {
                         { label: 'Bom',                   value: 'Bom' },
                         { label: 'Necessita reforma',     value: 'Reforma' },
                       ]} />
+                    <div className="grid grid-cols-2 gap-8">
+                      <FormInput label="Construtora" value={formData.buildingInfo.builder}
+                        onChange={e => updateNested('buildingInfo', 'builder', e.target.value)} />
+                      <FormInput label="Incorporadora" value={formData.buildingInfo.developer}
+                        onChange={e => updateNested('buildingInfo', 'developer', e.target.value)} />
+                    </div>
                   </div>
                 </div>
 
@@ -370,6 +429,29 @@ export default function NewPropertyForm() {
               <motion.div key="step-3" variants={slideVariants} initial="initial" animate="animate" exit="exit"
                 transition={{ duration: 0.35, ease: [0.33, 1, 0.68, 1] }} className="space-y-16"
               >
+                {/* Proprietário & Responsáveis */}
+                <div className="bg-[#F9FCFF] p-8 border border-[#002B49]/5">
+                  <SectionTitle icon="🔑" title="Proprietário & Responsáveis" subtitle="Acesso exclusivo do corretor — não aparece no site" />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <FormInput label="Nome do Proprietário *" value={formData.ownerName}
+                      onChange={e => setFormData({ ...formData, ownerName: e.target.value })} />
+                    <FormInput label="Contato do Proprietário" value={formData.ownerContact}
+                      placeholder="Telefone ou e-mail"
+                      onChange={e => setFormData({ ...formData, ownerContact: e.target.value })} />
+                    <FormInput label="Agenciador" value={formData.agenciador}
+                      onChange={e => setFormData({ ...formData, agenciador: e.target.value })} />
+                    <FormInput label="Corretor Responsável" value={formData.correspondingAgent}
+                      onChange={e => setFormData({ ...formData, correspondingAgent: e.target.value })} />
+                    <FormInput label="Matrícula do Imóvel" value={formData.matricula}
+                      onChange={e => setFormData({ ...formData, matricula: e.target.value })} />
+                    <FormInput label="Local das Chaves" value={formData.chaves}
+                      onChange={e => setFormData({ ...formData, chaves: e.target.value })} />
+                    <FormInput label="Valor no Sistema (R$)" type="number" value={formData.internalValue}
+                      placeholder="Referência interna, pode diferir do valor de venda público"
+                      onChange={e => setFormData({ ...formData, internalValue: e.target.value })} />
+                  </div>
+                </div>
+
                 {/* Dados Estratégicos do Vendedor */}
                 <div className="bg-[#F9FCFF] p-8 border border-[#002B49]/5">
                   <SectionTitle icon="🎯" title="Dados Estratégicos do Vendedor" subtitle="Contexto interno — não aparece no site" />

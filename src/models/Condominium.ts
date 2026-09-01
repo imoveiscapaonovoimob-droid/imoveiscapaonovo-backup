@@ -20,6 +20,15 @@ export interface ICondominium {
   totalArea?: number;
   isPublished: boolean;
   isFeatured: boolean;
+
+  // ── Dados de acesso EXCLUSIVO do corretor ─────────────────────────────────
+  // NUNCA selecionado pelas leituras públicas (getPublishedCondominiums,
+  // getCondominiumBySlugOrId) — só por ações autenticadas do /admin.
+  broker?: {
+    concierge?: string; // síndico
+    caretaker?: string; // zelador
+  };
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -46,6 +55,11 @@ const CondominiumSchema = new Schema<ICondominium>(
     totalArea: { type: Number },
     isPublished: { type: Boolean, default: false },
     isFeatured: { type: Boolean, default: false },
+
+    broker: {
+      concierge: { type: String },
+      caretaker: { type: String },
+    },
   },
   { timestamps: true }
 );

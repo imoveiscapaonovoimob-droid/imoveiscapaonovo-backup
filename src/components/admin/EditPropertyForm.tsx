@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import StepIndicator from '@/components/admin/property-form/StepIndicator';
 import FormInput from '@/components/admin/property-form/FormInput';
 import AmenitiesGrid from '@/components/admin/property-form/AmenitiesGrid';
 import { updateProperty } from '@/lib/actions/property-edit.actions';
+import { getAllCondominiums } from '@/lib/actions/condominium.actions';
 import { PROPERTY_CATEGORIES, PROPERTY_LOCATIONS, CARDINAL_DIRECTIONS } from '@/constants/property-options';
 import PhotoUploader from '@/components/admin/property-form/PhotoUploader';
 
@@ -104,6 +105,12 @@ export default function EditPropertyForm({ property }: Props) {
     }))
   );
 
+  const [condominiums, setCondominiums] = useState<any[]>([]);
+
+  useEffect(() => {
+    getAllCondominiums().then(r => { if (r.success) setCondominiums(r.condominiums); });
+  }, []);
+
   const [formData, setFormData] = useState({
     // Step 1 – Básicas
     title:       property.title || '',
@@ -113,14 +120,19 @@ export default function EditPropertyForm({ property }: Props) {
     category:    property.category || 'casa',
     location:    property.location || 'Capão Novo',
     address:     property.address || '',
+    condominiumId: property.condominiumId || '',
 
     // Step 2 – Detalhes
     features: {
-      bedrooms:  property.features?.bedrooms  ?? 0,
-      suites:    property.features?.suites    ?? 0,
-      bathrooms: property.features?.bathrooms ?? 1,
-      parking:   property.features?.parking   ?? 0,
-      area:      property.features?.area      ?? 0,
+      bedrooms:     property.features?.bedrooms  ?? 0,
+      suites:       property.features?.suites    ?? 0,
+      bathrooms:    property.features?.bathrooms ?? 1,
+      restrooms:    property.features?.restrooms ?? 0,
+      livings:      property.features?.livings ?? 0,
+      storageRooms: property.features?.storageRooms ?? 0,
+      furnishedStatus: property.features?.furnishedStatus || '',
+      parking:      property.features?.parking   ?? 0,
+      area:         property.features?.area      ?? 0,
     },
     values: {
       condo: property.values?.condo ?? 0,
@@ -131,19 +143,28 @@ export default function EditPropertyForm({ property }: Props) {
       floors:      property.buildingInfo?.floors      || '',
       orientation: property.buildingInfo?.orientation || 'Norte',
       condition:   property.buildingInfo?.condition   || '',
+      builder:     property.buildingInfo?.builder      || '',
+      developer:   property.buildingInfo?.developer    || '',
     },
     amenities: (property.amenities || []) as string[],
 
-    // Step 3 – Estratégia Comercial
+    // Step 3 – Proprietário, Responsáveis & Estratégia Comercial (interno — não aparece no site)
+    ownerName:            property.broker?.owner?.name    || '',
+    ownerContact:         property.broker?.owner?.contact || '',
+    agenciador:           property.broker?.agenciador     || '',
+    correspondingAgent:   property.broker?.correspondingAgent || '',
+    matricula:            property.broker?.matricula      || '',
+    chaves:                property.broker?.chaves         || '',
+    internalValue:        String(property.broker?.internalValue || ''),
     strategicData: {
-      sellerMotivation:       property.strategicData?.sellerMotivation       || '',
-      urgency:                property.strategicData?.urgency                || '',
-      negotiationFlexibility: property.strategicData?.negotiationFlexibility || '',
+      sellerMotivation:       property.broker?.strategicData?.sellerMotivation       || '',
+      urgency:                property.broker?.strategicData?.urgency                || '',
+      negotiationFlexibility: property.broker?.strategicData?.negotiationFlexibility || '',
     },
     commercialIntelligence: {
-      commissionPercentage: String(property.commercialIntelligence?.commissionPercentage || ''),
-      netValueExpected:     String(property.commercialIntelligence?.netValueExpected     || ''),
-      proposalsHistory:     property.commercialIntelligence?.proposalsHistory            || '',
+      commissionPercentage: String(property.broker?.commercialIntelligence?.commissionPercentage || ''),
+      netValueExpected:     String(property.broker?.commercialIntelligence?.netValueExpected     || ''),
+      proposalsHistory:     property.broker?.commercialIntelligence?.proposalsHistory            || '',
     },
     propertyProfile: {
       classification: property.propertyProfile?.classification || '',
@@ -155,11 +176,11 @@ export default function EditPropertyForm({ property }: Props) {
       proximities:   (property.advancedLocation?.proximities || []) as string[],
     },
 
-    // Step 5 – Perfil & Documentação
-    idealCustomerProfile: property.idealCustomerProfile || '',
+    // Step 5 – Perfil & Documentação (interno)
+    idealCustomerProfile: property.broker?.idealCustomerProfile || '',
     documentation: {
-      status:  property.documentation?.status  || '',
-      details: property.documentation?.details || '',
+      status:  property.broker?.documentation?.status  || '',
+      details: property.broker?.documentation?.details || '',
     },
 
     // Step 6 – Publicação
@@ -179,6 +200,16 @@ export default function EditPropertyForm({ property }: Props) {
       [parent]: { ...(prev[parent as keyof typeof prev] as any), [field]: value },
     }));
 
+  const pickCondominium = (condominiumId: string) => {
+    const c = condominiums.find(x => x._id === condominiumId);
+    setFormData(prev => ({
+      ...prev,
+      condominiumId,
+      location: c?.location || prev.location,
+      address:  c?.address  || prev.address,
+    }));
+  };
+
   const fileToBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -194,6 +225,12 @@ export default function EditPropertyForm({ property }: Props) {
     setUploadStatus('Preparando...');
 
     try {
+      if (!formData.ownerName.trim()) {
+        alert('O nome do proprietário é obrigatório (Passo 3 — não aparece no site).');
+        setLoading(false);
+        return;
+      }
+
       const finalImages = [];
 
       // Função auxiliar para upload individual com assinatura fresca
@@ -321,6 +358,9 @@ export default function EditPropertyForm({ property }: Props) {
                 <FormInput label="Endereço / Referência" value={formData.address}
                   onChange={e => setFormData({ ...formData, address: e.target.value })} />
 
+                <Select label="Condomínio Vinculado" value={formData.condominiumId} onChange={pickCondominium}
+                  options={condominiums.map(c => ({ label: c.name, value: c._id }))} />
+
                 <div className="md:col-span-2 flex flex-col gap-2">
                   <label className="font-noto text-xs uppercase tracking-[0.15em] text-[#002B49]/60">Descrição Detalhada</label>
                   <textarea
@@ -345,6 +385,18 @@ export default function EditPropertyForm({ property }: Props) {
                     <FormInput label="Banheiros"    type="number" value={formData.features.bathrooms} onChange={e => updateNested('features', 'bathrooms', e.target.value)} />
                     <FormInput label="Vagas"        type="number" value={formData.features.parking}  onChange={e => updateNested('features', 'parking', e.target.value)} />
                     <FormInput label="Área m²"      type="number" value={formData.features.area}     onChange={e => updateNested('features', 'area', e.target.value)} />
+                    <FormInput label="Lavabos"      type="number" value={formData.features.restrooms} onChange={e => updateNested('features', 'restrooms', e.target.value)} />
+                    <FormInput label="Livings"      type="number" value={formData.features.livings}  onChange={e => updateNested('features', 'livings', e.target.value)} />
+                    <FormInput label="Depósitos"    type="number" value={formData.features.storageRooms} onChange={e => updateNested('features', 'storageRooms', e.target.value)} />
+                  </div>
+                  <div className="mt-8">
+                    <Select label="Mobiliado" value={formData.features.furnishedStatus}
+                      onChange={v => updateNested('features', 'furnishedStatus', v)}
+                      options={[
+                        { label: 'Não mobiliado',      value: 'Não mobiliado' },
+                        { label: 'Semi-mobiliado',     value: 'Semi-mobiliado' },
+                        { label: 'Totalmente mobiliado', value: 'Totalmente mobiliado' },
+                      ]} />
                   </div>
                 </div>
 
@@ -372,6 +424,12 @@ export default function EditPropertyForm({ property }: Props) {
                         { label: 'Bom',                   value: 'Bom' },
                         { label: 'Necessita reforma',     value: 'Reforma' },
                       ]} />
+                    <div className="grid grid-cols-2 gap-8">
+                      <FormInput label="Construtora" value={formData.buildingInfo.builder}
+                        onChange={e => updateNested('buildingInfo', 'builder', e.target.value)} />
+                      <FormInput label="Incorporadora" value={formData.buildingInfo.developer}
+                        onChange={e => updateNested('buildingInfo', 'developer', e.target.value)} />
+                    </div>
                   </div>
                 </div>
 
@@ -390,6 +448,29 @@ export default function EditPropertyForm({ property }: Props) {
               <motion.div key="step-3" variants={slideVariants} initial="initial" animate="animate" exit="exit"
                 transition={{ duration: 0.35, ease: [0.33, 1, 0.68, 1] }} className="space-y-16"
               >
+                {/* Proprietário & Responsáveis */}
+                <div className="bg-[#F9FCFF] p-8 border border-[#002B49]/5">
+                  <SectionTitle icon="🔑" title="Proprietário & Responsáveis" subtitle="Acesso exclusivo do corretor — não aparece no site" />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <FormInput label="Nome do Proprietário *" value={formData.ownerName}
+                      onChange={e => setFormData({ ...formData, ownerName: e.target.value })} />
+                    <FormInput label="Contato do Proprietário" value={formData.ownerContact}
+                      placeholder="Telefone ou e-mail"
+                      onChange={e => setFormData({ ...formData, ownerContact: e.target.value })} />
+                    <FormInput label="Agenciador" value={formData.agenciador}
+                      onChange={e => setFormData({ ...formData, agenciador: e.target.value })} />
+                    <FormInput label="Corretor Responsável" value={formData.correspondingAgent}
+                      onChange={e => setFormData({ ...formData, correspondingAgent: e.target.value })} />
+                    <FormInput label="Matrícula do Imóvel" value={formData.matricula}
+                      onChange={e => setFormData({ ...formData, matricula: e.target.value })} />
+                    <FormInput label="Local das Chaves" value={formData.chaves}
+                      onChange={e => setFormData({ ...formData, chaves: e.target.value })} />
+                    <FormInput label="Valor no Sistema (R$)" type="number" value={formData.internalValue}
+                      placeholder="Referência interna, pode diferir do valor de venda público"
+                      onChange={e => setFormData({ ...formData, internalValue: e.target.value })} />
+                  </div>
+                </div>
+
                 {/* Dados Estratégicos do Vendedor */}
                 <div className="bg-[#F9FCFF] p-8 border border-[#002B49]/5">
                   <SectionTitle icon="🎯" title="Dados Estratégicos do Vendedor" subtitle="Contexto interno — não aparece no site" />

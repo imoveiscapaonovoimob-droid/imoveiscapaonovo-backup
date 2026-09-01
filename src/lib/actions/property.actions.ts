@@ -34,6 +34,43 @@ function sanitizeEnums(data: any) {
   return clone;
 }
 
+/** Monta o subdocumento `broker` (acesso exclusivo do corretor) a partir do formData plano do formulário. */
+function buildBrokerField(sanitized: any) {
+  return {
+    owner: {
+      name: sanitized.ownerName || undefined,
+      contact: sanitized.ownerContact || undefined,
+    },
+    agenciador: sanitized.agenciador || undefined,
+    correspondingAgent: sanitized.correspondingAgent || undefined,
+    matricula: sanitized.matricula || undefined,
+    chaves: sanitized.chaves || undefined,
+    internalValue: sanitized.internalValue ? Number(sanitized.internalValue) : undefined,
+    strategicData: sanitized.strategicData || {},
+    commercialIntelligence: {
+      commissionPercentage: sanitized.commercialIntelligence?.commissionPercentage
+        ? Number(sanitized.commercialIntelligence.commissionPercentage) : undefined,
+      netValueExpected: sanitized.commercialIntelligence?.netValueExpected
+        ? Number(sanitized.commercialIntelligence.netValueExpected) : undefined,
+      proposalsHistory: sanitized.commercialIntelligence?.proposalsHistory || undefined,
+    },
+    idealCustomerProfile: sanitized.idealCustomerProfile || undefined,
+    documentation: sanitized.documentation || {},
+    financialStatus: sanitized.financialStatus?.hasEncumbrance !== undefined
+      ? sanitized.financialStatus : undefined,
+  };
+}
+
+/** Campos seguros pra qualquer leitura PÚBLICA (nunca inclui `broker`). */
+const PUBLIC_PROPERTY_FIELDS = [
+  'title', 'slug', 'description', 'call', 'price', 'category', 'location', 'address',
+  'youtubeId', 'instagramUrl', 'link360', 'features', 'values', 'buildingInfo',
+  'condominiumId', 'amenities', 'images', 'isPublished', 'isFeatured',
+  'propertyProfile', 'advancedLocation', 'areas', 'garageType', 'iptuPeriod',
+  'exclusivity', 'paymentMethods', 'directPaymentTerms', 'acceptsExchange', 'exchange',
+  'createdAt', 'updatedAt',
+].join(' ');
+
 export async function createProperty(formData: any) {
   try {
     await connectDB();
@@ -90,11 +127,15 @@ export async function createProperty(formData: any) {
       instagramUrl,
       link360,
       features: {
-        bedrooms:  Number(features.bedrooms),
-        suites:    Number(features.suites),
-        bathrooms: Number(features.bathrooms),
-        parking:   Number(features.parking),
-        area:      Number(features.area),
+        bedrooms:     Number(features.bedrooms),
+        suites:       Number(features.suites),
+        bathrooms:    Number(features.bathrooms),
+        restrooms:    Number(features.restrooms || 0),
+        livings:      Number(features.livings || 0),
+        storageRooms: Number(features.storageRooms || 0),
+        furnishedStatus: features.furnishedStatus || undefined,
+        parking:      Number(features.parking),
+        area:         Number(features.area),
       },
       values: {
         condo: Number(values.condo),
@@ -108,28 +149,21 @@ export async function createProperty(formData: any) {
         totalApts:    buildingInfo.totalApts    ? Number(buildingInfo.totalApts)    : undefined,
         deliveryDate: buildingInfo.deliveryDate ? new Date(buildingInfo.deliveryDate) : undefined,
       },
+      condominiumId: sanitized.condominiumId || undefined,
       amenities,
       images: finalImages,
       isPublished: Boolean(isPublished),
       isFeatured:  Boolean(isFeatured),
 
-      // ── Módulos de inteligência comercial (legado) ────────────────────────
-      strategicData:          sanitized.strategicData          || {},
-      commercialIntelligence: {
-        commissionPercentage: sanitized.commercialIntelligence?.commissionPercentage
-          ? Number(sanitized.commercialIntelligence.commissionPercentage) : undefined,
-        netValueExpected: sanitized.commercialIntelligence?.netValueExpected
-          ? Number(sanitized.commercialIntelligence.netValueExpected) : undefined,
-        proposalsHistory: sanitized.commercialIntelligence?.proposalsHistory || undefined,
-      },
-      propertyProfile:        sanitized.propertyProfile        || {},
+      propertyProfile: sanitized.propertyProfile || {},
       advancedLocation: {
         distanceToSea: sanitized.advancedLocation?.distanceToSea
           ? Number(sanitized.advancedLocation.distanceToSea) : undefined,
         proximities: sanitized.advancedLocation?.proximities || [],
       },
-      idealCustomerProfile: sanitized.idealCustomerProfile || undefined,
-      documentation:        sanitized.documentation        || {},
+
+      // ── Acesso exclusivo do corretor ──────────────────────────────────────
+      broker: buildBrokerField(sanitized),
 
       // ── Novos campos UX Step 2: Características ───────────────────────────
       areas: sanitized.areas?.privateArea || sanitized.areas?.totalArea
@@ -145,8 +179,6 @@ export async function createProperty(formData: any) {
       acceptsExchange:    Boolean(sanitized.acceptsExchange),
       exchange: sanitized.acceptsExchange && (sanitized.exchange?.limitPercent || sanitized.exchange?.assetTypes?.length)
         ? sanitized.exchange : undefined,
-      financialStatus: sanitized.financialStatus?.hasEncumbrance !== undefined
-        ? sanitized.financialStatus : undefined,
     });
 
     revalidatePath('/', 'layout');
@@ -266,8 +298,8 @@ export async function getPropertyBySlugOrId(idOrSlug: string) {
       ? { _id: idOrSlug } 
       : { slug: idOrSlug };
       
-    const property = await Property.findOne(query).lean();
-    
+    const property = await Property.findOne(query).select(PUBLIC_PROPERTY_FIELDS).lean();
+
     if (!property) return { success: false, property: null };
     
     return { 
