@@ -46,6 +46,28 @@ function buildBrokerField(sanitized: any) {
   };
 }
 
+/**
+ * Liga/desliga destaque ou publicação direto da tabela do painel.
+ * Existe porque curar a vitrine (ex.: reduzir 34 destaques para 8) não pode
+ * exigir abrir o formulário de 6 passos uma vez por imóvel.
+ */
+export async function togglePropertyFlag(
+  id: string,
+  field: 'isFeatured' | 'isPublished',
+  value: boolean,
+) {
+  try {
+    await connectDB();
+    await Property.findByIdAndUpdate(id, { [field]: value });
+    revalidatePath('/admin/dashboard');
+    revalidatePath('/');
+    return { success: true };
+  } catch (error: any) {
+    console.error('Error toggling property flag:', error);
+    return { success: false, error: error.message || 'Internal Server Error' };
+  }
+}
+
 export async function getPropertyById(id: string) {
   try {
     await connectDB();

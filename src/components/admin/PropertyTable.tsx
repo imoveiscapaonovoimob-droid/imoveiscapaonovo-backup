@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import { deleteProperty } from '@/lib/actions/property.actions';
+import { togglePropertyFlag } from '@/lib/actions/property-edit.actions';
 import { useRouter } from 'next/navigation';
 import CloudinaryImage from '@/components/ui/CloudinaryImage';
 
@@ -40,6 +41,23 @@ export default function PropertyTable({ properties, categoryLabels }: Props) {
       }
       setDeletingId(null);
       setConfirmingId(null);
+    });
+  };
+
+  // Alternância otimista: o ponto muda na hora e reverte se o servidor recusar.
+  const [overrides, setOverrides] = useState<Record<string, Partial<Property>>>({});
+
+  const toggleFlag = (id: string, field: 'isFeatured' | 'isPublished', current: boolean) => {
+    const next = !current;
+    setOverrides((o) => ({ ...o, [id]: { ...o[id], [field]: next } }));
+    startTransition(async () => {
+      const result = await togglePropertyFlag(id, field, next);
+      if (!result.success) {
+        setOverrides((o) => ({ ...o, [id]: { ...o[id], [field]: current } }));
+        alert('Não foi possível salvar: ' + result.error);
+      } else {
+        router.refresh();
+      }
     });
   };
 
@@ -101,14 +119,38 @@ export default function PropertyTable({ properties, categoryLabels }: Props) {
             {/* Price */}
             <span className="font-manrope text-xs font-semibold text-[#001629]">{formatPrice(p.price)}</span>
 
-            {/* Published dot */}
+            {/* Published — clicável */}
             <div className="flex justify-center">
-              <span className={`w-2 h-2 rounded-full ${p.isPublished ? 'bg-emerald-400' : 'bg-[#001629]/20'}`} />
+              {(() => {
+                const isOn = overrides[p._id]?.isPublished ?? p.isPublished;
+                return (
+                  <button
+                    onClick={() => toggleFlag(p._id, 'isPublished', isOn)}
+                    title={isOn ? 'Publicado — clique para tirar do site' : 'Fora do site — clique para publicar'}
+                    aria-label={isOn ? 'Tirar do site' : 'Publicar no site'}
+                    className="p-1.5 -m-1.5 rounded-full hover:bg-[#001629]/5 transition-colors"
+                  >
+                    <span className={`block w-2.5 h-2.5 rounded-full transition-colors ${isOn ? 'bg-emerald-400' : 'bg-[#001629]/20'}`} />
+                  </button>
+                );
+              })()}
             </div>
 
-            {/* Featured dot */}
+            {/* Featured — clicável */}
             <div className="flex justify-center">
-              <span className={`w-2 h-2 rounded-full ${p.isFeatured ? 'bg-[#775a19]' : 'bg-[#001629]/20'}`} />
+              {(() => {
+                const isOn = overrides[p._id]?.isFeatured ?? p.isFeatured;
+                return (
+                  <button
+                    onClick={() => toggleFlag(p._id, 'isFeatured', isOn)}
+                    title={isOn ? 'Em destaque — clique para remover' : 'Sem destaque — clique para destacar'}
+                    aria-label={isOn ? 'Remover destaque' : 'Marcar como destaque'}
+                    className="p-1.5 -m-1.5 rounded-full hover:bg-[#775a19]/10 transition-colors"
+                  >
+                    <span className={`block w-2.5 h-2.5 rounded-full transition-colors ${isOn ? 'bg-[#775a19]' : 'bg-[#001629]/20'}`} />
+                  </button>
+                );
+              })()}
             </div>
 
             {/* Actions */}
