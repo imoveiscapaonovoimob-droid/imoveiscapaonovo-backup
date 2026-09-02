@@ -17,12 +17,19 @@ interface PropertyGalleryProps {
   mainImageFallback: string;
   /** Se true, desabilita o gated content (ex: painel admin) */
   disableGate?: boolean;
+  /** Identificação do imóvel/condomínio — segue junto no lead capturado. */
+  propertyId?: string;
+  propertySlug?: string;
+  source?: string;
 }
 
 /** Número máximo de fotos gratuitas antes de exigir lead capture */
 const FREE_PHOTO_LIMIT = 4;
 
-export function PropertyGallery({ title, images, mainImageFallback, disableGate = false }: PropertyGalleryProps) {
+export function PropertyGallery({
+  title, images, mainImageFallback, disableGate = false,
+  propertyId, propertySlug, source,
+}: PropertyGalleryProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [mounted, setMounted] = useState(false);
@@ -371,6 +378,10 @@ export function PropertyGallery({ title, images, mainImageFallback, disableGate 
             setPendingIndex(null);
           }}
           onSuccess={handleLeadSuccess}
+          propertyId={propertyId}
+          propertyTitle={title}
+          propertySlug={propertySlug}
+          source={source}
         />,
         document.body
       )}

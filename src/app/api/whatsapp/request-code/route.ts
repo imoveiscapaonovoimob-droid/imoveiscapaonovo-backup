@@ -1,9 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { kv } from '@vercel/kv';
+import connectDB from '@/lib/mongodb';
+import SiteLead from '@/models/SiteLead';
 
 interface RequestCodeBody {
   name: string;
   phone: string;
+  propertyId?: string;
+  propertyTitle?: string;
+  propertySlug?: string;
+  pageUrl?: string;
+  source?: string;
 }
 
 interface RequestCodeResponse {
@@ -14,7 +21,7 @@ interface RequestCodeResponse {
 export async function POST(request: NextRequest): Promise<NextResponse<RequestCodeResponse>> {
   try {
     const body: RequestCodeBody = await request.json();
-    const { name, phone } = body;
+    const { name, phone, propertyId, propertyTitle, propertySlug, pageUrl, source } = body;
 
     if (!name || !phone) {
       return NextResponse.json(
@@ -79,6 +86,26 @@ export async function POST(request: NextRequest): Promise<NextResponse<RequestCo
     }
 
     console.log(`[OTP] Código enviado via WhatsApp para ${whatsappNumber} (${name})`);
+
+    // Grava o lead JÁ na solicitação — se a pessoa não chegar a confirmar o
+    // código, o contato continua registrado (fica `verified: false`).
+    // Nunca derruba o envio do código por causa da gravação.
+    try {
+      await connectDB();
+      await SiteLead.create({
+        name,
+        phone: cleanPhone,
+        verified: false,
+        source: source || 'galeria-imovel',
+        propertyId,
+        propertyTitle,
+        propertySlug,
+        pageUrl,
+        requestedAt: new Date(),
+      });
+    } catch (dbError) {
+      console.error('[OTP] Falha ao gravar o lead (código foi enviado mesmo assim):', dbError);
+    }
 
     return NextResponse.json(
       { success: true, message: 'Código enviado! Verifique seu WhatsApp.' },

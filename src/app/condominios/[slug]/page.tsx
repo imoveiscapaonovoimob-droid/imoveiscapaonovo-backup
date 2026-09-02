@@ -94,6 +94,9 @@ export default async function CondominiumPage({ params }: { params: Promise<{ sl
               title={condominium.name}
               images={condominium.images}
               mainImageFallback="/placeholder.jpg"
+              propertyId={condominium._id}
+              propertySlug={condominium.slug}
+              source="galeria-condominio"
             />
           </div>
         </div>

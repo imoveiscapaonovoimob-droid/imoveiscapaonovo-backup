@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { kv } from '@vercel/kv';
+import connectDB from '@/lib/mongodb';
+import SiteLead from '@/models/SiteLead';
 interface ValidateCodeBody {
   phone: string;
   code: string;
@@ -50,6 +52,19 @@ export async function POST(request: NextRequest): Promise<NextResponse<ValidateC
     
     // Código válido — remove do Redis para impedir reutilização
     await kv.del(`otp:${cleanPhone}`);
+
+    // Marca o lead como verificado: número confirmado pelo próprio dono.
+    // É o sinal de qualificação mais forte que o site produz.
+    try {
+      await connectDB();
+      await SiteLead.findOneAndUpdate(
+        { phone: cleanPhone, verified: false },
+        { verified: true, verifiedAt: new Date() },
+        { sort: { createdAt: -1 } }
+      );
+    } catch (dbError) {
+      console.error('[OTP] Falha ao marcar o lead como verificado:', dbError);
+    }
 
     console.log(`[OTP] Código validado com sucesso para ${cleanPhone}`);
 

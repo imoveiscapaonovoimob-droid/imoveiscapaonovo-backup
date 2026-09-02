@@ -7,6 +7,11 @@ interface LeadCaptureModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
+  /** Contexto do imóvel/condomínio que a pessoa está vendo — vai junto com o lead. */
+  propertyId?: string;
+  propertyTitle?: string;
+  propertySlug?: string;
+  source?: string;
 }
 
 type ModalStep = 'contact' | 'verify';
@@ -20,7 +25,10 @@ function formatPhoneDisplay(value: string): string {
   return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7, 11)}`;
 }
 
-export function LeadCaptureModal({ isOpen, onClose, onSuccess }: LeadCaptureModalProps) {
+export function LeadCaptureModal({
+  isOpen, onClose, onSuccess,
+  propertyId, propertyTitle, propertySlug, source,
+}: LeadCaptureModalProps) {
   const [step, setStep] = useState<ModalStep>('contact');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
@@ -78,7 +86,15 @@ export function LeadCaptureModal({ isOpen, onClose, onSuccess }: LeadCaptureModa
       const res = await fetch('/api/whatsapp/request-code', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: name.trim(), phone }),
+        body: JSON.stringify({
+          name: name.trim(),
+          phone,
+          propertyId,
+          propertyTitle,
+          propertySlug,
+          source,
+          pageUrl: typeof window !== 'undefined' ? window.location.href : undefined,
+        }),
       });
 
       const data = await res.json();

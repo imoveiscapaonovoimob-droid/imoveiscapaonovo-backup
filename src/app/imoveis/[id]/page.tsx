@@ -175,10 +175,13 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
 
           {/* Property Gallery (Overlapped) */}
           <div className="w-full relative z-10">
-             <PropertyGallery 
-              title={property.title} 
-              images={property.images} 
-              mainImageFallback="/placeholder.jpg" 
+             <PropertyGallery
+              title={property.title}
+              images={property.images}
+              mainImageFallback="/placeholder.jpg"
+              propertyId={property._id}
+              propertySlug={property.slug}
+              source="galeria-imovel"
              />
           </div>
         </div>

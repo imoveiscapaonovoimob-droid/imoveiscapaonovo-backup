@@ -40,6 +40,12 @@ export default async function AdminDashboardPage() {
               Olá, {session.user?.name}
             </span>
             <a
+              href="/admin/leads"
+              className="px-5 py-2.5 border border-[#775a19]/40 text-[#775a19] text-[10px] font-manrope uppercase tracking-widest hover:border-[#775a19] transition-all"
+            >
+              Leads do Site
+            </a>
+            <a
               href="/admin/condominiums"
               className="px-5 py-2.5 border border-[#001629]/20 text-[#001629] text-[10px] font-manrope uppercase tracking-widest hover:border-[#001629] transition-all"
             >
