@@ -35,6 +35,10 @@ export function normalizePropertyPayload(body: any) {
       bathrooms: Number(body.features?.bathrooms) || 0,
       parking: Number(body.features?.parking) || 0,
       area: Number(body.features?.area) || 0,
+      restrooms: Number(body.features?.restrooms) || 0,
+      livings: Number(body.features?.livings) || 0,
+      storageRooms: Number(body.features?.storageRooms) || 0,
+      furnishedStatus: body.features?.furnishedStatus,
     },
     values: {
       condo: Number(body.values?.condo) || 0,
@@ -65,6 +69,25 @@ export function normalizePropertyPayload(body: any) {
       : undefined,
     acceptsExchange: !!body.acceptsExchange,
     exclusivity: !!body.exclusivity,
+    ownerName: body.ownerName,
+    ownerContact: body.ownerContact,
+    advancedLocation: {
+      distanceToSea: body.advancedLocation?.distanceToSea,
+      proximities: Array.isArray(body.advancedLocation?.proximities) ? body.advancedLocation.proximities : [],
+    },
+    condominiumId: body.condominiumId,
+    propertyProfile: body.propertyProfile || {},
+    addressComplement: body.addressComplement,
+    block: body.block,
+    lot: body.lot,
+    directPayment: body.directPayment
+      ? {
+          minEntry: body.directPayment.minEntry,
+          maxMonths: body.directPayment.maxMonths != null
+            ? String(body.directPayment.maxMonths)
+            : undefined,
+        }
+      : undefined,
   };
 }
 
