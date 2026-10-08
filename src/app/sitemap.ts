@@ -32,6 +32,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/imoveis-terrasul',
     '/exclusividades',
     '/portfolio',
+    '/politica-privacidade',
   ].map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
