@@ -51,6 +51,7 @@ export const metadata: Metadata = {
 
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import ScrollTracker from "@/components/analytics/ScrollTracker";
+import MetaPixel from "@/components/analytics/MetaPixel";
 import FloatingWhatsAppChat from "@/components/shared/FloatingWhatsAppChat";
 
 import AuthProvider from "@/components/providers/AuthProvider";
@@ -110,6 +111,7 @@ export default function RootLayout({
       </head>
       <body className="antialiased font-sans">
         <GoogleAnalytics />
+        <MetaPixel />
         <ScrollTracker />
         <AuthProvider>
           {children}

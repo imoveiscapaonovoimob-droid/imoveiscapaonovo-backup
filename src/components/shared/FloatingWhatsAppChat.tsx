@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, type FormEvent } from "react";
 import Image from "next/image";
 import { X, Send, ChevronDown } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { trackMetaEvent } from "@/components/analytics/MetaPixel";
 
 /* ────────────────────────────────────────────
    Configuração — substitua pelo número real
@@ -71,6 +72,7 @@ export default function FloatingWhatsAppChat({
     if (!text) return;
 
     const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(text)}`;
+    trackMetaEvent("Contact", { method: "whatsapp" });
     window.open(url, "_blank", "noopener,noreferrer");
     setMessage("");
   };
