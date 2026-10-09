@@ -118,6 +118,7 @@ const SearchBarContent = () => {
                 <option value="Posto 4">Posto 4</option>
                 <option value="Posto 5">Posto 5</option>
                 <option value="Village">Village</option>
+                <option value="Capão da Canoa">Capão da Canoa</option>
               </select>
               <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-primary/40 pointer-events-none" />
             </div>

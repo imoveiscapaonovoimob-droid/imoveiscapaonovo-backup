@@ -16,6 +16,7 @@ export const PROPERTY_LOCATIONS = [
   'Posto 4',
   'Posto 5',
   'Village',
+  'Capão da Canoa',
 ];
 
 export const AMENITIES_LIST = [
