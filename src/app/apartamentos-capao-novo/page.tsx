@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const { properties } = await searchProperties({ category: "apartamento" });
+  const { properties } = await searchProperties({ category: ["apartamento", "jk"] });
 
   return (
     <main className="min-h-screen">

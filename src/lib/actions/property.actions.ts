@@ -272,7 +272,9 @@ export async function searchProperties(filters: any) {
     const { category, minPrice, maxPrice, location } = filters;
     const query: any = { isPublished: true };
 
-    if (category && category !== 'all') {
+    if (Array.isArray(category)) {
+      query.category = { $in: category.map((c: string) => new RegExp(`^${c}$`, 'i')) };
+    } else if (category && category !== 'all') {
       query.category = { $regex: `^${category}$`, $options: 'i' };
     }
 
